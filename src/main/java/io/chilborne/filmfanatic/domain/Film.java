@@ -31,30 +31,30 @@ public class Film {
   @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
   private LocalDate dataMigrate;
 
-  @OneToMany(mappedBy = "film")
+  @OneToMany(mappedBy = "film", cascade = CascadeType.REMOVE)
   private Set<Score> scores;
-  @OneToMany(mappedBy = "film")
+  @OneToMany(mappedBy = "film", cascade = CascadeType.REMOVE)
   private Set<Review> reviews;
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.DETACH)
   @JoinColumn(name = "director_id")
   private Person director;
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "film_actors", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "actor_id"))
   private Set<Person> actors;
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "film_musicians", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "musician_id"))
   private Set<Person> musicians;
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "film_screenwriters", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "screenwriter_id"))
   private Set<Person> screenwriters;
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "film_photographers", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "photographer_id"))
   private Set<Person> photographers;
