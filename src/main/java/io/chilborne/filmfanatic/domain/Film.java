@@ -8,7 +8,6 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @RequiredArgsConstructor
 @Builder
 @Entity(name = "films")
@@ -29,13 +28,16 @@ public class Film {
   private String poster;
   @Column
   private boolean migrate;
-  @Column(name = "date_migrate")
+  @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
   private LocalDate dataMigrate;
 
   @OneToMany(mappedBy = "film")
   private Set<Score> scores;
   @OneToMany(mappedBy = "film")
   private Set<Review> reviews;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @ManyToMany
   @JoinTable(name = "film_actors", joinColumns = @JoinColumn(name = "film_id"),
@@ -49,6 +51,7 @@ public class Film {
   @JoinTable(name = "film_screenwriters", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "screenwriter_id"))
   private Set<Person> screenwriters;
+  @ManyToMany
   @JoinTable(name = "film_photographers", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "photographer_id"))
   private Set<Person> photographers;

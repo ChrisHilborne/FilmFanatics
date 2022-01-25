@@ -1,15 +1,12 @@
 package io.chilborne.filmfanatic.domain;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @RequiredArgsConstructor
 @Builder
 @Entity(name = "reviews")
@@ -22,7 +19,7 @@ public class Review {
   private String title;
   @Column
   private String textReview;
-  @Column
+  @Column(columnDefinition = "TIMESTAMP")
   private LocalDate date;
 
   @ManyToOne
