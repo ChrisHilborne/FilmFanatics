@@ -41,11 +41,13 @@ public class User {
   private boolean active;
 
   @Column(name = "films_reviews")
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
   private Set<Review> filmsReviews;
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
   private Set<Film> peliculas;
-  @ManyToMany
+  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+  private Set<Score> scores;
+  @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Roles> roles;
