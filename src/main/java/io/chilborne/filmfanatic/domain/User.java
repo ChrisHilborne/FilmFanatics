@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
@@ -32,15 +31,18 @@ public class User {
   private String email;
   @Column
   private String image;
-  @Column(name = "birth_date")
+  @Column(name = "birth_date", columnDefinition = "TIMESTAMP")
   private Date birthDate;
-  @Column(name = "creation_date")
+  @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
   private LocalDate creationDate;
-  @Column(name = "last_login")
+  @Column(name = "last_login", columnDefinition = "TIMESTAMP")
   private LocalDateTime lastLogin;
   @Column
   private boolean active;
 
+  @Column(name = "films_reviews")
+  @OneToMany(mappedBy = "user")
+  private Set<Review> filmsReviews;
   @OneToMany(mappedBy = "user")
   private Set<Film> peliculas;
   @ManyToMany
