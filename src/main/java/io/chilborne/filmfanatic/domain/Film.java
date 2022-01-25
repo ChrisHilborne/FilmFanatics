@@ -39,6 +39,9 @@ public class Film {
   @JoinColumn(name = "user_id")
   private User user;
 
+  @OneToOne
+  @JoinColumn(name = "director_id")
+  private Person director;
   @ManyToMany
   @JoinTable(name = "film_actors", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "actor_id"))
