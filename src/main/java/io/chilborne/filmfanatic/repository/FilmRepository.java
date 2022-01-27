@@ -16,10 +16,10 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   Set<Film> findByYearBetween(int firstYear, int lastYear);
   Set<Film> findByDurationLessThan(int duration);
 
-  @Query("SELECT f FROM films f WHERE f.director.name LIKE ?1 AND f.director.surname LIKE ?2")
+  @Query("SELECT f FROM films f WHERE f.director.name = ?1 AND f.director.surname = ?2")
   Set<Film> findByDirectorNameAndDirectorSurname(String name, String surname);
 
-  @Query("SELECT f FROM films f JOIN FETCH f.actors a WHERE a.name LIKE ?1 AND a.surname LIKE ?2")
+  @Query("SELECT f FROM films f JOIN FETCH f.actors a WHERE a.name = ?1 AND a.surname = ?2")
   Set<Film> findByActorsNameAndActorsSurname(String name, String surname);
 
 }
