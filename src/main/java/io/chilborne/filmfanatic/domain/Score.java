@@ -7,9 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
-@Builder
 @Entity(name = "score")
 public class Score {
   @Id
@@ -28,8 +25,27 @@ public class Score {
   @JoinColumn(name = "user_id")
   private User user;
 
+
+  public Score() {}
+
+  public Score(int value) {
+    this.value = value;
+  }
+
   @Override
-  public String toString() {
-    return "Score:" + film + " : " + value;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Score score = (Score) o;
+
+    if (value != score.value) return false;
+    if (film != null ? !film.equals(score.film) : score.film != null) return false;
+    return user != null ? user.equals(score.user) : score.user == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.getClass().hashCode();
   }
 }
