@@ -11,6 +11,9 @@ import static javax.persistence.CascadeType.*;
 
 @Data
 @Entity(name = "films")
+@Table(indexes = {
+  @Index(name = "title_index", columnList = "title"),
+  @Index(name = "year_index", columnList = "year")})
 public class Film {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

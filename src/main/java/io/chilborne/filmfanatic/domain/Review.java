@@ -7,6 +7,9 @@ import java.time.LocalDate;
 
 @Data
 @Entity(name = "reviews")
+@Table(indexes =
+  {@Index(name = "film_index", columnList = "film"),
+  @Index(name = "user_index" ,columnList = "user")})
 public class Review {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,11 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
-@Builder
 @Entity(name = "roles")
-public class Roles {
+public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private long id;
