@@ -7,7 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Data
-@Entity(name = "score")
+@Entity(name = "scores")
 public class Score {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
