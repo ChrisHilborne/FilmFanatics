@@ -3,7 +3,6 @@ package io.chilborne.filmfanatic.repository;
 import io.chilborne.filmfanatic.domain.Film;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.Set;
@@ -17,9 +16,10 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   Set<Film> findByYearBetween(int firstYear, int lastYear);
   Set<Film> findByDurationLessThan(int duration);
 
-  Set<Film> findByDirectorNameAndDirectorSurname(@Param("director.name") String name, @Param("director.surname") String surname);
-  Set<Film> findByActorsNameAndActorsSurname(@Param("actors.name") String name,@Param("actors.surname") String surname);
+  @Query("SELECT f FROM films f WHERE f.director.name LIKE ?1 AND f.director.surname LIKE ?2")
+  Set<Film> findByDirectorNameAndDirectorSurname(String name, String surname);
 
-  @Query(value = "SELECT * FROM films f HAVING AVG(f.scores) >= :score", nativeQuery = true)
-  Set<Film> findFilmByAverageScoreGreaterThan(int score);
+  @Query("SELECT f FROM films f JOIN FETCH f.actors a WHERE a.name LIKE ?1 AND a.surname LIKE ?2")
+  Set<Film> findByActorsNameAndActorsSurname(String name, String surname);
+
 }
