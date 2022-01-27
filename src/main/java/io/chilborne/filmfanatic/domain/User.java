@@ -13,6 +13,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Builder
 @Entity(name = "users")
+@Table(indexes = @Index(name = "usrname_index", columnList = "username"))
 public class User {
 
   @Id
@@ -50,7 +51,7 @@ public class User {
   @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Roles> roles;
+  private Set<Role> roles;
 
   @Override
   public boolean equals(Object o) {
