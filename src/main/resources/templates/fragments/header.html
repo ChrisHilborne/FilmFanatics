@@ -1,24 +1,23 @@
-<header xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
-  <div class="navbar navbar-expand-md fixed-top">
+<header xmlns:th="http://www.thymeleaf.org">
+  <nav class="custom-navbar navbar navbar-expand-md fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Film Fanaticos</a>
+      <a class="custom-nav-link navbar-brand" href="/">Film Fanaticos</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="custom-nav-link nav-link" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="custom-nav-link nav-link" href="#">Link</a>
           </li>
         </ul>
         <form class="d-flex">
-          <a class="btn btn-outline-dark" th:href="${/login}">Login</a>
+          <a class="btn btn-outline-dark" th:href="#">Login</a>
         </form>
       </div>
     </div>
-  </div>
-
+  </nav>
 </header>
