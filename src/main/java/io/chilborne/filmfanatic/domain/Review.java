@@ -8,8 +8,9 @@ import java.time.LocalDate;
 @Data
 @Entity(name = "reviews")
 @Table(indexes =
-  {@Index(name = "film_index", columnList = "film"),
-  @Index(name = "user_index" ,columnList = "user")})
+  {@Index(name = "film_title_index", columnList = "film_title"),
+  @Index(name = "film_id_index", columnList = "film_id"),
+  @Index(name = "user_id_index" ,columnList = "user_id")})
 public class Review {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,8 @@ public class Review {
   private LocalDate date;
 
   @ManyToOne
-  @JoinColumn(name = "film_id")
+  @JoinColumn(name = "film_id", referencedColumnName = "id")
+  @JoinColumn(name = "film_title", referencedColumnName = "title")
   private Film film;
   @ManyToOne
   @JoinColumn(name = "user_id")
