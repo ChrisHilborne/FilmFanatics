@@ -15,6 +15,7 @@ public class WebController {
   @GetMapping("/")
   @PostMapping("/")
   public String index(Model model) {
+    logger.info("Connection... serving index.html");
     return "index";
   }
 }
