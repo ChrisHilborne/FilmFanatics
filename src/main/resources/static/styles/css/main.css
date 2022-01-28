@@ -12,8 +12,14 @@
     color: #f7f1e3;
 }
 
-.custom-login-btn {
+.custom-btn {
     color: #f7f1e3;
     background-color: #706fd3;
-    border-color: #40407a;
+    border-color: #34ace0;
+}
+
+
+.custom-btn:hover, .custom.btn:focus {
+    background-color: #34ace0;
+    color: #aaa69d;
 }
