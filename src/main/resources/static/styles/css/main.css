@@ -1,5 +1,7 @@
 .custom-footer {
     background-color: #84817a;
+    position: fixed;
+    bottom: 0;
 }
 
 .custom-navbar {
@@ -11,6 +13,7 @@
 }
 
 .custom-login-btn {
-    color: #706fd3;
-    border-color: #2c2c54;
+    color: #f7f1e3;
+    background-color: #706fd3;
+    border-color: #40407a;
 }
