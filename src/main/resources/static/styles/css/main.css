@@ -1,7 +1,11 @@
+.custom-footer {
+    background-color: #84817a;
+}
+
 .custom-navbar {
-    background-color: #aaa69d;
+    background-color: #84817a;
 }
 
 .custom-nav-link {
-    color: #227093;
+    color: #f7f1e3;
 }
