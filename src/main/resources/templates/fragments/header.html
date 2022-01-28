@@ -1,21 +1,39 @@
-<header xmlns:th="http://www.thymeleaf.org">
-  <nav class="custom-navbar navbar navbar-expand-md fixed-top">
+<header xmlns:th="http://www.w3.org/1999/xhtml">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Navbar">
     <div class="container-fluid">
-      <a class="custom-nav-link navbar-brand" href="/">Film Fanaticos</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="#">Film Fanatic</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
+
+      <div class="collapse navbar-collapse" id="Navbar Collapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="custom-nav-link nav-link" aria-current="page" href="/">Home</a>
+            <a class="nav-link" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="custom-nav-link nav-link" href="/">Link</a>
+            <a class="nav-link" href="#">Films</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Genres</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown04">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Fantasy</a></li>
+              <li><a class="dropdown-item" href="#">Sci Fi</a></li>
+              <li><a class="dropdown-item" href="#">Comedy</a></li>
+              <li><a class="dropdown-item" href="#">Romance</a></li>
+              <li><a class="dropdown-item" href="#">Family</a></li>
+            </ul>
           </li>
         </ul>
-        <form class="d-flex">
-          <a class="btn custom-login-btn" href="/">Login</a>
+        <form class="d-flex align-items-center">
+          <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success mr-1 ml-3" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="/login" class="link-primary">Login</a>
+          <small class="mx-1 style=color:rgba(209, 204, 192,1.0)" >or</small>
+          <a class="btn btn-primary btn-sm" href="/register">Register</a>
         </form>
       </div>
     </div>
