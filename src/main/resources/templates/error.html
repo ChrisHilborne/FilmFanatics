@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/head :: head(title='Error')"></head>
+<head th:replace="fragments/head :: head(title='Film Fanaticos')"></head>
 <header th:replace="fragments/header :: header"></header>
 <body>
 <main>
-    <div>
-        <h1>ERROR</h1>
+    <br><br>
+    <div class="container">
+        <div class="alert alert-warning" role="alert">
+            <p><strong>Whoops! Something went wrong.</strong></p>
+            <p th:text="${message}"></p>
+            <p th:text="${url}"></p>
+            <p><a href="#" class="alert-link" onclick="history.back()">Go Back</a></p>
+        </div>
     </div>
 </main>
 <footer th:replace="fragments/footer :: footer"></footer>
