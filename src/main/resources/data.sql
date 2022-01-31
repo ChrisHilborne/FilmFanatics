@@ -30,9 +30,9 @@ VALUES
 INSERT INTO scores
     (id, value, film_id)
 VALUES
-    (0, 4, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
-    (1, 5, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
-    (2, 4, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
-    (3, 2, (SELECT FROM films WHERE title = 'Kingdom of Heaven')),
-    (4, 3, (SELECT FROM films WHERE title = 'Kingdom of Heaven')),
-    (5, 2, (SELECT FROM films WHERE title = 'Kingdom of Heaven'));
+    (0, 4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
+    (1, 5, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
+    (2, 4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
+    (3, 2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven')),
+    (4, 3, (SELECT id FROM films WHERE title = 'Kingdom of Heaven')),
+    (5, 2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven'));
