@@ -2,9 +2,9 @@ package io.chilborne.filmfanatic.domain;
 
 
 public enum PersonTypeEnum {
-  GUIONISTA,
-  MUSICO,
-  FOTOGRAPHO,
+  SCREEN_WRITER,
+  COMPOSER,
+  CINEMATOGRAPHER,
   ACTOR,
   DIRECTOR
 }
