@@ -14,3 +14,4 @@ INSERT INTO user_roles
 VALUES
     ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE name = 'ADMIN'));
 
+
