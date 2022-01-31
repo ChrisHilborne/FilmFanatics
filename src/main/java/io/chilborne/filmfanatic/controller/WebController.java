@@ -26,14 +26,4 @@ public class WebController {
   public String errorTest(Model model) throws RuntimeException {
     throw new RuntimeException("This is a test Exception");
   }
-
-  @ExceptionHandler
-  public ModelAndView handleException(HttpServletRequest request, Exception exception){
-    logger.error("Exception Caught!", exception);
-    ModelAndView mav = new ModelAndView();
-    mav.addObject("message", exception.getMessage());
-    mav.addObject("exception", exception);
-    mav.setViewName("error");
-    return mav;
-  }
 }
