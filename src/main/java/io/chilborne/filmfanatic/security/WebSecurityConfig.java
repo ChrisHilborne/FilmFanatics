@@ -22,7 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .antMatchers("/h2-console/*").permitAll()
     .and()
       // in order to allow access to h2-console for testing
-      //TODO remove before release
+      // TODO remove before release
       .csrf().disable()
       .headers().frameOptions().disable();
   }

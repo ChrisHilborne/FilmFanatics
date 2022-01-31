@@ -24,7 +24,15 @@ VALUES
 INSERT INTO film_actors
     (film_id, actor_id)
 VALUES
-    ((SELECT id FROM films WHERE title = 'Lord of the Rings'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom')),
+    ((SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom')),
     ((SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom'));
 
-
+INSERT INTO scores
+    (id, value, film_id)
+VALUES
+    (0, 4, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
+    (1, 5, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
+    (2, 4, (SELECT FROM films WHERE title = 'The Fellowship of the Ring')),
+    (3, 2, (SELECT FROM films WHERE title = 'Kingdom of Heaven')),
+    (4, 3, (SELECT FROM films WHERE title = 'Kingdom of Heaven')),
+    (5, 2, (SELECT FROM films WHERE title = 'Kingdom of Heaven'));
