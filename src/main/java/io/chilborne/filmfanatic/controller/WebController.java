@@ -29,6 +29,7 @@ public class WebController {
 
   @ExceptionHandler
   public ModelAndView handleException(HttpServletRequest request, Exception exception){
+    logger.error("Exception Caught!", exception);
     ModelAndView mav = new ModelAndView();
     mav.addObject("message", exception.getMessage());
     mav.addObject("exception", exception);
