@@ -1,6 +1,5 @@
 package io.chilborne.filmfanatic.domain;
 
-import com.google.common.collect.Iterables;
 import lombok.*;
 
 import javax.persistence.*;
@@ -93,7 +92,7 @@ public class Film {
   }
 
   public void addMusician(Person musician) {
-    if (musician.getType() == PersonTypeEnum.MUSICO) {
+    if (musician.getType() == PersonTypeEnum.COMPOSER) {
       musicians.add(musician);
     }
   }
@@ -103,7 +102,7 @@ public class Film {
   }
 
   public void addScreenwriter(Person screenwriter) {
-    if (screenwriter.getType() == PersonTypeEnum.GUIONISTA) {
+    if (screenwriter.getType() == PersonTypeEnum.SCREEN_WRITER) {
       screenwriters.add(screenwriter);
     }
   }
@@ -113,7 +112,7 @@ public class Film {
   }
 
   public void addPhotographer(Person photographer) {
-    if (photographer.getType() == PersonTypeEnum.FOTOGRAPHO) {
+    if (photographer.getType() == PersonTypeEnum.CINEMATOGRAPHER) {
       photographers.add(photographer);
     }
   }
