@@ -2,9 +2,12 @@ package io.chilborne.filmfanatic.exception;
 
 public class UserNotFoundException extends RuntimeException {
 
+  private final static String message = "username or password incorrect";
+
   public UserNotFoundException() {
-    super("A user with that username or password was not found.");
+    super(message);
   }
+
 
   public UserNotFoundException(String message) {
     super(message);
