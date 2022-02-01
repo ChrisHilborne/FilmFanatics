@@ -1,9 +1,8 @@
-html,
-body {
+html.form-signin {
   height: 100%;
 }
 
-body {
+body.form-signin {
   display: flex;
   align-items: center;
   padding-top: 40px;
@@ -26,7 +25,7 @@ body {
   z-index: 2;
 }
 
-.form-signin input[type="test"] {
+.form-signin input[type="text"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
