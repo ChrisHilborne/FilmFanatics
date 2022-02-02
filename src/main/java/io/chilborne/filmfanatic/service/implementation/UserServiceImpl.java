@@ -4,6 +4,8 @@ import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.exception.UserNotFoundException;
 import io.chilborne.filmfanatic.repository.UserRepository;
 import io.chilborne.filmfanatic.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -12,6 +14,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepo;
+  private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
   public UserServiceImpl(UserRepository userRepo) {
     this.userRepo = userRepo;
@@ -19,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getUser(String username) {
+    logger.info("Fetching User {}", username);
     return userRepo.findByUsernameIgnoreCase(username)
       .orElseThrow(UserNotFoundException::new);
   }

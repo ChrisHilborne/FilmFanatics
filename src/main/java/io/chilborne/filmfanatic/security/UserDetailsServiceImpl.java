@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       return buildUserDetails(user, authorities);
 
     } catch (UserNotFoundException e) {
-      logger.error(e.getMessage(),e);
+      logger.error("User {} not found", username, e);
       throw new UsernameNotFoundException(e.getMessage(), e);
     }
   }

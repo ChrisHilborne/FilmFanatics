@@ -4,7 +4,7 @@ VALUES
     (0, 'admin'),
     (1, 'user');
 
-INSERT INTO users (id, username, password, active) VALUES (0,'tokioschool', 'tokioschool', 1);
+INSERT INTO users (id, username, password, active) VALUES (0,'tokioschool', '$2a$10$.JGCNuoStUWFceU0S2oh.eoI5c3dIwzm5KiYvzoJW7KGrIOBb41yq', 1);
 
 INSERT INTO user_roles
     (user_id, role_id)
