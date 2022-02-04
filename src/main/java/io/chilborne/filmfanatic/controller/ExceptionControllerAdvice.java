@@ -16,6 +16,7 @@ public class ExceptionControllerAdvice {
   @ExceptionHandler
   public ModelAndView handleException(HttpServletRequest request, Exception exception){
     logger.error("Exception Caught!", exception);
+    exception.printStackTrace();
     ModelAndView mav = new ModelAndView();
     mav.addObject("message", exception.getMessage());
     mav.addObject("exception", exception);

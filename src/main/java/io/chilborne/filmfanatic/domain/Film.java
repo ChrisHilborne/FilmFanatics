@@ -34,6 +34,7 @@ public class Film implements Serializable {
   @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
   private LocalDate dataMigrate;
 
+
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;

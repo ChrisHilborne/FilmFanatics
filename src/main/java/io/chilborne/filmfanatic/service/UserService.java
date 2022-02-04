@@ -11,4 +11,6 @@ public interface UserService {
   User getUser(long id);
 
   Set<User> getAllUsers();
+
+  User updateUser(String oldUsername, User user);
 }
