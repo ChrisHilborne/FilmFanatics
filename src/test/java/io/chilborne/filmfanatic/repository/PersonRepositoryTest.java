@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Import(TestData.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 class PersonRepositoryTest {
 
   @Autowired
@@ -34,18 +36,6 @@ class PersonRepositoryTest {
   @Autowired
   @Qualifier("orlandoBloom")
   Person orlandoBloom;
-
-  @BeforeAll
-  public void setup() {
-    repo.save(ridleyScott);
-    repo.save(peterJackson);
-    repo.save(orlandoBloom);
-  }
-
-  @AfterAll
-  public void tearDown() {
-    repo.deleteAll();
-  }
 
   @Test
   void findByType() {

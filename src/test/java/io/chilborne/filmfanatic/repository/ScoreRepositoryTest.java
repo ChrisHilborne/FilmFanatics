@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -19,42 +20,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Import(TestData.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 class ScoreRepositoryTest {
 
   @Autowired
-  PersonRepository personRepository;
-  @Autowired
-  FilmRepository filmRepo;
-  @Autowired
   ScoreRepository scoreRepo;
 
-  @Autowired
-  @Qualifier("ridleyScott")
-  private Person ridleyScott;
-  @Autowired
-  @Qualifier("peterJackson")
-  private Person peterJackson;
-  @Autowired
-  @Qualifier("orlandoBloom")
-  private Person orlandoBloom;
-  @Autowired
   @Qualifier("LOTR")
   private Film LOTR;
   @Autowired
   @Qualifier("kingdomOfHeaven")
   private Film kingdomOfHeaven;
 
-  @BeforeAll
-  public void setup() {
-    personRepository.saveAll(List.of(ridleyScott, orlandoBloom, peterJackson));
-    filmRepo.saveAll(List.of(LOTR, kingdomOfHeaven));
-  }
-
-  @AfterAll
-  public void tearDown() {
-    filmRepo.deleteAll();
-    personRepository.deleteAll();
-  }
 
   @Test
   void findAvgScoreByFilmTitle() {

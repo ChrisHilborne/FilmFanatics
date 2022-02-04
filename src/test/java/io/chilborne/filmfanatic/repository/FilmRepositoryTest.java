@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
@@ -21,16 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ContextConfiguration(classes = TestData.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 class FilmRepositoryTest {
 
   @Autowired
   FilmRepository filmRepo;
-  @Autowired
-  PersonRepository personRepo;
 
-  @Autowired
-  @Qualifier("ridleyScott")
-  Person ridleyScott;
   @Autowired
   @Qualifier("peterJackson")
   Person peterJackson;
@@ -44,21 +41,6 @@ class FilmRepositoryTest {
   @Qualifier("kingdomOfHeaven")
   Film kingdomOfHeaven;
 
-  @BeforeAll
-  void setup() {
-    personRepo.save(orlandoBloom);
-    personRepo.save(peterJackson);
-    personRepo.save(ridleyScott);
-
-    filmRepo.save(kingdomOfHeaven);
-    filmRepo.save(LOTR);
-  }
-
-  @AfterAll
-  void tearDown() {
-    filmRepo.deleteAll();
-    personRepo.deleteAll();
-  }
 
   @Test
   void findByDirectorNameAndDirectorSurnameShouldReturnFilmsWithNamedDirector() {
@@ -81,6 +63,7 @@ class FilmRepositoryTest {
 
     // assert
     assertEquals(2, returnedFilms.size());
+    assertTrue(returnedFilms.containsAll(Set.of(LOTR, kingdomOfHeaven)));
   }
 
 }
