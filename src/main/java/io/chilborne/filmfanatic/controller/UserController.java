@@ -36,6 +36,7 @@ public class UserController {
 
   @GetMapping("/profile/{username}")
   public String profile(Model model, HttpServletRequest request, @PathVariable String username) {
+    User user = userService.getUser(username);
     model.addAttribute("user", userService.getUser(username));
     return "profile";
   }

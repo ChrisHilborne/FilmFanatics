@@ -3,6 +3,7 @@ package io.chilborne.filmfanatic.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -13,7 +14,7 @@ import static javax.persistence.CascadeType.*;
 @Table(indexes = {
   @Index(name = "title_index", columnList = "title"),
   @Index(name = "year_index", columnList = "year")})
-public class Film {
+public class Film implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
@@ -29,7 +30,7 @@ public class Film {
   @Column
   private String poster;
   @Column
-  private boolean migrate;
+  private Boolean migrate;
   @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
   private LocalDate dataMigrate;
 
@@ -131,7 +132,6 @@ public class Film {
     if (year != film.year) return false;
     if (duration != film.duration) return false;
     if (migrate != film.migrate) return false;
-    if (id != null ? !id.equals(film.id) : film.id != null) return false;
     if (title != null ? !title.equals(film.title) : film.title != null) return false;
     if (synopsis != null ? !synopsis.equals(film.synopsis) : film.synopsis != null) return false;
     if (poster != null ? !poster.equals(film.poster) : film.poster != null) return false;

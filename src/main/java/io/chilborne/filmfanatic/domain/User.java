@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -33,7 +32,7 @@ public class User {
   @Column
   private String image;
   @Column(name = "birth_date", columnDefinition = "TIMESTAMP")
-  private Date birthDate;
+  private LocalDate birthDate;
   @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
   private LocalDate creationDate;
   @Column(name = "last_login", columnDefinition = "TIMESTAMP")
@@ -42,11 +41,11 @@ public class User {
   private boolean active;
 
   @Column(name = "films_reviews")
-  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+  @OneToMany(mappedBy = "user")
   private Set<Review> filmsReviews;
-  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
-  private Set<Film> peliculas;
-  @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+  @OneToMany(mappedBy = "user")
+  private Set<Film> films;
+  @OneToMany(mappedBy = "user")
   private Set<Score> scores;
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
@@ -61,7 +60,6 @@ public class User {
     User user = (User) o;
 
     if (active != user.active) return false;
-    if (id != null ? !id.equals(user.id) : user.id != null) return false;
     if (username != null ? !username.equals(user.username) : user.username != null) return false;
     if (password != null ? !password.equals(user.password) : user.password != null) return false;
     if (name != null ? !name.equals(user.name) : user.name != null) return false;

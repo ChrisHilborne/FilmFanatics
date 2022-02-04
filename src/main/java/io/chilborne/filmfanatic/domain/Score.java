@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 @Entity(name = "scores")
 public class Score {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   private Long id;
   @Column(nullable = false)
