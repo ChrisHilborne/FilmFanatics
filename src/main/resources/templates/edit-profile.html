@@ -8,10 +8,10 @@
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-3 border-right">
-                <form method="POST" enctype="multipart/form-data" th:action="@{/user-image}">
+                <form th:method="POST" enctype="multipart/form-data" th:action="@{/user-image}">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                         <label for="image-file">
-                            <img class="rounded-circle mt-5" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${user.image}}">
+                            <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${user.image}}">
                         </label>
                         <div class="row">
                             <input id="image-file" type="file" name="image" />
@@ -23,7 +23,7 @@
                     </div>
                 </form>
             </div>
-            <form method="POST" th:object="${user}" th:action="@{/update-user}" class="col-md-5 border-right">
+            <form th:method="PUT" th:object="${user}" th:action="@{/user/edit}" class="col-md-5 border-right">
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">Edit Profile</h4>
@@ -51,7 +51,10 @@
                         </div>
                     </div>
                     <div class="mt-5 text-center">
-                        <button class="btn btn-primary profile-button" type="submit">Submit</button>
+                        <button class="btn btn-primary profile-button mx-2" type="submit">Submit</button>
+
+                        <a class="btn btn-danger profile-button mx-2" th:href="@{/profile/delete}">Delete Profile</a>
+
                     </div>
                 </div>
             </form>

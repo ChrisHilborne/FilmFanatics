@@ -13,4 +13,6 @@ public interface UserService {
   Set<User> getAllUsers();
 
   User updateUser(String oldUsername, User user);
+
+  void deleteUser(String username);
 }

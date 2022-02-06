@@ -2,6 +2,7 @@ package io.chilborne.filmfanatic.service.implementation;
 
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.exception.UserNotFoundException;
+import io.chilborne.filmfanatic.exception.UserRemovalException;
 import io.chilborne.filmfanatic.exception.UsernameAlreadyExistsException;
 import io.chilborne.filmfanatic.repository.UserRepository;
 import io.chilborne.filmfanatic.service.UserService;
@@ -54,5 +55,13 @@ public class UserServiceImpl implements UserService {
       .orElseThrow(UserNotFoundException::new);
     toUpdate.update(user);
     return userRepo.save(toUpdate);
+  }
+
+  @Override
+  public void deleteUser(String username) {
+    logger.info("Deleting User {}", username);
+    if (!userRepo.deleteByUsername(username)) {
+      throw new UserRemovalException("Error while attempting to delete User");
+    }
   }
 }

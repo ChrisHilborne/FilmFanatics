@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/head :: head(title='Film Fanaticos')"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main>
+    <br><br>
+    <div class="container">
+        <div class="alert alert-danger" role="alert">
+            <p><strong>Are you sure you want to delete yourself permanently?</strong></p>
+            <br>
+            <form th:method="DELETE" th:action="@{user/delete}">
+            <p>
+                <button class="btn btn-danger profile-button mx-2" type="submit" >Confirm</button>
+                <a href="#" class="alert-link" onclick="history.back()">Go Back</a>
+            </p>
+            </form>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

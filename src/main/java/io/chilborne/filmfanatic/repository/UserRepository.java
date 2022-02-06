@@ -9,6 +9,9 @@ import java.util.Set;
 public interface UserRepository extends CrudRepository<User, Long> {
 
   Optional<User> findByUsernameIgnoreCase(String username);
+
   Set<User> findByActive(boolean active);
+
+  boolean deleteByUsername(String username);
 
 }
