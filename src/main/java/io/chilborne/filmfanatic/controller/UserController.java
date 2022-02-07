@@ -1,6 +1,7 @@
 package io.chilborne.filmfanatic.controller;
 
 import io.chilborne.filmfanatic.domain.User;
+import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -33,8 +33,17 @@ public class UserController {
     return "registration";
   }
 
+  @RequestMapping(path = "/profile", method = RequestMethod.GET)
+  public String profile(Model model, Principal principal) {
+    if (principal != null) {
+      profile(model, principal.getName());
+      return "profile";
+    }
+    else return "/";
+  }
+
   @RequestMapping(path = "/profile/{username}", method = RequestMethod.GET)
-  public String profile(Model model, HttpServletRequest request, @PathVariable String username) {
+  public String profile(Model model, @PathVariable String username) {
     User user = userService.getUser(username);
     model.addAttribute("user", userService.getUser(username));
     return "profile";
@@ -47,7 +56,7 @@ public class UserController {
     return "edit-profile";
   }
 
-  @RequestMapping(path = "/user/edit", method = RequestMethod.PUT)
+  @RequestMapping(path = "/user/edit", method = RequestMethod.POST)
   public String updateUser(@ModelAttribute User user, Model model, Principal principal) {
     String loggedInUsername = principal.getName();
     logger.info("Updating {} to {}", loggedInUsername, user);
@@ -61,8 +70,8 @@ public class UserController {
     return "delete-user";
   }
 
-  @RequestMapping(path = "/user/delete", method = RequestMethod.DELETE)
-  public String deleteUser(Model model, Principal principal) {
+  @RequestMapping(path = "/user/delete", method = {RequestMethod.GET})
+  public String deleteUser(Principal principal) throws UnauthorizedException {
     logger.info("Deleting User {}", principal.getName());
     userService.deleteUser(principal.getName());
     return "redirect:/logout";

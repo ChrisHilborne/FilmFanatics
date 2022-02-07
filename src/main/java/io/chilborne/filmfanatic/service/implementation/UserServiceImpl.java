@@ -58,10 +58,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void deleteUser(String username) {
     logger.info("Deleting User {}", username);
-    if (!userRepo.deleteByUsername(username)) {
-      throw new UserRemovalException("Error while attempting to delete User");
-    }
+   userRepo.deleteByUsername(username);
   }
 }

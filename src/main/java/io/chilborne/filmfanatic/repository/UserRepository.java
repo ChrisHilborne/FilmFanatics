@@ -12,6 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
   Set<User> findByActive(boolean active);
 
-  boolean deleteByUsername(String username);
+  void deleteByUsername(String username);
 
 }

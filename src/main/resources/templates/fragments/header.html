@@ -37,13 +37,16 @@
           <a class="btn btn-primary btn-sm" th:href="@{/register}">Register</a>
         </div>
         <div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
-          <a th:href="@{'/profile/' + ${username}}" class="link-primary mr-1" title="Profile">
-            <img class="rounded-circle" th:src="@{'/images/users/' + ${userImage}}" id="Avatar" alt="Avatar" height="50px" width="50px">
-          </a>
-          <a class="btn btn-primary btn-sm" th:href="@{/logout}">Logout</a>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" th:text="${#authentication.getPrincipal().getUsername()}"></button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.getPrincipal().getUsername()}}">Profile</a></li>
+              <li><a class="dropdown-item" th:href="@{'/films/?user=' + ${#authentication.getPrincipal().getUsername()}}">Films</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+            </ul>
+          </div>
         </div>
-          </form>
-      </div>
       </div>
     </div>
   </nav>

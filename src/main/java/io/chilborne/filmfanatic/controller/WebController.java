@@ -15,21 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class WebController {
 
   private final Logger logger = LoggerFactory.getLogger(WebController.class);
-  private final UserService userService;
-
-  public WebController(UserService userService) {
-    this.userService = userService;
-  }
 
   @RequestMapping(path = "/*", method = {RequestMethod.GET, RequestMethod.POST})
-  public String index(Model model, @CurrentSecurityContext(expression="authentication?.name")
-    String username) {
+  public String index(Model model) {
     logger.info("Connection... serving index.html");
-    if (username != null) {
-      String userImage = userService.getUser(username).getImage();
-      model.addAttribute("userImage", userImage);
-      model.addAttribute("username", username);
-    }
     return "index";
   }
 
