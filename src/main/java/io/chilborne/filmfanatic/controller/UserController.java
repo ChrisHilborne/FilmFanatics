@@ -1,5 +1,6 @@
 package io.chilborne.filmfanatic.controller;
 
+import io.chilborne.filmfanatic.domain.ChangePassword;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.UserService;
@@ -53,6 +54,7 @@ public class UserController {
   public String editProfile(Model model, Principal principal) {
     User user = userService.getUser(principal.getName());
     model.addAttribute("user", user);
+    model.addAttribute("changePassword", new ChangePassword());
     return "edit-profile";
   }
 
@@ -63,6 +65,13 @@ public class UserController {
     User updated = userService.updateUser(loggedInUsername, user);
     model.addAttribute("user", updated);
     return "redirect:/profile/" + user.getUsername();
+  }
+
+  @RequestMapping(path = "/user/change-password", method = RequestMethod.POST)
+  public String changePassword(@ModelAttribute ChangePassword changePassword, Model model, Principal principal) {
+    logger.info("Changing Password for {}", principal.getName());
+    userService.changePassword(principal.getName(),changePassword.getOldPassword(),changePassword.getNewPassword());
+    return "redirect:/profile/edit";
   }
 
   @RequestMapping(path = "/profile/delete", method = RequestMethod.GET)
