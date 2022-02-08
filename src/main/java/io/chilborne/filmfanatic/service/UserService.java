@@ -2,6 +2,7 @@ package io.chilborne.filmfanatic.service;
 
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -18,4 +19,6 @@ public interface UserService {
   void deleteUser(String username);
 
   void changePassword(String username, String oldPassword, String newPassword) throws UnauthorizedException;
+
+  void saveUserImage(String username, MultipartFile imageFile);
 }

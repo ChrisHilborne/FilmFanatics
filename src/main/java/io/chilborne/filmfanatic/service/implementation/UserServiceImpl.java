@@ -5,14 +5,18 @@ import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.exception.UserNotFoundException;
 import io.chilborne.filmfanatic.exception.UsernameAlreadyExistsException;
 import io.chilborne.filmfanatic.repository.UserRepository;
+import io.chilborne.filmfanatic.service.FileService;
 import io.chilborne.filmfanatic.service.UserService;
+import io.chilborne.filmfanatic.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Set;
 
 @Service
@@ -20,9 +24,11 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepo;
   private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+  private final FileService fileService;
 
-  public UserServiceImpl(UserRepository userRepo) {
+  public UserServiceImpl(UserRepository userRepo, @Qualifier("user-image-file-service") FileService fileService) {
     this.userRepo = userRepo;
+    this.fileService = fileService;
   }
 
   @Override
@@ -70,15 +76,33 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void changePassword(String username, String oldPassword, String newPassword) {
     logger.info("Changing User's {} password", username);
-    User toChange = userRepo.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    User toUpdate = userRepo.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     // check user has entered correct old password
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(-1);
-    if (!encoder.matches(oldPassword, toChange.getPassword())) {
+    if (!encoder.matches(oldPassword, toUpdate.getPassword())) {
       throw new UnauthorizedException("Authorization Failure");
     }
     else {
-      toChange.setPassword(encoder.encode(newPassword));
-      userRepo.save(toChange);
+      toUpdate.setPassword(encoder.encode(newPassword));
+      userRepo.save(toUpdate);
+    }
+  }
+
+  @Override
+  @Transactional
+  public void saveUserImage(String username, MultipartFile imageFile) {
+    String imageFileName = StringUtil.getUserImageFileName(username, imageFile.getContentType());
+    User toUpdate = userRepo.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+
+    // check to see if imageFileName is different from that saved with user
+    if (!toUpdate.getImage().equals(imageFileName)) {
+      // delete existing file, save new file and update User
+      fileService.saveUserImage(imageFile, imageFileName, toUpdate.getImage());
+      toUpdate.setImage(imageFileName);
+      userRepo.save(toUpdate);
+    }
+    else {
+      fileService.saveUserImage(imageFile, imageFileName);
     }
   }
 }

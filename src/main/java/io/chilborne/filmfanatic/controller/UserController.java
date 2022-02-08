@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -41,6 +42,13 @@ public class UserController {
       return "profile";
     }
     else return "/";
+  }
+
+  @RequestMapping(path = "/user/image", method = RequestMethod.POST)
+  public String userImage(@RequestParam("image")MultipartFile imageFile, Principal principal) {
+    logger.info("Saving User {} userImage", principal.getName());
+    userService.saveUserImage(principal.getName(), imageFile);
+    return "redirect:/profile/edit";
   }
 
   @RequestMapping(path = "/profile/{username}", method = RequestMethod.GET)

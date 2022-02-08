@@ -40,7 +40,7 @@
           <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" th:text="${#authentication.getPrincipal().getUsername()}"></button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.getPrincipal().getUsername()}}">Profile</a></li>
+              <li><a class="dropdown-item" th:href="@{/profile/}">Profile</a></li>
               <li><a class="dropdown-item" th:href="@{'/films/?user=' + ${#authentication.getPrincipal().getUsername()}}">Films</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
