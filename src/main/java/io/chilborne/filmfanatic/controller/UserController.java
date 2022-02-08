@@ -51,12 +51,6 @@ public class UserController {
     return "redirect:/profile/edit";
   }
 
-  @RequestMapping(path = "/profile/{username}", method = RequestMethod.GET)
-  public String profile(Model model, @PathVariable String username) {
-    User user = userService.getUser(username);
-    model.addAttribute("user", userService.getUser(username));
-    return "profile";
-  }
 
   @RequestMapping(path = "/profile/edit", method = RequestMethod.GET)
   public String editProfile(Model model, Principal principal) {
