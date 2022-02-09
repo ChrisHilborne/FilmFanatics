@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -52,6 +53,40 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles;
 
+
+  public void addFilm(Film film) {
+    films.add(film);
+  }
+
+  public void removeFilm(Film film) {
+    films.remove(film);
+  }
+
+  public void addReview(Review review) {
+    filmsReviews.add(review);
+  }
+
+  public void removeReview(Review review) {
+    filmsReviews.remove(review);
+  }
+
+  public void addScore(Score score) {
+    scores.add(score);
+  }
+
+  public void removeScore(Score score) {
+    scores.remove(score);
+  }
+
+  public void addRole(Role role) {
+    roles.add(role);
+  }
+
+  public void removeRole(Role role) {
+    roles.remove(role);
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -95,4 +130,5 @@ public class User {
       this.surname = user.getSurname();
     }
   }
+
 }

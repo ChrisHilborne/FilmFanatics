@@ -21,4 +21,6 @@ public interface UserService {
   void changePassword(String username, String oldPassword, String newPassword) throws UnauthorizedException;
 
   void saveUserImage(String username, MultipartFile imageFile);
+
+  User add(User user);
 }

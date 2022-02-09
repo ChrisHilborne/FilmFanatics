@@ -4,6 +4,7 @@ import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.exception.UserNotFoundException;
 import io.chilborne.filmfanatic.exception.UsernameAlreadyExistsException;
+import io.chilborne.filmfanatic.repository.RoleRepository;
 import io.chilborne.filmfanatic.repository.UserRepository;
 import io.chilborne.filmfanatic.service.FileService;
 import io.chilborne.filmfanatic.service.UserService;
@@ -16,18 +17,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepo;
-  private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+  private final RoleRepository roleRepo;
   private final FileService fileService;
 
-  public UserServiceImpl(UserRepository userRepo, @Qualifier("user-image-file-service") FileService fileService) {
+  private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+  public UserServiceImpl(UserRepository userRepo,
+                         RoleRepository roleRepo,
+                         @Qualifier("user-image-file-service") FileService fileService) {
     this.userRepo = userRepo;
+    this.roleRepo = roleRepo;
     this.fileService = fileService;
   }
 
@@ -40,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getUser(long id) {
+    logger.info("Fetching User id: {}", id);
     return userRepo.findById(id)
       .orElseThrow(UserNotFoundException::new);
   }
@@ -52,7 +60,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public User updateUser(String oldUsername, User user) {
-    logger.info("Updating {} to " + user, oldUsername);
+    logger.info("Updating User {} username to " + user.getUsername(), oldUsername);
     // check if username is new
     if (!oldUsername.equalsIgnoreCase(user.getUsername())
     // and check if it's available
@@ -104,5 +112,16 @@ public class UserServiceImpl implements UserService {
     else {
       fileService.saveUserImage(imageFile, imageFileName);
     }
+  }
+
+  @Override
+  public User add(User user) {
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    user.setPassword(encoder.encode(user.getPassword()));
+    user.setCreationDate(LocalDate.now());
+    user.setActive(true);
+    user.addRole(roleRepo.findByNameIgnoreCase("USER"));
+
+    return userRepo.save(user);
   }
 }

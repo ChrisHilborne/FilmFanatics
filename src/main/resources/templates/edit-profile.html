@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-<head th:replace="fragments/head::head(title='Film Fanaticos')"></head>
+<head th:replace="fragments/head::head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
 
-<main>
+<main class="body-color">
     <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -40,67 +40,70 @@
         </div>
     </div>
 
-
-    <div class="container rounded bg-white mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-4 border-right">
-                <form></form>
-                <form th:method="POST" enctype="multipart/form-data" action="/user/image">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <label for="image-file">
-                            <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${user.image}}">
-                        </label>
-                        <div class="row">
-                            <input class="px-2 mr-4" id="image-file" type="file" name="image" />
-                        </div>
-                        <div class="row mt-2">
-                            <input type="submit" value="Change Picture" />
-                        </div>
-                        <br/>
+    <div class="container fill">
+        <div class="row center align-items-center">
+            <div class="container rounded bg-white mt-5 mb-5">
+                <div class="row">
+                    <div class="col-md-4 border-right">
+                        <form></form>
+                        <form th:method="POST" enctype="multipart/form-data" action="/user/image">
+                            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                                <label for="image-file">
+                                    <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${user.image}}">
+                                </label>
+                                <div class="row">
+                                    <input class="px-2 mr-4" id="image-file" type="file" name="image" />
+                                </div>
+                                <div class="row mt-2">
+                                    <input type="submit" value="Change Picture" />
+                                </div>
+                                <br/>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="col-md-4 border-right">
-                <form th:method="POST" th:object="${user}" th:action="@{/user/edit}">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">Edit Profile</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="labels">Username</label>
-                                <input type="text" th:placeholder="${user.username}" th:field="*{username}" class="form-control">
+                    <div class="col-md-4 border-right">
+                        <form th:method="POST" th:object="${user}" th:action="@{/user/edit}">
+                            <div class="p-3 py-5">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="text-right">Edit Profile</h4>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <label class="labels">Username</label>
+                                        <input type="text" th:placeholder="${user.username}" th:field="*{username}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12 text-center">
+                                        <button type="button" data-bs-target="#changePasswordModal" class="btn btn-secondary" data-bs-toggle="modal">
+                                            Change Password
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <label class="labels">Name</label>
+                                        <input type="text" th:placeholder="${user.name}" th:field="*{name}" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="labels">Surname</label>
+                                        <input type="text" th:placeholder="${user.surname}" th:field="*{surname}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label class="labels">Email</label>
+                                        <input type="email"  th:placeholder="${user.email}" th:field="*{email}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <button class="btn btn-primary profile-button mx-2" type="submit">Submit</button>
+                                    <a class="btn btn-danger profile-button mx-2" th:href="@{/profile/delete}">Delete Profile</a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12 text-center">
-                                <button type="button" data-bs-target="#changePasswordModal" class="btn btn-secondary" data-bs-toggle="modal">
-                                    Change Password
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <label class="labels">Name</label>
-                                <input type="text" th:placeholder="${user.name}" th:field="*{name}" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="labels">Surname</label>
-                                <input type="text" th:placeholder="${user.surname}" th:field="*{surname}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <label class="labels">Email</label>
-                                <input type="email"  th:placeholder="${user.email}" th:field="*{email}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="mt-5 text-center">
-                            <button class="btn btn-primary profile-button mx-2" type="submit">Submit</button>
-                            <a class="btn btn-danger profile-button mx-2" th:href="@{/profile/delete}">Delete Profile</a>
-                        </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

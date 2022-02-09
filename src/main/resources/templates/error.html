@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/head :: head(title='Film Fanaticos')"></head>
+<head th:replace="fragments/head :: head"></head>
 <header th:replace="fragments/header :: header"></header>
 <body>
-<main>
-    <br><br>
-    <div class="container">
-        <div class="alert alert-danger" role="alert">
-            <p><strong>Whoops! Something went wrong.</strong></p>
-            <p th:text="${message}"></p>
-            <p th:text="${url}"></p>
-            <p><a href="#" class="alert-link" onclick="history.back()">Go Back</a></p>
+<main class="body-color">
+    <div class="container fill">
+        <div class="row center align-items-center">
+                <br><br>
+            <div class="container">
+                <div class="alert alert-danger" role="alert">
+                    <p><strong>Whoops! Something went wrong.</strong></p>
+                    <p th:text="${message}"></p>
+                    <p th:text="${url}"></p>
+                    <p><a href="#" class="alert-link" onclick="history.back()">Go Back</a></p>
+                </div>
+            </div>
         </div>
     </div>
 </main>

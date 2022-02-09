@@ -35,10 +35,18 @@ public class UserController {
     return "registration";
   }
 
+  @RequestMapping(path = "/user/register", method = RequestMethod.GET)
+  public String registerNewUser(Model model, @ModelAttribute User user) {
+    User newUser = userService.add(user);
+    model.addAttribute("username", user.getUsername());
+    return "/user/register/image";
+  }
+
   @RequestMapping(path = "/profile", method = RequestMethod.GET)
   public String profile(Model model, Principal principal) {
     if (principal != null) {
-      profile(model, principal.getName());
+      User user = userService.getUser(principal.getName());
+      model.addAttribute("user", user);
       return "profile";
     }
     else return "/";

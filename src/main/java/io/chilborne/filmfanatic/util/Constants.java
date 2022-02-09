@@ -7,7 +7,7 @@ public class Constants {
 
   public static final String LOGIN_FAILURE = "/login?error=true";
   public static final String LOGIN_URL = "/login";
-  public static final String LOGIN_SUCCESS_URL = "/?message=login";
+  public static final String LOGIN_SUCCESS_URL = "/profile?message=login";
 
   public static final String LOGOUT_URL = "/logout";
   public static final String LOGOUT_SUCCESS_URL = "/?message=logout";
