@@ -13,4 +13,6 @@ public class Constants {
   public static final String LOGOUT_SUCCESS_URL = "/?message=logout";
   public static final String JSESSIONID = "JSESSIONID";
 
+  public static final String DEFAULT_PROFILE_IMAGE ="xsRV^Y3+env9+!3=g77H.jpg";
+
 }

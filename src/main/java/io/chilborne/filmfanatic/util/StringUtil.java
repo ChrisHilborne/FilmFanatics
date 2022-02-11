@@ -4,11 +4,8 @@ import java.util.Locale;
 
 public class StringUtil {
 
-  public static String getUserImageFileName(String username, String contentType) {
-    String fileName = username
-      .toLowerCase(Locale.ROOT).replace(' ', '-')
-      + getFileExtension(contentType);
-    return fileName;
+  public static String getUserImageFileName(long userId, String contentType) {
+    return userId + getFileExtension(contentType);
   }
 
   private static String getFileExtension(String contentType) {

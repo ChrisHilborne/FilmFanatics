@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head::head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<main class="body-color center">
+    <div class="container fill">
+        <div class="row center align-items-center">
+            <div class="container mx-auto rounded">
+                <!--- content goes here --->
+                <div class="col border-right">
+                    <form></form>
+                    <form th:method="POST" enctype="multipart/form-data" th:object="${user}" th:action="@{/register}">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-right">Register</h4>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label class="labels">Username</label>
+                                    <input type="text" placeholder="Username" th:field="*{username}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12 ">
+                                    <label class="labels">Password</label>
+                                    <input type="password" placeholder="Password" th:field="*{password}" class="form-control">
+                                    <input type="password" placeholder="Repeat Password" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <label for="userImage" class="form-label">Profile Picture</label>
+                                <input class="form-control" type="file" name="userImage" id="userImage">
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="labels">Name</label>
+                                    <input type="text" placeholder="Name" th:field="*{name}" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="labels">Surname</label>
+                                    <input type="text" placeholder="Surname" th:field="*{surname}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label class="labels">Email</label>
+                                    <input type="email"  placeholder="email" th:field="*{email}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label class="labels">Birthdate</label>
+                                    <div class="input-group date">
+                                        <input type="datetime" class="form-control" id="birthDate" autocomplete="off" th:field="*{birthDate}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-5 text-center">
+                                <button class="btn btn-primary profile-button mx-2" type="submit">Confirm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+<script>
+    $('.input-group.date').datepicker({
+        autoclose: true,
+        todayHighlight: false
+    });
+</script>
+</body>
+</html>

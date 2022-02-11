@@ -29,17 +29,19 @@ public class UserController {
     return "login";
   }
 
-  @RequestMapping(path = "/registration", method = RequestMethod.GET)
+  @RequestMapping(path = "/register", method = RequestMethod.GET)
   public String registerUser(Model model) {
     model.addAttribute("user", new User());
-    return "registration";
+    return "register";
   }
 
-  @RequestMapping(path = "/user/register", method = RequestMethod.GET)
-  public String registerNewUser(Model model, @ModelAttribute User user) {
+  @RequestMapping(path = "/register", method = RequestMethod.POST)
+  public String registerNewUser(Model model, @RequestParam("userImage")MultipartFile imageFile, @ModelAttribute User user) {
     User newUser = userService.add(user);
-    model.addAttribute("username", user.getUsername());
-    return "/user/register/image";
+    if (!imageFile.isEmpty()) {
+      userService.saveUserImage(newUser.getUsername(), imageFile);
+    }
+    return "login";
   }
 
   @RequestMapping(path = "/profile", method = RequestMethod.GET)
@@ -53,7 +55,7 @@ public class UserController {
   }
 
   @RequestMapping(path = "/user/image", method = RequestMethod.POST)
-  public String userImage(@RequestParam("image")MultipartFile imageFile, Principal principal) {
+  public String userImage(@RequestParam("userImage")MultipartFile imageFile, Principal principal) {
     logger.info("Saving User {} userImage", principal.getName());
     userService.saveUserImage(principal.getName(), imageFile);
     return "redirect:/profile/edit";
@@ -74,7 +76,7 @@ public class UserController {
     logger.info("Updating {} to {}", loggedInUsername, user);
     User updated = userService.updateUser(loggedInUsername, user);
     model.addAttribute("user", updated);
-    return "redirect:/profile/" + user.getUsername();
+    return "redirect:/profile/";
   }
 
   @RequestMapping(path = "/user/change-password", method = RequestMethod.POST)

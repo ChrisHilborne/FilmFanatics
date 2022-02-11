@@ -1,5 +1,6 @@
 package io.chilborne.filmfanatic.util;
 
+import org.hibernate.query.criteria.internal.PathSource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,12 @@ public class FileUtils {
     FileUtils.resourceLoader = resourceLoader;
   }
 
+  private static Path getRootResourcePath() throws IOException {
+    return Paths.get(resourceLoader.getResource("classpath:").getURI());
+  }
+
   public static Path getResourcePath(String directory, String fileName) throws IOException {
-    Path path = Paths.get(resourceLoader.getResource("classpath:" + directory + File.separator + fileName).getURI());
+    Path path = Paths.get(getRootResourcePath() + File.separator + directory + File.separator + fileName);
     return path;
   }
 }

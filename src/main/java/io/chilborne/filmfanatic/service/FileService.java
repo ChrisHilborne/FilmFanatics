@@ -4,7 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
 
-  void saveUserImage(MultipartFile imageFile, String imageFileName);
+  void saveFile(MultipartFile file, String fileName);
 
-  void saveUserImage(MultipartFile imageFile, String imageFileName, String oldImageFileName);
+
+  void deleteFile(String fileName);
 }

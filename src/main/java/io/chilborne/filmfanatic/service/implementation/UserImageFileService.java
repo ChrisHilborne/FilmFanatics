@@ -24,34 +24,31 @@ public class UserImageFileService implements FileService {
   private final Logger logger = LoggerFactory.getLogger(UserImageFileService.class);
 
   @Override
-  public void saveUserImage(MultipartFile imageFile, String imageFileName) throws ImageUploadException {
-    try {
-      Path toCopy = FileUtils.getResourcePath(userImageUploadDirectory, imageFileName);
-      Files.copy(imageFile.getInputStream(), toCopy, StandardCopyOption.REPLACE_EXISTING);
+  public void saveFile(MultipartFile file, String fileName) throws ImageUploadException {
+    try (InputStream fileStream = file.getInputStream()) {
+      Path imagePath = FileUtils.getResourcePath(userImageUploadDirectory, fileName);
+      if (Files.exists(imagePath)) {
+        Files.copy(fileStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
+      }
+      else {
+        Files.write(imagePath, fileStream.readAllBytes(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+      }
     } catch (IOException e) {
-      logger.error("Error saving file {}", imageFileName, e);
+      logger.error("Error saving file {}", fileName, e);
       throw new ImageUploadException("Image Upload Failed", e);
     }
   }
 
   @Override
-  public void saveUserImage(MultipartFile imageFile, String newImageFileName, String oldImageFileName)
-    throws ImageUploadException
-  {
+  public void deleteFile(String fileName) {
     try {
-      // delete old image
-      Path toDeletePath = FileUtils.getResourcePath(userImageUploadDirectory, oldImageFileName);
-      System.out.println("To delete path: " + toDeletePath.toAbsolutePath());
-      Files.deleteIfExists(toDeletePath);
-
-      // save new image
-      Path toSavePath = FileUtils.getResourcePath(userImageUploadDirectory, "");
-      System.out.println("To save path: " + toSavePath.toAbsolutePath());
-      File newImageFile = new File(toSavePath + File.separator + newImageFileName);
-      imageFile.transferTo(newImageFile);
+      Path toDelete = FileUtils.getResourcePath(userImageUploadDirectory, fileName);
+      Files.deleteIfExists(toDelete);
     } catch (IOException e) {
+      logger.error("Error when deleting image file {}", fileName);
       throw new ImageUploadException("Image Upload Failed", e);
     }
   }
+
 
 }

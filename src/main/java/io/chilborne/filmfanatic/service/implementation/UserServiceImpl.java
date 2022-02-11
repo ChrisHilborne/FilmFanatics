@@ -12,14 +12,18 @@ import io.chilborne.filmfanatic.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
+
+import static io.chilborne.filmfanatic.util.Constants.DEFAULT_PROFILE_IMAGE;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User getUser(String username) {
     logger.info("Fetching User {}", username);
-    return userRepo.findByUsernameIgnoreCase(username)
+    return userRepo.findByUsername(username)
       .orElseThrow(UserNotFoundException::new);
   }
 
@@ -60,17 +64,24 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public User updateUser(String oldUsername, User user) {
-    logger.info("Updating User {} username to " + user.getUsername(), oldUsername);
+    logger.info("Updating User {}", oldUsername);
     // check if username is new
-    if (!oldUsername.equalsIgnoreCase(user.getUsername())
+    if (!oldUsername.equals(user.getUsername())
     // and check if it's available
-      && userRepo.findByUsernameIgnoreCase(user.getUsername()).isPresent()) {
-      throw new UsernameAlreadyExistsException(user.getUsername() + " unavailable.");
+      && userRepo.findByUsername(user.getUsername()).isPresent()) {
+      throw new UsernameAlreadyExistsException("Username unavailable.");
     }
-    User toUpdate = userRepo.findByUsernameIgnoreCase(oldUsername)
+    User toUpdate = userRepo.findByUsername(oldUsername)
       .orElseThrow(UserNotFoundException::new);
     toUpdate.update(user);
+    updateSecurityContext(toUpdate.getUsername());
     return userRepo.save(toUpdate);
+  }
+
+  private void updateSecurityContext(String username) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    User userDetails = (User) authentication.getPrincipal();
+    userDetails.setUsername(username);
   }
 
   @Override
@@ -84,7 +95,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void changePassword(String username, String oldPassword, String newPassword) {
     logger.info("Changing User's {} password", username);
-    User toUpdate = userRepo.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    User toUpdate = userRepo.findByUsername(username).orElseThrow(UserNotFoundException::new);
     // check user has entered correct old password
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(-1);
     if (!encoder.matches(oldPassword, toUpdate.getPassword())) {
@@ -99,28 +110,28 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void saveUserImage(String username, MultipartFile imageFile) {
-    String imageFileName = StringUtil.getUserImageFileName(username, imageFile.getContentType());
-    User toUpdate = userRepo.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
+    User toUpdate = userRepo.findByUsername(username).orElseThrow(UserNotFoundException::new);
+    String imageFileName = StringUtil.getUserImageFileName(toUpdate.getId(), imageFile.getContentType());
 
-    // check to see if imageFileName is different from that saved with user
     if (!toUpdate.getImage().equals(imageFileName)) {
-      // delete existing file, save new file and update User
-      fileService.saveUserImage(imageFile, imageFileName, toUpdate.getImage());
       toUpdate.setImage(imageFileName);
       userRepo.save(toUpdate);
     }
-    else {
-      fileService.saveUserImage(imageFile, imageFileName);
-    }
+    fileService.saveFile(imageFile, imageFileName);
   }
+
 
   @Override
   public User add(User user) {
+    if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+      throw new UsernameAlreadyExistsException("Username not available");
+    }
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     user.setPassword(encoder.encode(user.getPassword()));
     user.setCreationDate(LocalDate.now());
     user.setActive(true);
     user.addRole(roleRepo.findByNameIgnoreCase("USER"));
+    user.setImage(DEFAULT_PROFILE_IMAGE);
 
     return userRepo.save(user);
   }

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 
-  Optional<User> findByUsernameIgnoreCase(String username);
+  Optional<User> findByUsername(String username);
 
   Set<User> findByActive(boolean active);
 
