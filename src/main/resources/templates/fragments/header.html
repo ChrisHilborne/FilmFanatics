@@ -1,5 +1,5 @@
 <header xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
-  <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark" aria-label="Navbar">
+  <nav class="navbar static-top navbar-expand-md navbar-dark bg-dark" aria-label="Navbar">
     <div class="container-fluid">
       <a class="navbar-brand" th:href="@{/}">Film Fanátic@s</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,11 +26,13 @@
             </ul>
           </li>
         </ul>
-        <form class="d-flex align-items-center">
+        <form></form>
+        <form class="d-flex align-items-center" th:method="get" th:action="@{/films}">
           <input class="form-control" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success mx-2" type="submit">
             <i class="fas fa-search"></i>
           </button>
+        </form>
         <div class="d-flex align-items-center" sec:authorize="!isAuthenticated()">
           <a th:href="@{/login}" class="link-primary">Login</a>
           <small class="mx-1" style="color:rgba(209, 204, 192,1.0)" >or</small>

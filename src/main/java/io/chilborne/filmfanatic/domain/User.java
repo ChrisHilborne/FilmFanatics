@@ -1,6 +1,7 @@
 package io.chilborne.filmfanatic.domain;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,15 +49,15 @@ public class User implements UserDetails {
 
   @Column(name = "films_reviews")
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Review> filmsReviews;
+  private Set<Review> filmsReviews = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Film> films;
+  private Set<Film> films = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Score> scores;
+  private Set<Score> scores = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles;
+  private Set<Role> roles = new HashSet<>();
 
 
   public void addFilm(Film film) {
