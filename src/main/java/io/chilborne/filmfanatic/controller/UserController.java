@@ -1,16 +1,19 @@
 package io.chilborne.filmfanatic.controller;
 
-import io.chilborne.filmfanatic.domain.ChangePassword;
+import io.chilborne.filmfanatic.domain.dto.ChangePasswordForm;
 import io.chilborne.filmfanatic.domain.User;
+import io.chilborne.filmfanatic.domain.dto.UserApplicationForm;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -31,13 +34,19 @@ public class UserController {
 
   @RequestMapping(path = "/register", method = RequestMethod.GET)
   public String registerUser(Model model) {
-    model.addAttribute("user", new User());
+    model.addAttribute("userApplicationForm", new UserApplicationForm());
     return "register";
   }
 
   @RequestMapping(path = "/register", method = RequestMethod.POST)
-  public String registerNewUser(Model model, @RequestParam("userImage")MultipartFile imageFile, @ModelAttribute User user) {
-    User newUser = userService.add(user);
+  public String registerNewUser(@RequestParam("userImage")MultipartFile imageFile,
+                                @ModelAttribute @Valid UserApplicationForm userApplicationForm,
+                                BindingResult result)
+  {
+    if (result.hasErrors()) {
+      return "register";
+    }
+    User newUser = userService.add(userApplicationForm.buildUser());
     if (!imageFile.isEmpty()) {
       userService.saveUserImage(newUser.getUsername(), imageFile);
     }
@@ -66,7 +75,7 @@ public class UserController {
   public String editProfile(Model model, Principal principal) {
     User user = userService.getUser(principal.getName());
     model.addAttribute("user", user);
-    model.addAttribute("changePassword", new ChangePassword());
+    model.addAttribute("changePassword", new ChangePasswordForm());
     return "edit-profile";
   }
 
@@ -80,9 +89,18 @@ public class UserController {
   }
 
   @RequestMapping(path = "/user/change-password", method = RequestMethod.POST)
-  public String changePassword(@ModelAttribute ChangePassword changePassword, Model model, Principal principal) {
+  public String changePassword(@Valid @ModelAttribute("changePassword") ChangePasswordForm changePassword,
+                               BindingResult result,
+                               Model model,
+                               Principal principal)
+  {
+    if (result.hasErrors()) {
+      model.addAttribute("user", userService.getUser(principal.getName()));
+      model.addAttribute("error", true);
+      return "edit-profile";
+    }
     logger.info("Changing Password for {}", principal.getName());
-    userService.changePassword(principal.getName(),changePassword.getOldPassword(),changePassword.getNewPassword());
+    userService.changePassword(principal.getName(), changePassword.getOldPassword(), changePassword.getPassword());
     return "redirect:/profile/edit";
   }
 
