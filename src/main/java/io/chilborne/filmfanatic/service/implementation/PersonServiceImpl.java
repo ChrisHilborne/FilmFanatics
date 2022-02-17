@@ -4,8 +4,10 @@ import io.chilborne.filmfanatic.domain.Person;
 import io.chilborne.filmfanatic.repository.PersonRepository;
 import io.chilborne.filmfanatic.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class PersonServiceImpl implements PersonService {
 
   private final PersonRepository personRepo;

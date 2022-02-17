@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @Slf4j
@@ -30,12 +31,15 @@ public class PersonController {
   @RequestMapping(path = "person/add", method = RequestMethod.POST)
   public String addPerson(@ModelAttribute @Valid Person person,
                           BindingResult result,
-                          Model model)
+                          Model model,
+                          Principal principal)
   {
     if (result.hasErrors()) {
+      log.error("Creation of Person {} failed because: {}", person, result.getAllErrors().toArray());
       return "add-person";
     }
     else {
+      log.info("User {} added Person {}", principal.getName(), person);
       Person added = service.addPerson(person);
       model.addAttribute("success", true);
       return "add-person";

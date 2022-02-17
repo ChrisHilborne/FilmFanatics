@@ -3,6 +3,8 @@ package io.chilborne.filmfanatic.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity(name = "people")
@@ -12,10 +14,13 @@ public class Person {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+  @NotEmpty(message = "{field.mandatory}")
   @Column(nullable = false)
   private String name;
+  @NotEmpty(message = "{field.mandatory}")
   @Column(nullable = false)
   private String surname;
+  @NotNull(message = "{field.mandatory}")
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private PersonTypeEnum type;
