@@ -2,6 +2,7 @@ package io.chilborne.filmfanatic.controller;
 
 import io.chilborne.filmfanatic.domain.dto.ChangePasswordForm;
 import io.chilborne.filmfanatic.domain.User;
+import io.chilborne.filmfanatic.domain.dto.EditUserDTO;
 import io.chilborne.filmfanatic.domain.dto.UserApplicationForm;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.UserService;
@@ -74,18 +75,30 @@ public class UserController {
   @RequestMapping(path = "/profile/edit", method = RequestMethod.GET)
   public String editProfile(Model model, Principal principal) {
     User user = userService.getUser(principal.getName());
-    model.addAttribute("user", user);
+    model.addAttribute("editUserDTO", new EditUserDTO(user));
+    model.addAttribute("image", user.getImage());
     model.addAttribute("changePassword", new ChangePasswordForm());
     return "edit-profile";
   }
 
   @RequestMapping(path = "/user/edit", method = RequestMethod.POST)
-  public String updateUser(@ModelAttribute User user, Model model, Principal principal) {
-    String loggedInUsername = principal.getName();
-    logger.info("Updating {} to {}", loggedInUsername, user);
-    User updated = userService.updateUser(loggedInUsername, user);
-    model.addAttribute("user", updated);
-    return "redirect:/profile/";
+  public String updateUser(@ModelAttribute @Valid EditUserDTO userDto,
+                           BindingResult result,
+                           Model model,
+                           Principal principal)
+  {
+    if (result.hasErrors()) {
+      model.addAttribute("image", userDto.getImage());
+      model.addAttribute("changePassword", new ChangePasswordForm());
+      return "edit-profile";
+    }
+    else {
+      String loggedInUsername = principal.getName();
+      logger.info("Updating {} to {}", loggedInUsername, userDto);
+      User updated = userService.updateUser(loggedInUsername, userDto.map());
+      model.addAttribute("user", updated);
+      return "redirect:/profile/";
+    }
   }
 
   @RequestMapping(path = "/user/change-password", method = RequestMethod.POST)
