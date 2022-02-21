@@ -1,6 +1,7 @@
 package io.chilborne.filmfanatic.controller;
 
 import io.chilborne.filmfanatic.domain.Film;
+import io.chilborne.filmfanatic.domain.PersonTypeEnum;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.PersonService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+
+import static io.chilborne.filmfanatic.domain.PersonTypeEnum.*;
 
 @Controller
 @Slf4j
@@ -32,6 +35,11 @@ public class FilmController {
     Film newFilm = new Film();
     newFilm.setUser((User) authentication.getPrincipal());
     model.addAttribute("film", newFilm);
+    model.addAttribute("directors", personService.getPeopleByType(DIRECTOR));
+    model.addAttribute("actors", personService.getPeopleByType(ACTOR));
+    model.addAttribute("screenwriters", personService.getPeopleByType(SCREEN_WRITER));
+    model.addAttribute("cinematographers", personService.getPeopleByType(CINEMATOGRAPHER));
+    model.addAttribute("composers", personService.getPeopleByType(COMPOSER));
     return "create-film";
   }
 
