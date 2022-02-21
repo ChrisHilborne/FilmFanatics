@@ -3,6 +3,7 @@ package io.chilborne.filmfanatic.controller;
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.service.FilmService;
+import io.chilborne.filmfanatic.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,12 +20,14 @@ import javax.validation.Valid;
 public class FilmController {
 
   private final FilmService filmService;
+  private final PersonService personService;
 
-  public FilmController(FilmService filmService) {
+  public FilmController(FilmService filmService, PersonService personService) {
     this.filmService = filmService;
+    this.personService = personService;
   }
 
-  @RequestMapping(path = "films/create", method = RequestMethod.GET)
+  @RequestMapping(path = "films/add", method = RequestMethod.GET)
   public String createFilm(Model model, Authentication authentication) {
     Film newFilm = new Film();
     newFilm.setUser((User) authentication.getPrincipal());
@@ -32,7 +35,7 @@ public class FilmController {
     return "create-film";
   }
 
-  @RequestMapping(path = "films/create", method = RequestMethod.POST)
+  @RequestMapping(path = "films/add", method = RequestMethod.POST)
   public String createFilm(@Valid @ModelAttribute("film") Film film,
                            BindingResult result,
                            Model model)
