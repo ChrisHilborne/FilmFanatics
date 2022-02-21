@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserApplicationForm extends PasswordForm {
+public class CreateUserDTO extends PasswordDTO {
 
   @NotBlank(message = "{field.mandatory}")
   private String username;

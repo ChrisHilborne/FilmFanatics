@@ -40,6 +40,17 @@ public class EditUserDTO {
     user.setEmail(email);
     return user;
   }
+
+  @Override
+  public String toString() {
+    return "EditUserDTO{" +
+      "username='" + username + '\'' +
+      ", name='" + name + '\'' +
+      ", surname='" + surname + '\'' +
+      ", email='" + email + '\'' +
+      ", image='" + image + '\'' +
+      '}';
+  }
 }
 
 

@@ -1,13 +1,14 @@
 package io.chilborne.filmfanatic.controller;
 
-import io.chilborne.filmfanatic.domain.dto.ChangePasswordForm;
+import io.chilborne.filmfanatic.domain.dto.ChangePasswordDTO;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.domain.dto.EditUserDTO;
-import io.chilborne.filmfanatic.domain.dto.UserApplicationForm;
+import io.chilborne.filmfanatic.domain.dto.CreateUserDTO;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,19 +36,19 @@ public class UserController {
 
   @RequestMapping(path = "/register", method = RequestMethod.GET)
   public String registerUser(Model model) {
-    model.addAttribute("userApplicationForm", new UserApplicationForm());
+    model.addAttribute("createUserDTO", new CreateUserDTO());
     return "register";
   }
 
   @RequestMapping(path = "/register", method = RequestMethod.POST)
   public String registerNewUser(@RequestParam("userImage")MultipartFile imageFile,
-                                @ModelAttribute @Valid UserApplicationForm userApplicationForm,
+                                @ModelAttribute @Valid CreateUserDTO createUserDTO,
                                 BindingResult result)
   {
     if (result.hasErrors()) {
       return "register";
     }
-    User newUser = userService.add(userApplicationForm.buildUser());
+    User newUser = userService.add(createUserDTO.buildUser());
     if (!imageFile.isEmpty()) {
       userService.saveUserImage(newUser.getUsername(), imageFile);
     }
@@ -76,44 +77,42 @@ public class UserController {
   public String editProfile(Model model, Principal principal) {
     User user = userService.getUser(principal.getName());
     model.addAttribute("editUserDTO", new EditUserDTO(user));
-    model.addAttribute("image", user.getImage());
-    model.addAttribute("changePassword", new ChangePasswordForm());
+    model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
     return "edit-profile";
   }
 
   @RequestMapping(path = "/user/edit", method = RequestMethod.POST)
-  public String updateUser(@ModelAttribute @Valid EditUserDTO userDto,
+  public String updateUser(@Valid @ModelAttribute("editUserDTO") EditUserDTO editUserDTO,
                            BindingResult result,
                            Model model,
                            Principal principal)
   {
     if (result.hasErrors()) {
-      model.addAttribute("image", userDto.getImage());
-      model.addAttribute("changePassword", new ChangePasswordForm());
+      model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
       return "edit-profile";
     }
     else {
       String loggedInUsername = principal.getName();
-      logger.info("Updating {} to {}", loggedInUsername, userDto);
-      User updated = userService.updateUser(loggedInUsername, userDto.map());
+      logger.info("Updating {} to {}", loggedInUsername, editUserDTO);
+      User updated = userService.updateUser(loggedInUsername, editUserDTO.map());
       model.addAttribute("user", updated);
       return "redirect:/profile/";
     }
   }
 
   @RequestMapping(path = "/user/change-password", method = RequestMethod.POST)
-  public String changePassword(@Valid @ModelAttribute("changePassword") ChangePasswordForm changePassword,
+  public String changePassword(@Valid @ModelAttribute("changePasswordDTO") ChangePasswordDTO changePassword,
                                BindingResult result,
                                Model model,
-                               Principal principal)
+                               Authentication authentication)
   {
     if (result.hasErrors()) {
-      model.addAttribute("user", userService.getUser(principal.getName()));
+      model.addAttribute("editUserDTO", new EditUserDTO((User) authentication.getPrincipal()));
       model.addAttribute("error", true);
       return "edit-profile";
     }
-    logger.info("Changing Password for {}", principal.getName());
-    userService.changePassword(principal.getName(), changePassword.getOldPassword(), changePassword.getPassword());
+    logger.info("Changing Password for {}", authentication.getName());
+    userService.changePassword(authentication.getName(), changePassword.getOldPassword(), changePassword.getPassword());
     return "redirect:/profile/edit";
   }
 

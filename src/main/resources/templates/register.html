@@ -11,7 +11,7 @@
                 <!--- content goes here --->
                 <div class="col-8 col-centered">
                     <form></form>
-                    <form th:method="POST" enctype="multipart/form-data" th:object="${userApplicationForm}" th:action="@{/register}">
+                    <form th:method="POST" enctype="multipart/form-data" th:object="${createUserDTO}" th:action="@{/register}">
                         <div class="d-flex justify-content-center align-items-center mt-1">
                             <h2 class="text-center width-100">Register</h2>
                         </div>

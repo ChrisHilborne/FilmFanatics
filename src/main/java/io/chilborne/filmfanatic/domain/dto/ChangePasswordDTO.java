@@ -3,7 +3,7 @@ package io.chilborne.filmfanatic.domain.dto;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class ChangePasswordForm extends PasswordForm {
+public class ChangePasswordDTO extends PasswordDTO {
 
   private String oldPassword;
 

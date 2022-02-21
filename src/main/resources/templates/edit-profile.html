@@ -5,7 +5,7 @@
 <header th:replace="fragments/header :: header"></header>
 
 <main>
-    <div th:replace="fragments/passwordModal :: passwordModal(changePassword=${changePassword})"></div>
+    <div th:replace="fragments/passwordModal :: passwordModal(changePasswordDTO=${changePasswordDTO})"></div>
 
     <div class="container">
         <div class="row align-items-center">
@@ -16,7 +16,7 @@
                         <form th:method="POST" enctype="multipart/form-data" action="/user/image">
                             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                                 <label for="image-file">
-                                    <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${image}}">
+                                    <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${editUserDTO.image}}">
                                 </label>
                                 <div class="row">
                                     <input class="px-2 mr-4" id="image-file" type="file" name="userImage" />

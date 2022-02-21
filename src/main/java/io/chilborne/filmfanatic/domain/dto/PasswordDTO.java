@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public abstract class PasswordForm {
+public abstract class PasswordDTO {
 
   @NotBlank(message = "{field.mandatory}")
   @Size(min= 8, message = "{field.password.length}")
