@@ -4,8 +4,6 @@ import io.chilborne.filmfanatic.domain.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Set;
-
 @TestConfiguration
 public class TestData {
 
@@ -41,7 +39,7 @@ public class TestData {
     Film LOTR = new Film();
     LOTR.setTitle("The Fellowship of the Ring");
     LOTR.addActor(orlandoBloom());
-    LOTR.setDirector(peterJackson());
+    LOTR.setFilmDirector(peterJackson());
     LOTR.setYear(2001);
     LOTR.setDuration(178);
     LOTR.setPoster("the-fellowship-of-the-ring.jpeg");
@@ -56,7 +54,7 @@ public class TestData {
     Film kingdomOfHeaven = new Film();
     kingdomOfHeaven.setTitle("Kingdom of Heaven");
     kingdomOfHeaven.addActor(orlandoBloom());
-    kingdomOfHeaven.setDirector(ridelyScott());
+    kingdomOfHeaven.setFilmDirector(ridelyScott());
     kingdomOfHeaven.setYear(2005);
     kingdomOfHeaven.setDuration(190);
     kingdomOfHeaven.setPoster("kingdom-of-heaven.jpeg");

@@ -37,6 +37,7 @@ public class Person {
 
     Person person = (Person) o;
 
+    if (id != person.id) return false;
     if (name != null ? !name.equals(person.name) : person.name != null) return false;
     if (surname != null ? !surname.equals(person.surname) : person.surname != null) return false;
     return type == person.type;
@@ -44,7 +45,10 @@ public class Person {
 
   @Override
   public int hashCode() {
-    return this.getClass().hashCode() + this.type.hashCode();
+    int result = (int) (id ^ (id >>> 32));
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + (surname != null ? surname.hashCode() : 0);
+    result = 31 * result + (type != null ? type.hashCode() : 0);
+    return result;
   }
-
 }

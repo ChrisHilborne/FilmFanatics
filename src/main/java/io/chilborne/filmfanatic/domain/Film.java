@@ -44,23 +44,23 @@ public class Film implements Serializable {
   private Set<Review> reviews = new HashSet<>();
   @ManyToOne()
   @JoinColumn(name = "director_id")
-  private Person director;
+  private Person filmDirector;
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "film_actors", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "actor_id"))
-  private Set<Person> actors = new HashSet<>();
+  private Set<Person> filmActors = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "film_musicians", joinColumns = @JoinColumn(name = "film_id"),
+  @JoinTable(name = "film_composers", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "musician_id"))
-  private Set<Person> musicians = new HashSet<>();
+  private Set<Person> filmComposers = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "film_screenwriters", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "screenwriter_id"))
-  private Set<Person> screenwriters = new HashSet<>();
+  private Set<Person> filmScreenwriters = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "film_photographers", joinColumns = @JoinColumn(name = "film_id"),
+  @JoinTable(name = "film_cinematographers", joinColumns = @JoinColumn(name = "film_id"),
     inverseJoinColumns = @JoinColumn(name = "photographer_id"))
-  private Set<Person> photographers = new HashSet<>();
+  private Set<Person> filmCinematographers = new HashSet<>();
 
   public double getAvgScore() {
     return scores.stream().map(Score::getValue).reduce(0, Integer::sum) * 1.0 / scores.size();
@@ -85,42 +85,42 @@ public class Film implements Serializable {
 
   public void addActor(Person actor) {
     if (actor.getType() == PersonTypeEnum.ACTOR) {
-      actors.add(actor);
+      filmActors.add(actor);
     }
   }
 
   public boolean removeActor(Person actor) {
-    return actors.remove(actor);
+    return filmActors.remove(actor);
   }
 
   public void addMusician(Person musician) {
     if (musician.getType() == PersonTypeEnum.COMPOSER) {
-      musicians.add(musician);
+      filmComposers.add(musician);
     }
   }
 
   public boolean removeMusician(Person musician) {
-    return musicians.remove(musician);
+    return filmComposers.remove(musician);
   }
 
   public void addScreenwriter(Person screenwriter) {
     if (screenwriter.getType() == PersonTypeEnum.SCREEN_WRITER) {
-      screenwriters.add(screenwriter);
+      filmScreenwriters.add(screenwriter);
     }
   }
 
   public boolean removeScreenwriter(Person screenwriter) {
-    return screenwriters.remove(screenwriter);
+    return filmScreenwriters.remove(screenwriter);
   }
 
   public void addPhotographer(Person photographer) {
     if (photographer.getType() == PersonTypeEnum.CINEMATOGRAPHER) {
-      photographers.add(photographer);
+      filmCinematographers.add(photographer);
     }
   }
 
   public boolean removePhotographer(Person photographer) {
-    return photographers.remove(photographer);
+    return filmCinematographers.remove(photographer);
   }
 
   @Override
@@ -139,11 +139,11 @@ public class Film implements Serializable {
     if (dataMigrate != null ? !dataMigrate.equals(film.dataMigrate) : film.dataMigrate != null) return false;
     if (user != null ? !user.equals(film.user) : film.user != null) return false;
     if (reviews != null ? !reviews.equals(film.reviews) : film.reviews != null) return false;
-    if (director != null ? !director.equals(film.director) : film.director != null) return false;
-    if (actors != null ? !actors.equals(film.actors) : film.actors != null) return false;
-    if (musicians != null ? !musicians.equals(film.musicians) : film.musicians != null) return false;
-    if (screenwriters != null ? !screenwriters.equals(film.screenwriters) : film.screenwriters != null) return false;
-    return photographers != null ? photographers.equals(film.photographers) : film.photographers == null;
+    if (filmDirector != null ? !filmDirector.equals(film.filmDirector) : film.filmDirector != null) return false;
+    if (filmActors != null ? !filmActors.equals(film.filmActors) : film.filmActors != null) return false;
+    if (filmComposers != null ? !filmComposers.equals(film.filmComposers) : film.filmComposers != null) return false;
+    if (filmScreenwriters != null ? !filmScreenwriters.equals(film.filmScreenwriters) : film.filmScreenwriters != null) return false;
+    return filmCinematographers != null ? filmCinematographers.equals(film.filmCinematographers) : film.filmCinematographers == null;
   }
 
   @Override

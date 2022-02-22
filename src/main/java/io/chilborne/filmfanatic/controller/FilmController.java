@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -31,9 +32,8 @@ public class FilmController {
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
-  public String createFilm(Model model, Authentication authentication) {
+  public String createFilm(Model model) {
     Film newFilm = new Film();
-    newFilm.setUser((User) authentication.getPrincipal());
     model.addAttribute("film", newFilm);
     model.addAttribute("directors", personService.getPeopleByType(DIRECTOR));
     model.addAttribute("actors", personService.getPeopleByType(ACTOR));
@@ -46,6 +46,7 @@ public class FilmController {
   @RequestMapping(path = "films/add", method = RequestMethod.POST)
   public String createFilm(@Valid @ModelAttribute("film") Film film,
                            BindingResult result,
+                           @ModelAttribute("posterImage") MultipartFile posterImage,
                            Model model)
   {
     if (result.hasErrors()) {
@@ -53,8 +54,12 @@ public class FilmController {
     }
     else {
       Film createdFilm = filmService.addFilm(film);
+      if (posterImage != null) {
+        filmService.savePoster(film, posterImage);
+      }
+
       model.addAttribute("film", createdFilm);
-      return "film-info";
+      return "redirect: films/" + film.getTitle();
     }
   }
 }

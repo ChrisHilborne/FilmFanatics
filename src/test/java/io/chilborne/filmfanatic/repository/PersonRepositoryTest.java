@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,7 +41,7 @@ class PersonRepositoryTest {
   @Test
   void findByType() {
     // when
-    Set<Person> returned = repo.findByType(PersonTypeEnum.ACTOR);
+    List<Person> returned = repo.findByType(PersonTypeEnum.ACTOR);
 
     // assert
     assertEquals(1, returned.size());
@@ -51,7 +52,7 @@ class PersonRepositoryTest {
   @Test
   void findByNameAndSurnameAllIgnoreCase() {
     // when
-    Set<Person> returned = repo.findByNameAndSurnameAllIgnoreCase("pEtER", "JacKSon");
+    List<Person> returned = repo.findByNameAndSurnameAllIgnoreCase("pEtER", "JacKSon");
 
     // assert
     assertEquals(1, returned.size());
