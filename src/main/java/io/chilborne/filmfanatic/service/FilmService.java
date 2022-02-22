@@ -7,5 +7,5 @@ public interface FilmService {
 
   Film addFilm(Film film);
 
-  void savePoster(Film film, MultipartFile posterImage);
+  Film savePoster(Film film, MultipartFile posterImage);
 }

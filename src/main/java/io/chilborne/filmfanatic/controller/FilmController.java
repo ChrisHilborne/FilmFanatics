@@ -5,6 +5,7 @@ import io.chilborne.filmfanatic.domain.PersonTypeEnum;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.PersonService;
+import io.chilborne.filmfanatic.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,8 +33,12 @@ public class FilmController {
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
-  public String createFilm(Model model) {
+  public String createFilm(Model model, Authentication authentication) {
     Film newFilm = new Film();
+    if (authentication != null) {
+      newFilm.setUser((User) authentication.getPrincipal());
+    }
+
     model.addAttribute("film", newFilm);
     model.addAttribute("directors", personService.getPeopleByType(DIRECTOR));
     model.addAttribute("actors", personService.getPeopleByType(ACTOR));
@@ -47,7 +52,8 @@ public class FilmController {
   public String createFilm(@Valid @ModelAttribute("film") Film film,
                            BindingResult result,
                            @ModelAttribute("posterImage") MultipartFile posterImage,
-                           Model model)
+                           Model model,
+                           Authentication authentication)
   {
     if (result.hasErrors()) {
       return "create-film";
@@ -55,11 +61,10 @@ public class FilmController {
     else {
       Film createdFilm = filmService.addFilm(film);
       if (posterImage != null) {
-        filmService.savePoster(film, posterImage);
+        createdFilm = filmService.savePoster(film, posterImage);
       }
-
       model.addAttribute("film", createdFilm);
-      return "redirect: films/" + film.getTitle();
+      return "redirect: films/" + StringUtil.getFilmUrl(createdFilm.getTitle(), createdFilm.getYear());
     }
   }
 }

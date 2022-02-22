@@ -13,4 +13,12 @@ public class StringUtil {
   }
 
 
+  public static String getFilmPosterFilename(String filmTitle, int filmYear, String contentType) {
+    return getFilmUrl(filmTitle, filmYear) + getFileExtension(contentType);
+  }
+
+  public static String getFilmUrl(String filmTitle, int filmYear) {
+    return String.join("-", filmTitle.toLowerCase(Locale.ROOT).split(" ")) + filmYear;
+  }
+
 }
