@@ -21,16 +21,22 @@
                             <i th:each="i : ${#numbers.sequence(1, film.averageScore)}" class="fa fa-star"></i>
                         </h5>
                         <form></form>
-                        <form class="row row-cols g-1 align-items-centre" th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__/score/}">
+                        <form sec:authorize="isAuthenticated()" th:if="${score.value} == 0" class="row row-cols g-1 align-items-centre" th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__/score/}">
                             <div class="col-4">
-                                <select class="form-select" id="score" name="score">
-                                    <option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">Year</option>
+                                <select class="form-select" th:field="*{value}" id="score" name="score">
+                                    <option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">Score</option>
                                 </select>
+                                <input type="hidden" th:field="*{user}" th:value="${#authentication.getPrincipal()}">
+                                <input type="hidden" th:field="*{film}" th:value="${film}">
                             </div>
                             <div class="col-8">
                                 <button class="btn btn-primary btn-rounded" type="submit">Submit Your Score</button>
                             </div>
                         </form>
+                        <h6 sec:authorize="isAuthenticated()" th:if="${score}" class="mt-1">
+                            Your Score:
+                            <i th:each="i : ${#numbers.sequence(1, score.value)}" class="fa fa-star"></i>
+                        </h6>
                     </div>
                     <div class="d-flex col justify-content-center">
                         <img class="responsive-image py-3 my-1 mx-1" height="400px" th:src="@{'/images/films/' + *{poster}}" id="Poster" alt="Film Poster" src="">

@@ -39,7 +39,7 @@ public class Film implements Serializable {
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
-  @OneToMany(mappedBy = "film", cascade = ALL,fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "film", cascade = ALL, fetch = FetchType.EAGER)
   private List<Score> scores = new ArrayList<>();
   @OneToMany(mappedBy = "film", cascade = ALL, fetch = FetchType.EAGER)
   private Set<Review> reviews = new HashSet<>();

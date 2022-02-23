@@ -2,6 +2,7 @@ package io.chilborne.filmfanatic.controller;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.PersonTypeEnum;
+import io.chilborne.filmfanatic.domain.Score;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.PersonService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+
+import java.util.Optional;
 
 import static io.chilborne.filmfanatic.domain.PersonTypeEnum.*;
 
@@ -32,10 +35,36 @@ public class FilmController {
 
   @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)
   public String filmInfo(@PathVariable("filmUrl") String filmUrl,
-                         Model model) {
+                         Model model,
+                         Authentication authentication) {
     Film film = filmService.getFilmByUrl(filmUrl);
     model.addAttribute("film", film);
+
+    if (authentication != null) {
+      User authenticatedUser = (User) authentication.getPrincipal();
+      Optional<Score> userScore = film.getScores()
+        .stream()
+        .filter(scr -> scr.getUser().getId() == authenticatedUser.getId())
+        .findFirst();
+      if (userScore.isPresent()) {
+        model.addAttribute("score", userScore.get());
+      } else {
+        model.addAttribute("score", new Score());
+      }
+    }
     return "film-info";
+  }
+
+  @RequestMapping(path = "films/{filmUrl}/score", method = RequestMethod.POST)
+  public String filmInfo(@PathVariable("filmUrl") String filmUrl,
+                         @RequestParam("score") @Valid Score score,
+                         BindingResult result) {
+    if (result.hasErrors()) {
+      return "film-info";
+    }
+    filmService.addScore(filmUrl, score);
+
+    return "redirect: /films/" + filmUrl;
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
@@ -69,7 +98,7 @@ public class FilmController {
         createdFilm = filmService.savePoster(film, posterImage);
       }
       model.addAttribute("film", createdFilm);
-      return "redirect: films/" + StringUtil.getFilmUrl(createdFilm.getTitle(), createdFilm.getYear());
+      return "redirect: /films/" + StringUtil.getFilmUrl(createdFilm.getTitle(), createdFilm.getYear());
     }
   }
 }

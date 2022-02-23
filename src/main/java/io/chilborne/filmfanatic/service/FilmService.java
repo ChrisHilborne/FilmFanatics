@@ -1,6 +1,7 @@
 package io.chilborne.filmfanatic.service;
 
 import io.chilborne.filmfanatic.domain.Film;
+import io.chilborne.filmfanatic.domain.Score;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FilmService {
@@ -10,4 +11,6 @@ public interface FilmService {
   Film savePoster(Film film, MultipartFile posterImage);
 
   Film getFilmByUrl(String filmUrl);
+
+  Film addScore(String filmUrl, Score score);
 }

@@ -36,11 +36,11 @@ VALUES
     ((SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom'));
 
 INSERT INTO scores
-    (value, film_id)
+    (value, film_id, user_id)
 VALUES
-    (4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
-    (5, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
-    (4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring')),
-    (2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven')),
-    (3, (SELECT id FROM films WHERE title = 'Kingdom of Heaven')),
-    (2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven'));
+    (4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM users WHERE username = 'tokioschool')),
+    (5, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM users WHERE username = 'tokioschool')),
+    (4, (SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM users WHERE username = 'tokioschool')),
+    (2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM users WHERE username = 'tokioschool')),
+    (3, (SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM users WHERE username = 'tokioschool')),
+    (2, (SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM users WHERE username = 'tokioschool'));

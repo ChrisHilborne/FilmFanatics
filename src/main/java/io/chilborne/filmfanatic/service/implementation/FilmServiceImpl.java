@@ -1,6 +1,7 @@
 package io.chilborne.filmfanatic.service.implementation;
 
 import io.chilborne.filmfanatic.domain.Film;
+import io.chilborne.filmfanatic.domain.Score;
 import io.chilborne.filmfanatic.exception.FilmNotFoundException;
 import io.chilborne.filmfanatic.repository.FilmRepository;
 import io.chilborne.filmfanatic.service.FileService;
@@ -47,9 +48,18 @@ public class FilmServiceImpl implements FilmService {
   }
 
   @Override
+  @Transactional()
   public Film getFilmByUrl(String filmUrl) {
     String filmTitle = StringUtil.getFilmTitleFromUrl(filmUrl);
     return filmRepo.findByTitleIgnoreCase(filmTitle)
       .orElseThrow(() -> new FilmNotFoundException(filmTitle));
+  }
+
+  @Override
+  @Transactional
+  public Film addScore(String filmUrl, Score score) {
+        Film toUpdate = getFilmByUrl(filmUrl);
+        toUpdate.addScore(score);
+    return filmRepo.save(toUpdate);
   }
 }
