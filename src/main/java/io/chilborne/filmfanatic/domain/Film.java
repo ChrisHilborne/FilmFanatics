@@ -33,7 +33,8 @@ public class Film implements Serializable {
   private Boolean migrate;
   @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
   private LocalDate dataMigrate;
-
+  @Column(name = "avg_score")
+  private int averageScore;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
@@ -62,17 +63,19 @@ public class Film implements Serializable {
     inverseJoinColumns = @JoinColumn(name = "photographer_id"))
   private Set<Person> filmCinematographers = new HashSet<>();
 
-  public double getAvgScore() {
-    return scores.stream().map(Score::getValue).reduce(0, Integer::sum) * 1.0 / scores.size();
+  public void calculateAverageScore() {
+    this.averageScore = scores.stream().map(Score::getValue).reduce(0, Integer::sum) / scores.size();
   }
 
   public void addScore(Score score) {
     score.setFilm(this);
     scores.add(score);
+    calculateAverageScore();
   }
 
-  public boolean removeScore(Score score) {
-    return scores.remove(score);
+  public void removeScore(Score score) {
+    scores.remove(score);
+    calculateAverageScore();
   }
 
   public void addReview(Review review) {

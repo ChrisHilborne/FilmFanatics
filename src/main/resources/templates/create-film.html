@@ -10,7 +10,7 @@
                 <div class="container mx-auto py-2 rounded bg-white">
                     <!--- content goes here --->
                     <form></form>
-                    <form th:method="POST" th:object="${film}" th:href="@{films/add}">
+                    <form th:method="POST" th:object="${film}" enctype="multipart/form-data" th:href="@{films/add}">
                         <div class="row px-1 mt-1">
                             <div class="col">
                                 <label for="title">Title</label>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="row py-1 px-1">
                             <div class="col">
-                                <label for="poster" class="labels">Poster Image</label>
+                                <label for="posterImage" class="labels">Poster Image</label>
                                 <input class="form-control" type="file" name="posterImage" id="posterImage" style="padding: 0.25rem;">
                             </div>
                             <div class="col-8 py-1 px-1">

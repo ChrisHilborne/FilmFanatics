@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface FilmRepository extends CrudRepository<Film, Long> {
 
-  Optional<Film> findByTitle(String title);
+  Optional<Film> findByTitleIgnoreCase(String title);
   Set<Film> findByYear(int year);
   Set<Film> findByYearGreaterThan(int year);
   Set<Film> findByYearLessThan(int year);

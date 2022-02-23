@@ -11,9 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -30,6 +28,14 @@ public class FilmController {
   public FilmController(FilmService filmService, PersonService personService) {
     this.filmService = filmService;
     this.personService = personService;
+  }
+
+  @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)
+  public String filmInfo(@PathVariable("filmUrl") String filmUrl,
+                         Model model) {
+    Film film = filmService.getFilmByUrl(filmUrl);
+    model.addAttribute("film", film);
+    return "film-info";
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
@@ -49,18 +55,17 @@ public class FilmController {
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.POST)
-  public String createFilm(@Valid @ModelAttribute("film") Film film,
+  public String createFilm(@RequestParam("posterImage") MultipartFile posterImage,
+                           @ModelAttribute("film") @Valid Film film,
                            BindingResult result,
-                           @ModelAttribute("posterImage") MultipartFile posterImage,
-                           Model model,
-                           Authentication authentication)
+                           Model model)
   {
     if (result.hasErrors()) {
       return "create-film";
     }
     else {
       Film createdFilm = filmService.addFilm(film);
-      if (posterImage != null) {
+      if (!posterImage.isEmpty()) {
         createdFilm = filmService.savePoster(film, posterImage);
       }
       model.addAttribute("film", createdFilm);

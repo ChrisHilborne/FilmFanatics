@@ -8,4 +8,6 @@ public interface FilmService {
   Film addFilm(Film film);
 
   Film savePoster(Film film, MultipartFile posterImage);
+
+  Film getFilmByUrl(String filmUrl);
 }
