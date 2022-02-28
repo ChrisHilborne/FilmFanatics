@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -30,6 +31,7 @@ public class FilmServiceImpl implements FilmService {
   @Override
   @Transactional
   public Film addFilm(Film film) {
+    film.setUrl(StringUtil.getFilmUrl(film.getTitle(), film.getYear()));
     log.info("Saving Film {}", film);
     return filmRepo.save(film);
   }
@@ -61,5 +63,11 @@ public class FilmServiceImpl implements FilmService {
         Film toUpdate = getFilmByUrl(filmUrl);
         toUpdate.addScore(score);
     return filmRepo.save(toUpdate);
+  }
+
+  @Override
+  public Set<Film> searchByTitle(String title) {
+    log.info("Searching for Film with title like {}", title);
+    return filmRepo.findByTitleContainsIgnoreCase(title);
   }
 }

@@ -22,4 +22,5 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   @Query("SELECT f FROM films f JOIN FETCH f.filmActors a WHERE a.name = ?1 AND a.surname = ?2")
   Set<Film> findByActorsNameAndActorsSurname(String name, String surname);
 
+  Set<Film> findByTitleContainsIgnoreCase(String title);
 }

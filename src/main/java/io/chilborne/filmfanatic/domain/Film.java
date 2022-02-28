@@ -21,6 +21,8 @@ public class Film implements Serializable {
   private Long id;
   @Column(nullable = false)
   private String title;
+  @Column
+  private String url;
   @Column(nullable = false)
   private int year;
   @Column

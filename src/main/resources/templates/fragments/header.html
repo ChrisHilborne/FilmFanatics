@@ -23,8 +23,8 @@
         </ul>
         <form></form>
 
-          <form class="d-flex align-items-center" th:method="get" th:action="@{/films}">
-            <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+          <form class="d-flex align-items-center" th:method="get" th:action="@{/films/search}">
+            <input class="form-control" type="text" name="title" id="title" placeholder="Search" aria-label="search">
             <button class="btn btn-outline-success mx-2" type="submit">
               <i class="fas fa-search"></i>
             </button>

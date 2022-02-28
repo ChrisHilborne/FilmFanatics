@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.Set;
 
 import static io.chilborne.filmfanatic.domain.PersonTypeEnum.*;
 
@@ -34,6 +35,14 @@ public class FilmController {
     this.filmService = filmService;
     this.userService = userService;
     this.personService = personService;
+  }
+
+  @RequestMapping(path = "films/search", method=RequestMethod.GET)
+  public String searchFilm(@RequestParam(name = "title", required = true) String title,
+                           Model model) {
+    Set<Film> results = filmService.searchByTitle(title);
+    model.addAttribute("films", results);
+    return "search-films";
   }
 
   @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)
