@@ -1,5 +1,6 @@
 package io.chilborne.filmfanatic.domain.dto;
 
+import io.chilborne.filmfanatic.domain.Role;
 import io.chilborne.filmfanatic.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,12 +18,11 @@ public class CreateUserDTO extends PasswordDTO {
 
   @NotBlank(message = "{field.mandatory}")
   private String username;
-  @Size(min = 2, message = "{field.name.length}")
   private String name;
-  @Size(min = 2, message = "{field.surname.length}")
   private String surname;
   @Email(message = "{field.email.valid}")
   private String email;
+  private Set<Role> roles = new HashSet<>();
 
   private LocalDate birthDate;
 
@@ -32,6 +34,7 @@ public class CreateUserDTO extends PasswordDTO {
     user.setSurname(this.surname);
     user.setBirthDate(this.birthDate);
     user.setEmail(this.email);
+    roles.forEach(user::addRole);
     return user;
   }
 }

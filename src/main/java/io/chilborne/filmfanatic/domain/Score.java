@@ -16,7 +16,7 @@ public class Score {
   @Column(nullable = false)
   @Min(value = 0)
   @Max(value = 5)
-  private int value;
+  private int value = 0;
 
   @ManyToOne
   @JoinColumn(name = "film_id")

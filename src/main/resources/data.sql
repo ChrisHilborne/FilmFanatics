@@ -1,8 +1,8 @@
 INSERT INTO roles
     (id, name)
 VALUES
-    (0, 'admin'),
-    (1, 'user');
+    (0, 'ADMIN'),
+    (1, 'USER');
 
 INSERT INTO users
     (username, password, image, name, surname, email, birth_date, creation_date, last_login, active)
@@ -13,8 +13,7 @@ VALUES
 INSERT INTO user_roles
     (user_id, role_id)
 VALUES
-    ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE name = 'admin')),
-    ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE name = 'user'));
+    ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE name = 'ADMIN'));
 
 INSERT INTO people
     (name, surname, type)

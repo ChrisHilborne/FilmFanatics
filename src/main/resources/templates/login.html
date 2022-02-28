@@ -6,6 +6,9 @@
     
 <main class="form-signin">
   <form th:action="@{/login}" th:method="post">
+    <a href="/">
+      <img class="mb-4 rounded-circle" src="" th:src="@{/images/cinema.png}" alt="" height="100">
+    </a>
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
@@ -16,7 +19,11 @@
       <input type="password" class="form-control" name="password" id="password" placeholder="Password" autofocus>
       <label for="password">Password</label>
     </div>
-  
+    <div class="checkbox mb-2">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
 
     <br/><br/>

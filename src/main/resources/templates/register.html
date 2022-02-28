@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/head::head"></head>
 <body class="d-flex flex-column min-vh-100 body-color" >
 <header th:replace="fragments/header :: header"></header>
@@ -51,13 +51,19 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md">
+                            <div class="col">
                                 <label for="userImage" class="labels">Profile Picture</label>
                                 <input class="form-control" type="file" name="userImage" id="userImage" style="padding: 0.25rem;">
                             </div>
-                            <div class="col-md">
+                            <div class="col">
                                 <label for="birthDate" class="labels">Birthdate</label>
                                 <input type="text" data-provide="datepicker" data-date-format="dd/mm/yyyy" class="form-control datepicker" id="birthDate" autocomplete="off" th:field="*{birthDate}">
+                            </div>
+                            <div class="col" sec:authorize="hasAuthority('ADMIN')">
+                                <label for="role">Role</label>
+                                <select id="role" class="form-select" th:field="*{roles}">
+                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                </select>
                             </div>
                         </div>
                         <div class="mt-3 text-center">

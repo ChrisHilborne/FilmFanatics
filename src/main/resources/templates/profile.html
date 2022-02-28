@@ -5,6 +5,8 @@
 <header th:replace="fragments/header :: header"></header>
 
 <main>
+    <div th:replace="fragments/userCreatedModal :: userCreatedModal(user=${user})"></div>
+
     <div class="container">
         <div class="row center align-items-center">
             <div class="container rounded bg-white mt-3">
@@ -93,4 +95,7 @@
 </main>
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
+
+
+
 </html>

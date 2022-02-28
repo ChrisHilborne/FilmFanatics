@@ -36,7 +36,7 @@ public class Film implements Serializable {
   @Column(name = "avg_score")
   private int averageScore;
 
-  @ManyToOne
+  @ManyToOne(cascade = MERGE)
   @JoinColumn(name = "user_id")
   private User user;
   @OneToMany(mappedBy = "film", cascade = ALL, fetch = FetchType.EAGER)

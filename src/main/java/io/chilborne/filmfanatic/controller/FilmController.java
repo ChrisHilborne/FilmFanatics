@@ -1,11 +1,11 @@
 package io.chilborne.filmfanatic.controller;
 
 import io.chilborne.filmfanatic.domain.Film;
-import io.chilborne.filmfanatic.domain.PersonTypeEnum;
 import io.chilborne.filmfanatic.domain.Score;
 import io.chilborne.filmfanatic.domain.User;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.PersonService;
+import io.chilborne.filmfanatic.service.UserService;
 import io.chilborne.filmfanatic.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import static io.chilborne.filmfanatic.domain.PersonTypeEnum.*;
@@ -26,10 +27,12 @@ import static io.chilborne.filmfanatic.domain.PersonTypeEnum.*;
 public class FilmController {
 
   private final FilmService filmService;
+  private final UserService userService;
   private final PersonService personService;
 
-  public FilmController(FilmService filmService, PersonService personService) {
+  public FilmController(FilmService filmService, UserService userService, PersonService personService) {
     this.filmService = filmService;
+    this.userService = userService;
     this.personService = personService;
   }
 
@@ -49,7 +52,7 @@ public class FilmController {
       if (userScore.isPresent()) {
         model.addAttribute("score", userScore.get());
       } else {
-        model.addAttribute("score", new Score());
+        model.addAttribute("newScore", new Score());
       }
     }
     return "film-info";
@@ -57,22 +60,21 @@ public class FilmController {
 
   @RequestMapping(path = "films/{filmUrl}/score", method = RequestMethod.POST)
   public String filmInfo(@PathVariable("filmUrl") String filmUrl,
-                         @RequestParam("score") @Valid Score score,
-                         BindingResult result) {
+                         @ModelAttribute("newScore") @Valid Score score,
+                         BindingResult result,
+                         Authentication auth) {
     if (result.hasErrors()) {
       return "film-info";
     }
+    score.setUser((User) auth.getPrincipal());
     filmService.addScore(filmUrl, score);
 
     return "redirect: /films/" + filmUrl;
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
-  public String createFilm(Model model, Authentication authentication) {
+  public String createFilm(Model model) {
     Film newFilm = new Film();
-    if (authentication != null) {
-      newFilm.setUser((User) authentication.getPrincipal());
-    }
 
     model.addAttribute("film", newFilm);
     model.addAttribute("directors", personService.getPeopleByType(DIRECTOR));
@@ -87,12 +89,14 @@ public class FilmController {
   public String createFilm(@RequestParam("posterImage") MultipartFile posterImage,
                            @ModelAttribute("film") @Valid Film film,
                            BindingResult result,
-                           Model model)
+                           Model model,
+                           Principal principal)
   {
     if (result.hasErrors()) {
       return "create-film";
     }
     else {
+      film.setUser(userService.getUser(principal.getName()));
       Film createdFilm = filmService.addFilm(film);
       if (!posterImage.isEmpty()) {
         createdFilm = filmService.savePoster(film, posterImage);

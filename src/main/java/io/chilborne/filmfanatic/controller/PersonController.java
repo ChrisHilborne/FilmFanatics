@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -23,12 +24,13 @@ public class PersonController {
     this.service = service;
   }
 
-  @RequestMapping(path = "person/add", method = RequestMethod.GET)
-  public String addPerson(Model model) {
+  @RequestMapping(path = "/person/add", method = RequestMethod.GET)
+  public String addPerson(@RequestParam(name = "person", required = false) String message,
+                          Model model) {
     model.addAttribute("person", new Person());
     return "add-person";
   }
-  @RequestMapping(path = "person/add", method = RequestMethod.POST)
+  @RequestMapping(path = "/person/add", method = RequestMethod.POST)
   public String addPerson(@ModelAttribute @Valid Person person,
                           BindingResult result,
                           Model model,
@@ -40,9 +42,8 @@ public class PersonController {
     }
     else {
       log.info("User {} added Person {}", principal.getName(), person);
-      Person added = service.addPerson(person);
-      model.addAttribute("success", true);
-      return "add-person";
+      service.addPerson(person);
+      return "redirect:/person/add?person=created";
     }
   }
 }

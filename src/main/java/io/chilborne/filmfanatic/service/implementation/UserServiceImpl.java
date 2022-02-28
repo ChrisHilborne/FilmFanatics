@@ -130,8 +130,11 @@ public class UserServiceImpl implements UserService {
     user.setPassword(encoder.encode(user.getPassword()));
     user.setCreationDate(LocalDate.now());
     user.setActive(true);
-    user.addRole(roleRepo.findByNameIgnoreCase("USER"));
     user.setImage(DEFAULT_PROFILE_IMAGE);
+
+    if (user.getRoles().isEmpty()) {
+      user.addRole(roleRepo.findByNameIgnoreCase("USER"));
+    }
 
     return userRepo.save(user);
   }
