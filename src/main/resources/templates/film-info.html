@@ -69,8 +69,14 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row mx-1" th:each="review :: ${fim.reviews}">
-
+                <div class="row mx-1 p-3" th:each="review : *{reviews}">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${review.title}">Review Title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${review.user.username} + ' (' + ${review.date} + ')'">User and date</h6>
+                            <p class="card-text" th:text="${review.textReview}">Review Text</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

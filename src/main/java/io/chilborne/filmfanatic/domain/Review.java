@@ -18,7 +18,7 @@ public class Review {
   private Long id;
   @Column
   private String title;
-  @Column
+  @Column(name = "text_review", columnDefinition = "TEXT")
   private String textReview;
   @Column(columnDefinition = "TIMESTAMP")
   private LocalDate date;
