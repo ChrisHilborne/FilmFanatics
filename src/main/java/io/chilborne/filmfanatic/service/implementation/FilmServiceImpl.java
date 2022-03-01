@@ -40,7 +40,7 @@ public class FilmServiceImpl implements FilmService {
   @Transactional
   public Film savePoster(Film film, MultipartFile posterImage) {
     Film toUpdate = filmRepo.findByTitleIgnoreCase(film.getTitle())
-      .orElseThrow(() -> new FilmNotFoundException(film.getTitle()));
+      .orElseThrow(() -> new FilmNotFoundException());
 
     String fileName = StringUtil.getFilmPosterFilename(film.getTitle(), film.getYear(), posterImage.getContentType());
     fileService.saveFile(posterImage, fileName);
@@ -54,7 +54,7 @@ public class FilmServiceImpl implements FilmService {
   public Film getFilmByUrl(String filmUrl) {
     String filmTitle = StringUtil.getFilmTitleFromUrl(filmUrl);
     return filmRepo.findByTitleIgnoreCase(filmTitle)
-      .orElseThrow(() -> new FilmNotFoundException(filmTitle));
+      .orElseThrow(() -> new FilmNotFoundException());
   }
 
   @Override
