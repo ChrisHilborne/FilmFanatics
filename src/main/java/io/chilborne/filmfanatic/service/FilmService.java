@@ -17,4 +17,6 @@ public interface FilmService {
   Film addScore(String filmUrl, Score score);
 
   Set<Film> searchByTitle(String title);
+
+  Set<Film> getAllFilms();
 }

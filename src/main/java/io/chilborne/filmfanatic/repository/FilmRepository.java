@@ -23,4 +23,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   Set<Film> findByActorsNameAndActorsSurname(String name, String surname);
 
   Set<Film> findByTitleContainsIgnoreCase(String title);
+
+  Set<Film> findAll();
 }

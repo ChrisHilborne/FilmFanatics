@@ -1,10 +1,8 @@
 package io.chilborne.filmfanatic.controller;
 
-import io.chilborne.filmfanatic.domain.User;
-import io.chilborne.filmfanatic.service.UserService;
+import io.chilborne.filmfanatic.service.FilmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class WebController {
 
   private final Logger logger = LoggerFactory.getLogger(WebController.class);
+  private final FilmService filmService;
+
+  public WebController(FilmService filmService) {
+    this.filmService = filmService;
+  }
 
   @RequestMapping(path = "/*", method = {RequestMethod.GET, RequestMethod.POST})
   public String index(Model model) {
     logger.info("Connection... serving index.html");
+    model.addAttribute("films", filmService.getAllFilms());
     return "index";
   }
 

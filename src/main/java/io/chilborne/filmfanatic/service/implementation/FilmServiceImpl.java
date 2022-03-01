@@ -70,4 +70,9 @@ public class FilmServiceImpl implements FilmService {
     log.info("Searching for Film with title like {}", title);
     return filmRepo.findByTitleContainsIgnoreCase(title);
   }
+
+  @Override
+  public Set<Film> getAllFilms() {
+    return filmRepo.findAll();
+  }
 }
