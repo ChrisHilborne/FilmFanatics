@@ -7,7 +7,6 @@ import io.chilborne.filmfanatic.domain.dto.CreateUserDTO;
 import io.chilborne.filmfanatic.exception.UnauthorizedException;
 import io.chilborne.filmfanatic.service.RoleService;
 import io.chilborne.filmfanatic.service.UserService;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -43,7 +42,7 @@ public class UserController {
   public String registerUser(Model model) {
     model.addAttribute("createUserDTO", new CreateUserDTO());
     model.addAttribute("roles", roleService.getAllRoles());
-    return "register";
+    return "registration";
   }
 
   @RequestMapping(path = "/register", method = RequestMethod.POST)
@@ -53,7 +52,7 @@ public class UserController {
                                 Authentication auth)
   {
     if (result.hasErrors()) {
-      return "register";
+      return "registration";
     }
     User newUser = userService.add(createUserDTO.buildUser());
     if (!imageFile.isEmpty()) {
@@ -91,7 +90,7 @@ public class UserController {
   public String userFilms(Model model, @PathVariable("username") String username) {
     User user = userService.getUser(username);
     model.addAttribute(user.getFilms());
-    return "films-search-results";
+    return "searched-film";
   }
 
   @RequestMapping(path = "/user/image", method = RequestMethod.POST)

@@ -44,13 +44,13 @@ public class FilmController {
                            Model model) {
     Set<Film> results = filmService.searchFilms(query, criteria);
     model.addAttribute("films", results);
-    return "films-search-results";
+    return "searched-film";
   }
 
   @RequestMapping(path = "search", method = RequestMethod.GET)
   public String search(Model model) {
     model.addAttribute("criteria", FilmSearchCriteriaEnum.values());
-    return "film-search-form";
+    return "search-film";
   }
 
   @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)
@@ -72,7 +72,7 @@ public class FilmController {
         model.addAttribute("newScore", new Score());
       }
     }
-    return "film-info";
+    return "film";
   }
 
   @RequestMapping(path = "films/{filmUrl}/score", method = RequestMethod.POST)
@@ -81,7 +81,7 @@ public class FilmController {
                          BindingResult result,
                          Authentication auth) {
     if (result.hasErrors()) {
-      return "film-info";
+      return "film";
     }
     score.setUser((User) auth.getPrincipal());
     filmService.addScore(filmUrl, score);
@@ -99,7 +99,7 @@ public class FilmController {
     model.addAttribute("screenwriters", personService.getPeopleByType(SCREEN_WRITER));
     model.addAttribute("cinematographers", personService.getPeopleByType(CINEMATOGRAPHER));
     model.addAttribute("composers", personService.getPeopleByType(COMPOSER));
-    return "create-film";
+    return "new-film";
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.POST)
@@ -110,7 +110,7 @@ public class FilmController {
                            Principal principal)
   {
     if (result.hasErrors()) {
-      return "create-film";
+      return "new-film";
     }
     else {
       film.setUser(userService.getUser(principal.getName()));

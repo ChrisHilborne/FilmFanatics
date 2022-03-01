@@ -9,7 +9,7 @@
         <div class="row">
             <div class="container mx-auto rounded">
                 <!--- content goes here --->
-                <div th:fragment="search-films" class="row">
+                <div th:fragment="searched-film" class="row">
                     <div class="card m-2" th:each="film : ${films}" style="width: 12rem;">
                         <img th:src="@{'/images/films/' + ${film.poster}}" src="" class="card-img-top p-3" alt="Film Poster">
                         <div class="card-body">

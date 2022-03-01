@@ -28,7 +28,7 @@ public class PersonController {
   public String addPerson(@RequestParam(name = "person", required = false) String message,
                           Model model) {
     model.addAttribute("person", new Person());
-    return "add-person";
+    return "new-person";
   }
   @RequestMapping(path = "/person/add", method = RequestMethod.POST)
   public String addPerson(@ModelAttribute @Valid Person person,
@@ -38,7 +38,7 @@ public class PersonController {
   {
     if (result.hasErrors()) {
       log.error("Creation of Person {} failed because: {}", person, result.getAllErrors().toArray());
-      return "add-person";
+      return "new-person";
     }
     else {
       log.info("User {} added Person {}", principal.getName(), person);
