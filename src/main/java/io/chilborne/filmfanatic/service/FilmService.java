@@ -2,6 +2,7 @@ package io.chilborne.filmfanatic.service;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.Score;
+import io.chilborne.filmfanatic.domain.dto.FilmSearchCriteriaEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
@@ -19,4 +20,6 @@ public interface FilmService {
   Set<Film> searchByTitle(String title);
 
   Set<Film> getAllFilms();
+
+  Set<Film> searchFilms(String searchParam, String searchCriteria);
 }

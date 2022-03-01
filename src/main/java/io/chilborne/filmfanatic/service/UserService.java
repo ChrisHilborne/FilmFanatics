@@ -23,4 +23,6 @@ public interface UserService {
   void saveUserImage(String username, MultipartFile imageFile);
 
   User add(User user);
+
+  void userLoggedIn(User user);
 }

@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div th:if="${#authentication.getPrincipal().getUsername()}}" class="mt-5 text-center">
+                            <div class="mt-5 text-center" th:if="${#authentication.getPrincipal().getUsername() == user.username}">
                                 <a class="btn btn-primary profile-button mx-1" th:href="@{/profile/edit/}">Edit Profile</a>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                             <div class="row mt-2">
                                 <ul>
                                     <li class="d-flex align-items-center mx-1" th:each="film : ${user.films}">
-                                        <a th:href="@{'/film/' + ${film.id}}" class="link" title="${film.title}">
+                                        <a th:href="@{'/film/' + ${film.url}}" class="link" title="${film.title}">
                                             <img class="responsive-image py-3 my-1" th:src="@{'/images/films/' + ${film.poster}}" height="120" id="Poster" alt="Film Poster" src="">
                                         </a>
                                         <strong class="mx-2" th:src="@{'/film/' + @{film.id}}" th:text="${film.title}"></strong>

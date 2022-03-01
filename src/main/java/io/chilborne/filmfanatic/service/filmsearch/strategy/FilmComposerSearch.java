@@ -1,4 +1,4 @@
-package io.chilborne.filmfanatic.domain.dto;
+package io.chilborne.filmfanatic.service.filmsearch.strategy;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.repository.FilmRepository;
@@ -6,16 +6,16 @@ import io.chilborne.filmfanatic.service.filmsearch.FilmSearchStrategy;
 
 import java.util.Set;
 
-public class FilmAverageScoreSearch implements FilmSearchStrategy {
+public class FilmComposerSearch implements FilmSearchStrategy {
 
   private final FilmRepository repository;
 
-  public FilmAverageScoreSearch(FilmRepository repository) {
+  public FilmComposerSearch(FilmRepository repository) {
     this.repository = repository;
   }
 
   @Override
   public Set<Film> searchFilm(String searchParam) {
-    return repository.findByAverageScoreGreaterThanEqual(Integer.parseInt(searchParam));
+    return repository.findByFilmComposersNameContainsOrFilmComposersSurnameContainsAllIgnoreCase(searchParam, searchParam);
   }
 }

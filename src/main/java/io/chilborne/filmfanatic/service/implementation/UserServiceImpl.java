@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static io.chilborne.filmfanatic.util.Constants.DEFAULT_PROFILE_IMAGE;
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
+  @Transactional
   public User add(User user) {
     if (userRepo.findByUsername(user.getUsername()).isPresent()) {
       throw new UsernameAlreadyExistsException("Username not available");
@@ -137,5 +139,14 @@ public class UserServiceImpl implements UserService {
     }
 
     return userRepo.save(user);
+  }
+
+  @Override
+  @Transactional
+  public void userLoggedIn(User user) {
+    LocalDateTime now = LocalDateTime.now();
+    User loggedIn = userRepo.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
+    loggedIn.setLastLogin(now);
+    userRepo.save(loggedIn);
   }
 }

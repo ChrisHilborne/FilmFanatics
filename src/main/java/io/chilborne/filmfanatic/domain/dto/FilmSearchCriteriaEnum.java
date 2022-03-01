@@ -1,5 +1,8 @@
 package io.chilborne.filmfanatic.domain.dto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum FilmSearchCriteriaEnum {
   TITLE("Title"),
   YEAR("Year"),
@@ -21,4 +24,24 @@ public enum FilmSearchCriteriaEnum {
   public String getDisplayValue() {
     return displayValue;
   }
+
+  public static FilmSearchCriteriaEnum fromString(String value) {
+    for (FilmSearchCriteriaEnum criteria : FilmSearchCriteriaEnum.values()) {
+      if (criteria.getDisplayValue().equalsIgnoreCase(value)) {
+        return criteria;
+      }
+      else {
+        try {
+          if (FilmSearchCriteriaEnum.valueOf(value) == criteria) {
+            return criteria;
+          }
+        }
+        catch (Exception e) {
+          log.error("Error when fetching FilmSearchCriteriaEnum", e);
+        }
+      }
+    }
+    throw new IllegalArgumentException("No matching search criteria found");
+  }
+
 }

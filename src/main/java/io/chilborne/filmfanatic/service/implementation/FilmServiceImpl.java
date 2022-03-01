@@ -2,10 +2,12 @@ package io.chilborne.filmfanatic.service.implementation;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.Score;
+import io.chilborne.filmfanatic.domain.dto.FilmSearchCriteriaEnum;
 import io.chilborne.filmfanatic.exception.FilmNotFoundException;
 import io.chilborne.filmfanatic.repository.FilmRepository;
 import io.chilborne.filmfanatic.service.FileService;
 import io.chilborne.filmfanatic.service.FilmService;
+import io.chilborne.filmfanatic.service.filmsearch.FilmSearch;
 import io.chilborne.filmfanatic.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,11 +22,14 @@ import java.util.Set;
 public class FilmServiceImpl implements FilmService {
 
   private final FilmRepository filmRepo;
+  private final FilmSearch filmSearch;
   private final FileService fileService;
 
   public FilmServiceImpl(FilmRepository filmRepo,
-                         @Qualifier("film-poster-file-service") FileService fileService) {
+                        FilmSearch filmSearch, @Qualifier("film-poster-file-service")
+                        FileService fileService) {
     this.filmRepo = filmRepo;
+    this.filmSearch = filmSearch;
     this.fileService = fileService;
   }
 
@@ -60,8 +65,8 @@ public class FilmServiceImpl implements FilmService {
   @Override
   @Transactional
   public Film addScore(String filmUrl, Score score) {
-        Film toUpdate = getFilmByUrl(filmUrl);
-        toUpdate.addScore(score);
+    Film toUpdate = getFilmByUrl(filmUrl);
+    toUpdate.addScore(score);
     return filmRepo.save(toUpdate);
   }
 
@@ -74,5 +79,10 @@ public class FilmServiceImpl implements FilmService {
   @Override
   public Set<Film> getAllFilms() {
     return filmRepo.findAll();
+  }
+
+  @Override
+  public Set<Film> searchFilms(String searchParam, String searchCriteria) {
+    return filmSearch.searchFilm(searchParam, FilmSearchCriteriaEnum.fromString(searchCriteria));
   }
 }

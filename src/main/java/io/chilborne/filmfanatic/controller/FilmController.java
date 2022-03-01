@@ -3,6 +3,7 @@ package io.chilborne.filmfanatic.controller;
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.Score;
 import io.chilborne.filmfanatic.domain.User;
+import io.chilborne.filmfanatic.domain.dto.FilmSearchCriteriaEnum;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.PersonService;
 import io.chilborne.filmfanatic.service.UserService;
@@ -38,11 +39,18 @@ public class FilmController {
   }
 
   @RequestMapping(path = "films/search", method=RequestMethod.GET)
-  public String searchFilm(@RequestParam(name = "title", required = true) String title,
+  public String searchFilm(@RequestParam(name = "query") String query,
+                           @RequestParam(name = "criteria") String criteria,
                            Model model) {
-    Set<Film> results = filmService.searchByTitle(title);
+    Set<Film> results = filmService.searchFilms(query, criteria);
     model.addAttribute("films", results);
-    return "search-films";
+    return "films-search-results";
+  }
+
+  @RequestMapping(path = "search", method = RequestMethod.GET)
+  public String search(Model model) {
+    model.addAttribute("criteria", FilmSearchCriteriaEnum.values());
+    return "film-search-form";
   }
 
   @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)

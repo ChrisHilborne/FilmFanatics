@@ -61,7 +61,7 @@ public class UserController {
     }
     if (auth != null &&
       auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-      return "redirect:/profile/" + newUser.getUsername() + "?user=created";
+      return "redirect:/admin/user/" + newUser.getUsername() + "?user=created";
     }
     return "login";
   }
@@ -76,18 +76,22 @@ public class UserController {
     else return "/";
   }
 
-  @RequestMapping(path = "/profile/{username}", method = RequestMethod.GET)
+  @RequestMapping(path = "admin/user/{username}", method = RequestMethod.GET)
   public String profile(@PathVariable("username") String username,
                         @RequestParam(name = "user", required = false) String requestParam,
                         Model model,
                         Authentication auth)
   {
-    if (!auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-      throw new UnauthorizedException();
-    }
     User user = userService.getUser(username);
     model.addAttribute("user", user);
     return "profile";
+  }
+
+  @RequestMapping(path = "/profile/{username}/films", method = RequestMethod.GET)
+  public String userFilms(Model model, @PathVariable("username") String username) {
+    User user = userService.getUser(username);
+    model.addAttribute(user.getFilms());
+    return "films-search-results";
   }
 
   @RequestMapping(path = "/user/image", method = RequestMethod.POST)

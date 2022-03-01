@@ -12,16 +12,12 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   Optional<Film> findByTitleIgnoreCase(String title);
   Set<Film> findByYear(int year);
   Set<Film> findByDurationLessThanEqual(int duration);
-  Set<Film> findByFilmDirectorNameContainsOrFilmDirectorSurnameContains(String name, String surname);
-  Set<Film> findByFilmActorsNameContainsOrFilmActorsSurnameContains(String name, String surname);
-  Set<Film> findByFilmCinematographersNameContainsOrFilmCinematographersSurnameContains(String name, String surname);
-  Set<Film> findByFilmScreenwritersNameContainsOrFilmScreenwritersSurnameContains(String name, String surname);
-  Set<Film> findByFilmComposersNameContainsOrFilmComposersSurnameContains(String name, String surname);
+  Set<Film> findByFilmDirectorNameContainsOrFilmDirectorSurnameContainsAllIgnoreCase(String name, String surname);
+  Set<Film> findByFilmActorsNameContainsOrFilmActorsSurnameContainsAllIgnoreCase(String name, String surname);
+  Set<Film> findByFilmCinematographersNameContainsOrFilmCinematographersSurnameContainsAllIgnoreCase(String name, String surname);
+  Set<Film> findByFilmScreenwritersNameContainsOrFilmScreenwritersSurnameContainsAllIgnoreCase(String name, String surname);
+  Set<Film> findByFilmComposersNameContainsOrFilmComposersSurnameContainsAllIgnoreCase(String name, String surname);
   Set<Film> findByAverageScoreGreaterThanEqual(int score);
-
-
-
-
 
 
   @Query("SELECT f FROM films f WHERE f.filmDirector.name = ?1 AND f.filmDirector.surname = ?2")
