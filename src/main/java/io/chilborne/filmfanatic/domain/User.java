@@ -45,6 +45,8 @@ public class User implements UserDetails {
   private LocalDateTime lastLogin;
   @Column
   private boolean active;
+  @Transient
+  private Collection<GrantedAuthority> authorities;
 
   @Column(name = "films_reviews")
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -138,9 +140,12 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    Set<GrantedAuthority> authorities = new HashSet<>();
-    roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-    return new ArrayList<>(authorities);
+    if (authorities == null) {
+      Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+      roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+      authorities = new ArrayList<>(grantedAuthorities);
+    }
+    return authorities;
   }
 
   @Override
