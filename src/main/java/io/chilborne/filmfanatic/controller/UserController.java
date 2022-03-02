@@ -78,8 +78,7 @@ public class UserController {
   @RequestMapping(path = "admin/user/{username}", method = RequestMethod.GET)
   public String profile(@PathVariable("username") String username,
                         @RequestParam(name = "user", required = false) String requestParam,
-                        Model model,
-                        Authentication auth)
+                        Model model)
   {
     User user = userService.getUser(username);
     model.addAttribute("user", user);
