@@ -1,4 +1,4 @@
-package io.chilborne.filmfanatic.controller;
+package io.chilborne.filmfanatic.controller.thymeleaf;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = {"io.chilborne.filmfanatic.controller.thymeleaf"})
 public class ExceptionControllerAdvice {
 
   private final Logger logger = LoggerFactory.getLogger(ExceptionControllerAdvice.class);

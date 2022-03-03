@@ -48,7 +48,7 @@ public class User implements UserDetails {
 
   @Column(name = "films_reviews")
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private final Set<Review> filmsReviews = new HashSet<>();
+  private final Set<Review> reviews = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   private final Set<Film> films = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -68,11 +68,11 @@ public class User implements UserDetails {
   }
 
   public void addReview(Review review) {
-    filmsReviews.add(review);
+    reviews.add(review);
   }
 
   public void removeReview(Review review) {
-    filmsReviews.remove(review);
+    reviews.remove(review);
   }
 
   public void addScore(Score score) {

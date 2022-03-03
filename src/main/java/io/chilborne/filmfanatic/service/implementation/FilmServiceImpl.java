@@ -85,4 +85,9 @@ public class FilmServiceImpl implements FilmService {
   public Set<Film> searchFilms(String searchParam, String searchCriteria) {
     return filmSearch.searchFilm(searchParam, FilmSearchCriteriaEnum.fromString(searchCriteria));
   }
+
+  @Override
+  public Film findByTitleExact(String title) {
+    return filmRepo.findByTitleIgnoreCase(title).orElseThrow(FilmNotFoundException::new);
+  }
 }
