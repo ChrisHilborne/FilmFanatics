@@ -1,4 +1,4 @@
-package io.chilborne.filmfanatic.service.filmsearch;
+package io.chilborne.filmfanatic.service.filmsearch.strategy;
 
 import io.chilborne.filmfanatic.domain.Film;
 
