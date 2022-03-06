@@ -7,20 +7,25 @@
     <!-- Configuración del log que aparece por consola: Console appender -->
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
             <!-- Configuración de la traza -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %-60.60yellow(%C{20}): %msg%n%throwable
             </Pattern>
-        </layout>
+        </encoder>
     </appender>
 
     <!-- Configuración para que se almacene el log en un fichero: File Appender -->
     <appender name="RollingFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/${LOG_NAME}.log</file>
-        <encoder
-                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d %p %C{1.}:%M [%t] %m%n</Pattern>
         </encoder>
 
@@ -35,11 +40,9 @@
         </rollingPolicy>
     </appender>
 
-    <!-- Define el nivel de log para cada appender -->
-    <root level="info">
-        <appender-ref ref="Console" />
+    <root level="INFO">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
     </root>
-    <root level="debug>
-    	<appnder-ref ref="RollingFile />
-   	</root>
+
 </configuration>

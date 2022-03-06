@@ -1,4 +1,4 @@
-package io.chilborne.filmfanatic.controller;
+package io.chilborne.filmfanatic.controller.thymeleaf;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.domain.Score;

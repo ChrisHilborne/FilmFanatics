@@ -22,4 +22,6 @@ public interface FilmService {
   Set<Film> getAllFilms();
 
   Set<Film> searchFilms(String searchParam, String searchCriteria);
+
+  Film findByTitleExact(String title);
 }

@@ -5,7 +5,7 @@ import io.chilborne.filmfanatic.domain.dto.FilmSearchCriteriaEnum;
 import io.chilborne.filmfanatic.exception.FilmNotFoundException;
 import io.chilborne.filmfanatic.repository.FilmRepository;
 import io.chilborne.filmfanatic.service.filmsearch.FilmSearch;
-import io.chilborne.filmfanatic.service.filmsearch.strategy.*;
+import io.chilborne.filmfanatic.service.filmsearch.strategy.implementation.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;

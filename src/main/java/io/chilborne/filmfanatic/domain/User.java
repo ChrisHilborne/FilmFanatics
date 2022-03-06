@@ -50,15 +50,15 @@ public class User implements UserDetails {
 
   @Column(name = "films_reviews")
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Review> filmsReviews = new HashSet<>();
+  private final Set<Review> reviews = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Film> films = new HashSet<>();
+  private final Set<Film> films = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private Set<Score> scores = new HashSet<>();
+  private final Set<Score> scores = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>();
+  private final Set<Role> roles = new HashSet<>();
 
 
   public void addFilm(Film film) {
@@ -70,11 +70,11 @@ public class User implements UserDetails {
   }
 
   public void addReview(Review review) {
-    filmsReviews.add(review);
+    reviews.add(review);
   }
 
   public void removeReview(Review review) {
-    filmsReviews.remove(review);
+    reviews.remove(review);
   }
 
   public void addScore(Score score) {

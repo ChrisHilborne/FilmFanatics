@@ -1,8 +1,8 @@
-package io.chilborne.filmfanatic.service.filmsearch.strategy;
+package io.chilborne.filmfanatic.service.filmsearch.strategy.implementation;
 
 import io.chilborne.filmfanatic.domain.Film;
 import io.chilborne.filmfanatic.repository.FilmRepository;
-import io.chilborne.filmfanatic.service.filmsearch.FilmSearchStrategy;
+import io.chilborne.filmfanatic.service.filmsearch.strategy.FilmSearchStrategy;
 
 import java.util.Set;
 
