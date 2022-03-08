@@ -9,9 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice(basePackages = {"io.chilborne.filmfanatic.controller.thymeleaf"})
-public class ExceptionControllerAdvice {
+public class WebsiteExceptionControllerAdvice {
 
-  private final Logger logger = LoggerFactory.getLogger(ExceptionControllerAdvice.class);
+  private final Logger logger = LoggerFactory.getLogger(WebsiteExceptionControllerAdvice.class);
 
   @ExceptionHandler
   public ModelAndView handleException(HttpServletRequest request, Exception exception){

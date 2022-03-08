@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 public class WebController {
 
@@ -19,11 +21,16 @@ public class WebController {
     this.filmService = filmService;
   }
 
-  @RequestMapping(path = "/*", method = {RequestMethod.GET, RequestMethod.POST})
+  @RequestMapping(path = "/*", method = {GET, RequestMethod.POST})
   public String index(Model model) {
     logger.info("Connection... serving index.html");
     model.addAttribute("films", filmService.getAllFilms());
     return "index";
+  }
+
+  @RequestMapping(path = "/swagger-ui", method = GET)
+  public String swaggerUi() {
+    return "redirect:/swagger-ui/index.html";
   }
 
   @GetMapping(path = "/error-test")

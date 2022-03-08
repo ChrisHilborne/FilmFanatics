@@ -1,5 +1,6 @@
 package io.chilborne.filmfanatic.security.jwt;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtResponse {
 
+    @Schema(description = "Authentication Token")
     private final String token;
 
 }

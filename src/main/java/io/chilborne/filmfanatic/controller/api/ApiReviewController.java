@@ -6,9 +6,17 @@ import io.chilborne.filmfanatic.exception.ReviewAlreadyExistsException;
 import io.chilborne.filmfanatic.service.FilmService;
 import io.chilborne.filmfanatic.service.ReviewService;
 import io.chilborne.filmfanatic.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/review")
 @Slf4j
+@Tag(name = "Reviews", description = "POST and GET User Reviews of Films")
 public class ApiReviewController {
 
   private final ReviewService reviewService;
@@ -41,6 +50,21 @@ public class ApiReviewController {
     this.modelMapper = modelMapper;
   }
 
+  @Operation(description = "Create new Review of Film belonging to Authenticated User")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "Successfully created",
+    content = @Content(schema = @Schema(implementation = ReviewDTO.class),
+      mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    @ApiResponse(responseCode = "409", description = "Review already Created for Film by User",
+    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+      mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    @ApiResponse(responseCode = "401", description = "Unauthorized",
+      content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+        mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    @ApiResponse(responseCode = "500", description = "Generic Error",
+      content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+        schema = @Schema(implementation = ErrorResponse.class)))
+  })
   @PostMapping(path = "/new", consumes = "application/json", produces = {"application/json", "text/xml"})
   public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO, Principal principal) {
     if (!reviewDTO.getUser().equals(principal.getName())) {
@@ -52,6 +76,18 @@ public class ApiReviewController {
     return ResponseEntity.status(HttpStatus.CREATED).body(addedDTO);
   }
 
+  @Operation(description = "GET all Reviews belonging to authenticated User")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Success!",
+      content = @Content(array = @ArraySchema(schema = @Schema(implementation = ReviewDTO.class)),
+        mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    @ApiResponse(responseCode = "401", description = "Unauthorized",
+      content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+        mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    @ApiResponse(responseCode = "500", description = "Generic Error",
+      content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+        mediaType = MediaType.APPLICATION_JSON_VALUE))
+  })
   @GetMapping(path = "/user/{username}")
   public ResponseEntity<?> getUserReviews(@PathVariable String username, Authentication auth) {
     if (!username.equals(auth.getName())) {
@@ -63,11 +99,6 @@ public class ApiReviewController {
     return ResponseEntity.ok(convertToDtos(userReviews));
   }
 
-  @ExceptionHandler({ReviewAlreadyExistsException.class})
-  public ResponseEntity<?> handleReviewAlreadyExistsException(HttpServletRequest request, Exception e) {
-    ErrorResponse response = new ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT, e.getMessage(), "/api/review/new");
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-  }
 
   private Review convertToEntity(ReviewDTO reviewDTO) {
     Review review = modelMapper.map(reviewDTO, Review.class);

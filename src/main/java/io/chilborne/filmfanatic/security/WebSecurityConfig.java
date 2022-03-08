@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/films/**").permitAll()
         .antMatchers("/search").permitAll()
         .antMatchers("/h2-console/**").permitAll()
+        .antMatchers("/v3/api-docs/**" ,"/swagger-ui/**", "swagger-ui.html").permitAll()
         .antMatchers("/admin/**").hasAnyAuthority(ADMIN_ROLE)
         .anyRequest().authenticated()
     .and()

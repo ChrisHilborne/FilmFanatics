@@ -8,7 +8,7 @@
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
             <!-- Configuración de la traza -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
