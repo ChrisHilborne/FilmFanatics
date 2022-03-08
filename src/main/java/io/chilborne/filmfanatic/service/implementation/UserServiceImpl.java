@@ -89,7 +89,8 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(String username) {
     logger.info("Deleting User {}", username);
-   userRepo.deleteByUsername(username);
+    User toDelete = userRepo.findByUsername(username).orElseThrow(UserNotFoundException::new);
+   userRepo.delete(toDelete);
   }
 
   @Override

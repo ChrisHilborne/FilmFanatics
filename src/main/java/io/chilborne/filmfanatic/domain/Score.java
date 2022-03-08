@@ -18,10 +18,10 @@ public class Score {
   @Max(value = 5)
   private int value = 0;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.REMOVE)
   @JoinColumn(name = "film_id")
   private Film film;
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.REMOVE)
   @JoinColumn(name = "user_id")
   private User user;
 

@@ -48,17 +48,23 @@ public class User implements UserDetails {
   @Transient
   private Collection<GrantedAuthority> authorities;
 
-  @Column(name = "films_reviews")
-  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+
+  @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final Set<Review> reviews = new HashSet<>();
-  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final Set<Film> films = new HashSet<>();
-  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final Set<Score> scores = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private final Set<Role> roles = new HashSet<>();
+
+  public User(String username, String password) {
+    this.username = username;
+    this.password = password;
+    this.active = true;
+  }
 
 
   public void addFilm(Film film) {

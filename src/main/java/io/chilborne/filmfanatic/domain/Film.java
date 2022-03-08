@@ -38,14 +38,14 @@ public class Film implements Serializable {
   @Column(name = "avg_score")
   private int averageScore;
 
-  @ManyToOne(cascade = MERGE)
+  @ManyToOne(cascade = REMOVE)
   @JoinColumn(name = "user_id")
   private User user;
-  @OneToMany(mappedBy = "film", cascade = ALL, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "film", fetch = FetchType.EAGER, orphanRemoval = true)
   private List<Score> scores = new ArrayList<>();
-  @OneToMany(mappedBy = "film", cascade = ALL, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "film", fetch = FetchType.EAGER, orphanRemoval = true)
   private Set<Review> reviews = new HashSet<>();
-  @ManyToOne()
+  @ManyToOne
   @JoinColumn(name = "director_id")
   private Person filmDirector;
   @ManyToMany(fetch = FetchType.EAGER)

@@ -19,10 +19,10 @@ public class Review {
   @Column(columnDefinition = "TIMESTAMP")
   private LocalDate date;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = CascadeType.REMOVE)
   @JoinColumn(name = "film_id", referencedColumnName = "id")
   private Film film;
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = CascadeType.REMOVE)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
