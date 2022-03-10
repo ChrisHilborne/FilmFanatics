@@ -16,6 +16,6 @@ public class FilmAverageScoreSearch implements FilmSearchStrategy {
 
   @Override
   public Set<Film> searchFilm(String searchParam) {
-    return repository.findByAverageScoreGreaterThanEqual(Integer.parseInt(searchParam));
+    return repository.findByAvgScoreGreaterThanEqual(Integer.parseInt(searchParam));
   }
 }

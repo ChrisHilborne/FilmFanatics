@@ -17,7 +17,7 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
   Set<Film> findByFilmCinematographersNameContainsOrFilmCinematographersSurnameContainsAllIgnoreCase(String name, String surname);
   Set<Film> findByFilmScreenwritersNameContainsOrFilmScreenwritersSurnameContainsAllIgnoreCase(String name, String surname);
   Set<Film> findByFilmComposersNameContainsOrFilmComposersSurnameContainsAllIgnoreCase(String name, String surname);
-  Set<Film> findByAverageScoreGreaterThanEqual(int score);
+  Set<Film> findByAvgScoreGreaterThanEqual(int score);
 
 
   @Query("SELECT f FROM films f WHERE f.filmDirector.name = ?1 AND f.filmDirector.surname = ?2")

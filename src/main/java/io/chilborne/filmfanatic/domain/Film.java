@@ -34,9 +34,9 @@ public class Film implements Serializable {
   @Column
   private Boolean migrate;
   @Column(name = "date_migrate", columnDefinition = "TIMESTAMP")
-  private LocalDate dataMigrate;
+  private LocalDate dateMigrate;
   @Column(name = "avg_score")
-  private int averageScore;
+  private int avgScore;
 
   @ManyToOne(cascade = REMOVE)
   @JoinColumn(name = "user_id")
@@ -66,7 +66,7 @@ public class Film implements Serializable {
   private Set<Person> filmCinematographers = new HashSet<>();
 
   public void calculateAverageScore() {
-    this.averageScore = scores.stream().map(Score::getValue).reduce(0, Integer::sum) / scores.size();
+    this.avgScore = scores.stream().map(Score::getValue).reduce(0, Integer::sum) / scores.size();
   }
 
   public void addScore(Score score) {
@@ -141,7 +141,7 @@ public class Film implements Serializable {
     if (title != null ? !title.equals(film.title) : film.title != null) return false;
     if (synopsis != null ? !synopsis.equals(film.synopsis) : film.synopsis != null) return false;
     if (poster != null ? !poster.equals(film.poster) : film.poster != null) return false;
-    if (dataMigrate != null ? !dataMigrate.equals(film.dataMigrate) : film.dataMigrate != null) return false;
+    if (dateMigrate != null ? !dateMigrate.equals(film.dateMigrate) : film.dateMigrate != null) return false;
     if (user != null ? !user.equals(film.user) : film.user != null) return false;
     if (reviews != null ? !reviews.equals(film.reviews) : film.reviews != null) return false;
     if (filmDirector != null ? !filmDirector.equals(film.filmDirector) : film.filmDirector != null) return false;
