@@ -23,7 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import static io.chilborne.filmfanatic.util.Constants.*;
 
 @Configuration
-@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
