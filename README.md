@@ -186,6 +186,8 @@ Todos los mensajes de validación están inducidos en el fichero `validation-mes
 #### registration.html
 * [registration.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/registration.html)
 
+Cuando se ve cualquier formulario en el plataforma se puede notar que antes hay un par de tags `<form></fom>` vaciás. Es asi porque encontré un bug que Thymeleaf no haría el formulario sin esto antes. Ya he creado un 'Issue' en el GitHub de Thymeleaf [aquí](https://github.com/thymeleaf/thymeleaf-spring/issues/282).    
+
 La paginá ya servida lleva el formulario para crear un `User` nuevo.
 ```
 <form th:method="POST" enctype="multipart/form-data" th:object="${createUserDTO}" th:action="@{/register}">
@@ -567,9 +569,254 @@ Si por algún motivo el intento del usuario de iniciar sesión se falla, la pagi
 ```
 
 ### User Profile
+* [profile.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/profile.html)
 
-### Delete User
+Al iniciar una sesión el usuario esta enviado a la pagina del perfíl. El método GET del `UserController` usa los datos de la sesión para cargar el `Model` con un objeto de `User` que muestra al usuario autenticado sus datos.
+```
+@RequestMapping(path = "/profile", method = RequestMethod.GET)
+public String profile(Model model, Principal principal) {
+  if (principal != null) {
+    User user = userService.getUser(principal.getName());
+    model.addAttribute("user", user);
+    return "profile";
+  }
+  else return "/";
+}
+```
+También si un usuario ADMIN crea un usuario nuevo esta enviado a la pagina de perfil para que se pueda confirmar los datas ya ingresados. Esta vez el método de `UserController` coge el username como parámetro de URL.   
+```
+@RequestMapping(path = "admin/user/{username}", method = RequestMethod.GET)
+public String profile(@PathVariable("username") String username,
+                      @RequestParam(name = "user", required = false) String requestParam,
+                      Model model)
+{
+  User user = userService.getUser(username);
+  model.addAttribute("user", user);
+  return "profile";
+}
+```
+De esta manera, un ADMIN puede ver los datos de cualquier usuario con el url path `/admin/user/{username}`. 
 
-### Edit User
+#### userCreatedModal.html
+
+* [userCreatedModel.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/userCreatedModal.html)
+
+El método `register()` del `UserController` directa un usuario ADMIN a la paginá con la lineá de código `     return "redirect:/admin/user/" + newUser.getUsername() + "?user=created";`. El parámetro `user=created` activa el `Modal` de bootstrap que esta incluido en la paginá `profile.html` como fragment. Así se anuncia al usuario ADMIN que se ha creado el usuario nuevo con éxito. Abajo se encuentra la función de javascript que `userCreatedModal.html` contiene para activarse.    
+```
+<script type="text/javascript">
+  window.onload =
+  function() {
+      let params = new URLSearchParams(window.location.search);
+      if (params.has('user')) {
+          let message = params.get('user');
+          if (message == 'created') {
+              console.log("message is created");
+              $('#userCreatedModal').modal("show");
+          }
+      }
+  };
+</script>
+```
+### Editar Usuario
+* [edit-user.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/edit-profile.html)
+
+El perfil de usuario muestra un botón para editar los datos del usuario. Solo se muestra si es el usuario autenticado que esta viendo sus propios datos. 
+```
+<div class="mt-5 text-center" th:if="${#authentication.getPrincipal().getUsername() == user.username}">
+    <a class="btn btn-primary profile-button mx-1" th:href="@{/profile/edit/}">Edit Profile</a>
+</div>
+```
+Todavía no he implementado la funcionalidad para que un usuario ADMIN puede editar los datos de otros usuarios.
+
+El método de GET `editProfile(Model model, Principal principal)` del `UserController` es asi.
+```
+  @RequestMapping(path = "/profile/edit", method = RequestMethod.GET)
+  public String editProfile(Model model, Principal principal) {
+    User user = userService.getUser(principal.getName());
+    model.addAttribute("editUserDTO", new EditUserDTO(user));
+    model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
+    return "edit-profile";
+  }
+```
+Tiene cuatro pasos:
+1. Se carga el `User` autenticado del base de datos. Aunque se puede cargar también de la sesión de Spring Security directamente.
+2. Usa el `User` que representa el usuario autenticado para crear un nuevo objeto de `EditUserDTO` y se carga al `Model`.
+3. Carga el `Model` con un nuevo objeto de `ChangePasswordDTO`
+4. Devuelve la paginá `edit-user.html`
+
+La paginá `edit-user.html` contiene tres formularios. 
+
+#### Cambiar imagen de usuario
+
+```
+<form th:method="POST" enctype="multipart/form-data" action="/user/image">
+  <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+      <label for="image-file">
+          <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${editUserDTO.image}}">
+      </label>
+      <div class="row">
+          <input class="px-2 mr-4" id="image-file" type="file" name="userImage" />
+      </div>
+      <div class="row mt-2">
+          <input type="submit" value="Change Picture" />
+      </div>
+      <br/>
+  </div>
+</form>
+``` 
+Se enviá el nuevo imagen al método `saveUserImage(String username, MultipartFile imageFile)` del `UserController` ya explicado en la sección de la creación del `User` nuevo.  
+
+#### Cambiar contraseña 
+[passwordModal.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/passwordModal.html)
+[ChangePasswordDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ChangePasswordDTO.java)
+
+Para cambiar la contraseña del usuario se hace clic en el botón 'Change Password' que abre un modal donde se encuentra el formulario de cambiar contraseña. El modal contiene un formulario donde el usuario debe ingresar su contraseña anterior, y su nuevo contraseña dos veces. Asi se puede verificar que: a) es el usuario que esta cambiando su contraseña, como tiene que ingresar su contraseña existente de nuevo; b) que la nueva contraseña esta correcto por el hecho de haber sido ingresado dos veces. 
+```
+<form th:method="POST" action="/user/change-password" th:object="${changePasswordDTO}">
+  <div class="modal-body">
+      <div class="row mt-2 justify-content-center">
+          <div class="col mx-3">
+              <input placeholder="Old Password" type="password" th:field="*{oldPassword}" class="form-control">
+          </div>
+      </div>
+      <div class="row mt-2 justify-content-center">
+          <div class="col mx-3">
+              <input placeholder="New Password" type="password" th:field="*{password}" class="form-control">
+              <div class="alert alert-warning mb-0 mt-1 py-1" th:if="${#fields.hasErrors('${changePasswordDTO.password}')}" th:errors="${changePasswordDTO.password}"></div>
+          </div>
+      </div>
+      <div class="row mt-2 justify-content-center">
+          <div class="col mx-3">
+              <input placeholder="Repeat New Password" type="password" th:field="*{confirmPassword}" class="form-control">
+              <div class="alert alert-warning mb-0 mt-1 py-1" th:if="${#fields.hasErrors('${changePasswordDTO.confirmPassword}')}" th:errors="${changePasswordDTO.confirmPassword}"></div>
+          </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Confirm</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  </div>
+</form>
+```
+El formulario se enviá al método POST de `changePassword()` del `UserController`.  
+```
+@RequestMapping(path = "/user/change-password", method = RequestMethod.POST)
+public String changePassword(@Valid @ModelAttribute("changePasswordDTO") ChangePasswordDTO changePassword,
+                              BindingResult result,
+                              Model model,
+                              Authentication authentication)
+{
+  if (result.hasErrors()) {
+    model.addAttribute("editUserDTO", new EditUserDTO((User) authentication.getPrincipal()));
+    model.addAttribute("error", true);
+    return "edit-profile";
+  }
+  logger.info("Changing Password for {}", authentication.getName());
+  userService.changePassword(authentication.getName(), changePassword.getOldPassword(), changePassword.getPassword());
+  return "redirect:/profile/edit";
+}
+```
+El método tiene 4 pasos:
+1. Si hay algún error en el `BindingResult` de `ChangePasswordDTO`, por ejemplo si los dos contraseñas nueva no se corresponden, se devuelve la paginá de `edit-user.html` de nuevo pero cargada con un nuevo `EditUserDTO` y otro atributo `error`. Aquí encontramos el problema que intenté resolver implementando `UserDetails` con el `User`. Como el `Model` que se usa como argumento del método solo contiene el `ChangePasswordDTO` se tiene que crear un nuevo `EditUserDTO` con un objeto `User`. Si no fuera el `User` una implementación de `UserDetails` esto implicaría una llamada al base de datos cada vez que hubiera un error que podría presentar problemas cuando se aumenta el numero de usuarios. Pero ahorra veo que este problema se puede evitar también con almacenamiento en caché.  
+2. Se escribe un informe de la operación al `Logger`.
+3. Llama el método `changePassword(String username, String oldPassword, String newPassword)` del `UserService`. 
+4. Enviá el usuario a la paginá de `edit-user.html` de nuevo. 
+
+##### changePassword(String username, String oldPassword, String newPassword)
+
+El método `changePassword(String username, String oldPassword, String newPassword)` del `UserService` es asi.
+```
+@Override
+@Transactional
+public void changePassword(String username, String oldPassword, String newPassword) {
+  logger.info("Changing User's {} password", username);
+  User toUpdate = userRepo.findByUsername(username).orElseThrow(UserNotFoundException::new);
+  // check user has entered correct old password
+  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(-1);
+  if (!encoder.matches(oldPassword, toUpdate.getPassword())) {
+    throw new UnauthorizedException("Authorization Failure");
+  }
+  else {
+    toUpdate.setPassword(encoder.encode(newPassword));
+    userRepo.save(toUpdate);
+  }
+}
+```        
+Este método tiene 4 pasos:
+1. Carga el usuario del base de datos.
+2. Verifica que la contraseña anterior del usuario esta correcta.
+3. Cambia la contraseña para la nueva ya codificada.
+4.  Guarda el `User` ya actualizado en le base de datos. 
+
+#### Cambiar datos personales de usuario
+* [EditUserDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/EditUserDTO.java)
+
+Decidí usar un objeto de tipo `DTO` para la actualización de los datos personales de usuarios por que no me parecía necesario cargar la paginá con todos los datos que contiene el objeto `User`. Además, asi creando una capa entre el objeto de dominio y los usuarios me parecía prudente. Así que para cambiar algo en la paginá web no será necesario ni tocar el objeto de dominio. Como los objetos de dominio forman la fundación del programa - cambiar uno de ellos implica una gran cambio por toda el programa. Mientras cambiar un objeto DTO solo implica un cambio en la capa del web y nada mas.
+
+Un vez ingresadas, los cambios del usuario se envían al método `updateUser()` del `UserController`. 
+
+```
+@RequestMapping(path = "/user/edit", method = RequestMethod.POST)
+public String updateUser(@Valid @ModelAttribute("editUserDTO") EditUserDTO editUserDTO,
+                          BindingResult result,
+                          Model model,
+                          Principal principaiál)
+{
+  if (result.hasErrors()) {
+    model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
+    return "edit-profile";
+  }
+  else {
+    String loggedInUsername = principal.getName();
+    logger.info("Updating {} to {}", loggedInUsername, editUserDTO);
+    User updated = userService.updateUser(loggedInUsername, editUserDTO.map());
+    model.addAttribute("user", updated);
+    return "profile";
+  }
+}
+```
+Este método tiene 4 pasos:
+1. Se hay algún error en los datos ingresado, se devuelve la pagina para que sea mostrado al usuario.
+2. Escribe un informe de la operación al `Logger`
+3. Llama el método `updateUser(String username, User user)` del `UserService.`
+4. Devuelve la pagina `profile.html` ya cargada con los datos actualizados del usuario.
+
+##### updateUser(updateUser(String username, User user)
+
+```
+@Override
+@Transactional
+public User updateUser(String oldUsername, User user) {
+  logger.info("Updating User {}", oldUsername);
+  // check if username is new
+  if (!oldUsername.equals(user.getUsername())
+  // and check if it's available
+    && userRepo.findByUsername(user.getUsername()).isPresent()) {
+    throw new UsernameAlreadyExistsException("Username unavailable.");
+  }
+  User toUpdate = userRepo.findByUsername(oldUsername)
+    .orElseThrow(UserNotFoundException::new);
+  toUpdate.update(user);
+  updateSecurityContext(toUpdate.getUsername());
+  return userRepo.save(toUpdate);
+}
+```
+
+```
+private void updateSecurityContext(String username) {
+  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  User userDetails = (User) authentication.getPrincipal();
+  userDetails.setUsername(username);
+}
+```
+
+
+### Eliminar Usuario
+* [delete-user.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/delete-user.html)
+
+En la paginá `edit-user.html` se encuentra un botón para eliminar el usuario del plataforma. Como la paginá en sí es solo disponible para que un usuario autorizado edite sus propios datos, la opción de eliminarse también solo se dispone al usuario autenticado. 
+
+El botón se enviá el usuario a una nueva paginá `delete-user.html` que pide confirmación de la eliminación. 
+
 
 ## Películas 
