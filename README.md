@@ -781,7 +781,7 @@ Este método tiene 4 pasos:
 3. Llama el método `updateUser(String username, User user)` del `UserService.`
 4. Devuelve la pagina `profile.html` ya cargada con los datos actualizados del usuario.
 
-##### updateUser(updateUser(String username, User user)
+##### updateUser(String username, User user)
 
 ```
 @Override
@@ -802,6 +802,18 @@ public User updateUser(String oldUsername, User user) {
 }
 ```
 
+El método para actualizar un objeto de `User` tiene 6 pasos:
+1. Primero escribe un informe de la operación al `Logger`.
+2. Comprueba si el usuario ha cambiado el `username` y si lo ha cambiado, si el `username` nuevo esta disponible. Si el `username` no esta disponible se tira una excepción. 
+3. Carga el `User` que se va a cambiar del base de datos.
+4. Llama un método de utilidad `update(User user)` del `User` que se va a actualizar para actualizar los campos del `User` ya cargado del base de datos. Se tiene que hacer asi para que Hibernate se mantenga la sesión del objeto.
+5. Llama otro método de `UserServiceImpl` para actualizar el `SecurityContext` asi que el nombre del usuario en `header.html` cambia.
+6. Guarda el `User` actualizada y lo devuelve.   
+
+##### updateSecurityContext(String username) 
+
+El método `updateSecurityContext` solo funciona para cambiar el nombre del usuario en el `SecurityContext`.
+
 ```
 private void updateSecurityContext(String username) {
   Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -810,13 +822,46 @@ private void updateSecurityContext(String username) {
 }
 ```
 
-
 ### Eliminar Usuario
 * [delete-user.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/delete-user.html)
 
 En la paginá `edit-user.html` se encuentra un botón para eliminar el usuario del plataforma. Como la paginá en sí es solo disponible para que un usuario autorizado edite sus propios datos, la opción de eliminarse también solo se dispone al usuario autenticado. 
 
-El botón se enviá el usuario a una nueva paginá `delete-user.html` que pide confirmación de la eliminación. 
+```
+<a class="btn btn-danger profile-button mx-2 my-1 py-1" th:href="@{/profile/delete}">Delete Profile</a>
+```
+
+El botón se enviá el usuario a una nueva paginá `delete-user.html` que pide confirmación de la eliminación.
+
+```
+<div class="alert alert-danger" role="alert">
+    <p class="text-center">
+        <strong>Are you sure you want to delete yourself permanently?</strong>
+        <br>
+        <small>All of your films, scores and reviews will also be deleted.</small>
+    </p>
+    <form></form>
+    <form class="text-center" th:method="GET" th:action="@{/user/delete}"}>
+        <button class="btn btn-danger profile-button mx-2" type="submit">Delete Profile</button>
+        <a href="#" class="alert-link mx-4" onclick="history.back()">Go Back</a>
+    </form>
+</div>
+```
+#### deleteUser(Principal principal)
+
+Al pinchar el botón para confirmar. Se envía un solicitude GET al método `deleteUser(Principal principal)` del `UserController` que simplemente coge el nombre del usuario autenticado y llama al método `deleteUser(String username)` del `UserService`. Al eliminar el `User` se envía el usuario a la pagina de 'logout'.    
+
+```
+@RequestMapping(path = "/user/delete", method = {RequestMethod.GET})
+public String deleteUser(Principal principal) throws UnauthorizedException {
+  logger.info("Deleting User {}", principal.getName());
+  userService.deleteUser(principal.getName());
+  return "redirect:/logout";
+}
+```
+
+## Personas
+
 
 
 ## Películas 
