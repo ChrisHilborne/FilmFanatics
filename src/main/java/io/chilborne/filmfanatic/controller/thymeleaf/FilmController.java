@@ -53,11 +53,11 @@ public class FilmController {
     return "search-film";
   }
 
-  @RequestMapping(path = "films/{filmUrl}", method = RequestMethod.GET)
-  public String filmInfo(@PathVariable("filmUrl") String filmUrl,
+  @RequestMapping(path = "films/{filmUri}", method = RequestMethod.GET)
+  public String filmInfo(@PathVariable("filmUri") String filmUri,
                          Model model,
                          Authentication authentication) {
-    Film film = filmService.getFilmByUrl(filmUrl);
+    Film film = filmService.getFilmByUri(filmUri);
     model.addAttribute("film", film);
 
     if (authentication != null) {
@@ -75,8 +75,8 @@ public class FilmController {
     return "film";
   }
 
-  @RequestMapping(path = "films/{filmUrl}/score", method = RequestMethod.POST)
-  public String filmInfo(@PathVariable("filmUrl") String filmUrl,
+  @RequestMapping(path = "films/{filmUri}/score", method = RequestMethod.POST)
+  public String filmInfo(@PathVariable("filmUri") String filmUri,
                          @ModelAttribute("newScore") @Valid Score score,
                          BindingResult result,
                          Authentication auth) {
@@ -84,9 +84,9 @@ public class FilmController {
       return "film";
     }
     score.setUser((User) auth.getPrincipal());
-    filmService.addScore(filmUrl, score);
+    filmService.addScore(filmUri, score);
 
-    return "redirect: /films/" + filmUrl;
+    return "redirect: /films/" + filmUri;
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
@@ -119,7 +119,7 @@ public class FilmController {
         createdFilm = filmService.savePoster(film, posterImage);
       }
       model.addAttribute("film", createdFilm);
-      return "redirect: /films/" + StringUtil.getFilmUrl(createdFilm.getTitle(), createdFilm.getYear());
+      return "redirect: /films/" + StringUtil.getFilmUri(createdFilm.getTitle(), createdFilm.getYear());
     }
   }
 }

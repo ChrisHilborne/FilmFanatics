@@ -860,8 +860,10 @@ public String deleteUser(Principal principal) throws UnauthorizedException {
 }
 ```
 
-## Personas
-
-
-
 ## Películas 
+
+Aparte del `User` el objeto de dominio `Film` es lo más esencial al programa. El propósito del plataforma es que usuarios pueden subir y buscar datos de pelis diferentes. 
+
+### objeto de dominio
+*[Film.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Film.java)
+

@@ -36,7 +36,7 @@ public class FilmServiceImpl implements FilmService {
   @Override
   @Transactional
   public Film addFilm(Film film) {
-    film.setUrl(StringUtil.getFilmUrl(film.getTitle(), film.getYear()));
+    film.setUri(StringUtil.getFilmUri(film.getTitle(), film.getYear()));
     log.info("Saving Film {}", film);
     return filmRepo.save(film);
   }
@@ -56,16 +56,16 @@ public class FilmServiceImpl implements FilmService {
 
   @Override
   @Transactional()
-  public Film getFilmByUrl(String filmUrl) {
-    String filmTitle = StringUtil.getFilmTitleFromUrl(filmUrl);
+  public Film getFilmByUri(String filmUri) {
+    String filmTitle = StringUtil.getFilmTitleFromUri(filmUri);
     return filmRepo.findByTitleIgnoreCase(filmTitle)
       .orElseThrow(() -> new FilmNotFoundException());
   }
 
   @Override
   @Transactional
-  public Film addScore(String filmUrl, Score score) {
-    Film toUpdate = getFilmByUrl(filmUrl);
+  public Film addScore(String filmUri, Score score) {
+    Film toUpdate = getFilmByUri(filmUri);
     toUpdate.addScore(score);
     return filmRepo.save(toUpdate);
   }

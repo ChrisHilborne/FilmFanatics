@@ -16,15 +16,15 @@ public class StringUtil {
 
 
   public static String getFilmPosterFilename(String filmTitle, int filmYear, String contentType) {
-    return getFilmUrl(filmTitle, filmYear) + getFileExtension(contentType);
+    return getFilmUri(filmTitle, filmYear) + getFileExtension(contentType);
   }
 
-  public static String getFilmUrl(String filmTitle, int filmYear) {
+  public static String getFilmUri(String filmTitle, int filmYear) {
     return String.join("-", filmTitle.toLowerCase(Locale.ROOT).split(" ")) + filmYear;
   }
 
-  public static String getFilmTitleFromUrl(String filmUrl) {
-    String lowerCaseTitle = filmUrl.substring(0, filmUrl.length() - 5)
+  public static String getFilmTitleFromUri(String filmUri) {
+    String lowerCaseTitle = filmUri.substring(0, filmUri.length() - 5)
       .replace("-", " ");
     return StringUtils.capitalize(lowerCaseTitle);
 

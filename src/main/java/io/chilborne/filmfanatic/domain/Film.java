@@ -22,7 +22,7 @@ public class Film implements Serializable {
   @Column(nullable = false)
   private String title;
   @Column
-  private String url;
+  private String uri;
   @Column(nullable = false)
   private int year;
   @Column
