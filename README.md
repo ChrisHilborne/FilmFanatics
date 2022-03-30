@@ -30,7 +30,7 @@ La estructura final del programa es:
 El Usuario es la fundación de nuestra app. Casio todos los datos, de `Film`, `Score` y `Review` pertenecen a un `User`. Son los usuarios que añadan los datos del app y, si un `User` se elimina del app - dichos datos también serán eliminados.   
 
 ### Objeto de Dominio
-[User](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/User.java)
+[User.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/User.java)
 
 Como se puede ver, decidí implementar el `interface` de `UserDetails` con el objeto de dominio `User`.
 
@@ -122,7 +122,6 @@ Asi cuando se busca un `User` con su `username` es más rápido.
 * [head.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/head.html)
 * [header.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/header.html)
 * [footer.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/footer.html)
-* [UserRepository](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/UserRepository.java)
 
 Al llegar a la paginá inicial del plataforma de FilmFanatic@s encontramos en el header de la paginá un botón de 'Register' para crear un usuario nuevo.       
 
@@ -145,8 +144,8 @@ Al pinchar el botón para registrarse, se llama el método con `@RequestMapping`
 ```
 #### CreateUserDTO
 
-* [CreateUserDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/CreateUserDTO.java)
-* [PasswordDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/PasswordDTO.java)
+* [CreateUserDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/CreateUserDTO.java)
+* [PasswordDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/PasswordDTO.java)
 
 Decidí usar objetos de DTO para la creación y actualización de los usuarios para poder verificar las contraseñas. También solo es necesario incluir los campos necesarios para crear o actualizar un `User` y no todos. 
 
@@ -184,7 +183,7 @@ El `PasswordDTO` funciona para verificar que las dos contraseñas que escribe el
 Todos los mensajes de validación están inducidos en el fichero `validation-messages.properties` ([GitHub](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/validation-messages.properties)) y configurado por el objeto de `@Configuration` de `ValidationMessageConfig` ([GitHub](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/config/ValidationMessageConfig.java)).    
 
 #### registration.html
-* [registration.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/registration.html)
+* [registration.html.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/registration.html)
 
 Cuando se ve cualquier formulario en el plataforma se puede notar que antes hay un par de tags `<form></fom>` vaciás. Es asi porque encontré un bug que Thymeleaf no haría el formulario sin esto antes. Ya he creado un 'Issue' en el GitHub de Thymeleaf [aquí](https://github.com/thymeleaf/thymeleaf-spring/issues/282).    
 
@@ -227,7 +226,7 @@ Si es un Admin que quiere crear un `User` nuevo tambien se muestra la opción de
 </div>
 ```
 #### UserController
-* [UserController](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/UserController.java)
+* [UserController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/UserController.java)
 
 Al enviar los datos del usuario nuevo al servidor se llama el método POST `registerNewUser()` del `UserController`:
 ```
@@ -260,11 +259,11 @@ Este método tiene 6 pasos:
 6. Si no es autenticado ni Admin, se devuelve la paginá de iniciar sesión para que el usuario nuevo haga el login. 
 
 #### UserService
-* [UserServiceImpl](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main.java/java/io/chilborne/filmfanatic/service/implementation/UserServiceImpl.java)
+* [UserServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main.java/java/io/chilborne/filmfanatic/service/implementation/UserServiceImpl.java)
 
 ##### add(User)
 
-* [UserRepository](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/UserRepository.java)
+* [UserRepository.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/UserRepository.java)
 
 ```
 @Override
@@ -301,7 +300,7 @@ para busca  cualquier `User` con el `username` del objeto nuevo. Si uno ya exist
 
 ##### saveUserImage(String username, MultipartFile imageFile)
 
-* [StringUtils](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/StringUtil.java)
+* [StringUtils.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/StringUtil.java)
 
 ```
 @Override
@@ -341,8 +340,8 @@ El método usa el numero id del usuario por si en caso de que se cambie el `user
 4) Llama el método `saveFile(MultipartFile file, String fileName)` del `FileService` que el `UserServiceImpl` tiene como dependencia.
 
 #### FileService
-* [FileServiceImpl](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FileServiceImpl.java)
-* [FileServiceConfig](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/config/FileServiceConfig.java)
+* [FileServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FileServiceImpl.java)
+* [FileServiceConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/config/FileServiceConfig.java)
 
 Se inyecta al `UserServiceImpl` el `FileService` asi.
 
@@ -410,7 +409,7 @@ images.upload.directory.film=static/images/films
 
 ##### saveFile(MultipartFile file, String fileName)
 
-* [FileUtils](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/FileUtils.java)
+* [FileUtils.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/FileUtils.java)
 
 ```
 @Override
@@ -453,7 +452,7 @@ public static Path getResourcePath(String directory, String fileName) throws IOE
 Al pinchar en el link de 'Login' para iniciar sesión el método GET `login(Model model)` del `UserController` devuelve la pagina de `login.html` donde se encuentra el formulario para indicar el username y contraseña del `User`. 
 
 #### WebSecurityConfig 
-* [WebSecurityConfig](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
+* [WebSecurityConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
 
 La clase `WebSecurityConfig` que extiende el `WebSecurityConfigurerAdapter` proporcionado por Spring Security es donde se configura la método de iniciar sesión. 
 
@@ -500,7 +499,7 @@ protected void configure(HttpSecurity http) throws Exception {
 Ignorando las partes del método que pertenecen al tema de RESTful API y autenticación JWT, se puede ver que mientra various paths están abierto a los usuarios no autenticados, se configura la autenticación del usuario con formulario usando varios variables constantes que se definen en al clase de utilidad `Constants`([GitHub](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/Constants.java)).
 
 #### UserDetailsServiceImpl 
-* [UserDetailsServiceImpl](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/UserDetailsServiceImpl.java)
+* [UserDetailsServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/UserDetailsServiceImpl.java)
 
 Dado que el objeto `User` implemente el `UserDetails` hubiera sido posible sencillamente implementar la interface `UserDetailsService` con el `UserService`, configurarlo en el `WebSecurityConfig` y de allí llevar todos las funciones del `User` - la autenticación incluida. Pero esto hubiera contradicho el principio de responsabilidades singular de SOLID. Ademas así hubiera sido más difícil de cambiar la manera de autenticación por el fuerte acoplamiento ('coupling' en inglés) entre las partes del programa.    
 
@@ -537,7 +536,7 @@ Cuando un usuario iniciar sesión con éxito se reenviá a la pagina principal c
 ```
 
 ##### SuccessfulAuthenticationEventListener 
-* [SuccessfulAuthenticationEventListener](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/SuccessfulAuthenticationEventListener.java)
+* [SuccessfulAuthenticationEventListener.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/SuccessfulAuthenticationEventListener.java)
 
 El objeto `User` tiene un campo de tipo `LocalDateTime` llamado 'lastLogin' que debe guardar el ultimo fecha y hora que el usuario inicio sesión en el plataforma. Para realizar esta funcionamiento decide utilizar la clase `SuccessfulAuthenticationEventListener` que implemente `ApplicationListener<AuthenticationSuccessEvent> `. De esta manera el método `onApplicationEvent(AuthenticationSuccessEvent event)` se llama cada vez que se autentica con éxito. 
 ```
@@ -668,7 +667,7 @@ Se enviá el nuevo imagen al método `saveUserImage(String username, MultipartFi
 
 #### Cambiar contraseña 
 [passwordModal.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/passwordModal.html)
-[ChangePasswordDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ChangePasswordDTO.java)
+[ChangePasswordDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ChangePasswordDTO.java)
 
 Para cambiar la contraseña del usuario se hace clic en el botón 'Change Password' que abre un modal donde se encuentra el formulario de cambiar contraseña. El modal contiene un formulario donde el usuario debe ingresar su contraseña anterior, y su nuevo contraseña dos veces. Asi se puede verificar que: a) es el usuario que esta cambiando su contraseña, como tiene que ingresar su contraseña existente de nuevo; b) que la nueva contraseña esta correcto por el hecho de haber sido ingresado dos veces. 
 ```
@@ -749,7 +748,7 @@ Este método tiene 4 pasos:
 4.  Guarda el `User` ya actualizado en le base de datos. 
 
 #### Cambiar datos personales de usuario
-* [EditUserDTO](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/EditUserDTO.java)
+* [EditUserDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/EditUserDTO.java)
 
 Decidí usar un objeto de tipo `DTO` para la actualización de los datos personales de usuarios por que no me parecía necesario cargar la paginá con todos los datos que contiene el objeto `User`. Además, asi creando una capa entre el objeto de dominio y los usuarios me parecía prudente. Así que para cambiar algo en la paginá web no será necesario ni tocar el objeto de dominio. Como los objetos de dominio forman la fundación del programa - cambiar uno de ellos implica una gran cambio por toda el programa. Mientras cambiar un objeto DTO solo implica un cambio en la capa del web y nada mas.
 
@@ -859,6 +858,8 @@ public String deleteUser(Principal principal) throws UnauthorizedException {
   return "redirect:/logout";
 }
 ```
+## Personas
+
 
 ## Películas 
 
@@ -866,4 +867,155 @@ Aparte del `User` el objeto de dominio `Film` es lo más esencial al programa. E
 
 ### objeto de dominio
 *[Film.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Film.java)
+
+En el objeto de dominio de `Film` hay unas cosas notables. 
+1. He añadido dos indices al base de datos para ayudar aumentar la velocidad de las buscadas:
+```
+@Table(indexes = {
+  @Index(name = "title_index", columnList = "title"),
+  @Index(name = "year_index", columnList = "year")})
+``` 
+2. Los dos propiedades `scores` y `reviews` tienen `orphanRemoval = true` para que no si se elimina una película del base de datos, no se quedan ningunos `Review` ni `Score` sin una película.
+3. He añadido otra propiedad `uri` (universal resource identifier) para cada `Film`. La razón es para que se puede usar una identificador en el url de la pagina. Por ejemplo, le película 'The Fellowship of the Ring' hecho en 2002 tiene el `uri` de 'the-fellowship-of-the-ring-2002' y el url para ir a su pagina es 'www.localhost:8080/the-fellowship-of-the-ring-2002'. Asi los url están más legibles y no mostramos ningún dato del sistema al usuario, en este caso el `id` del `Film`. El `uri` tiene la ventaja de tener el titulo y el año de producción de la película. A veces hay películas con el mismo titulo pero casi nunca esta producidas en el mismo año. Asi podemos evitar colisiones posibles entre los urls de la películas. 
+
+Para generar el `uri` usamos un método estático de `StringUtils` 
+```
+public static String getFilmUri(String filmTitle, int filmYear) {
+  return String.join("-", filmTitle.toLowerCase(Locale.ROOT).split(" ")) + filmYear;
+}
+```
+También hay un método estático de `StringUtil` para sacar el titulo de la película del `uri`:
+```
+public static String getFilmTitleFromUri(String filmUri) {
+  String lowerCaseTitle = filmUri.substring(0, filmUri.length() - 5)
+    .replace("-", " ");
+  return StringUtils.capitalize(lowerCaseTitle);
+}
+```
+Aquí uso la clase `StringUtils` de `ApacheCommons` para capitalizar el primer carácter de cada palabra.  
+
+4. Ademas he añadido un capo más `int avgScore` para guardar el promedio de la puntuación que los usuarios han dado a la película. La puntuación media esta calculado cada vez que se añade o quita un `Score` del `Film`.
+```
+public void calculateAverageScore() {
+  this.avgScore = scores.stream().map(Score::getValue).reduce(0, Integer::sum) / scores.size();
+}
+
+public void addScore(Score score) {
+  score.setFilm(this);
+  scores.add(score);
+  calculateAverageScore();
+}
+
+public void removeScore(Score score) {
+  scores.remove(score);
+  calculateAverageScore();
+}
+```
+
+### crear película
+* [new-film.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/new-film.html) 
+* [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
+* [FilmService.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FilmServiceImpl.java)
+* [FilmRepository.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/FilmRepository.java)
+
+Un usuario autenticado encontraría un link en el header para crear una película. Al pinchar el link llamará el método GET de `createFilm(Model model)` del `FilmController` que carga el modelo con todos las personas del base de datos antes de devolver la paginá `new-film.html`.  
+
+```
+@RequestMapping(path = "films/add", method = RequestMethod.GET)
+public String createFilm(Model model) {
+  Film newFilm = new Film();
+
+  model.addAttribute("film", newFilm);
+  model.addAttribute("directors", personService.getPeopleByType(DIRECTOR));
+  model.addAttribute("actors", personService.getPeopleByType(ACTOR));
+  model.addAttribute("screenwriters", personService.getPeopleByType(SCREEN_WRITER));
+  model.addAttribute("cinematographers", personService.getPeopleByType(CINEMATOGRAPHER));
+  model.addAttribute("composers", personService.getPeopleByType(COMPOSER));
+  return "new-film";
+}
+```
+La paginá en sí dispone un formulario para ingresar todos los datos de la película. El formulario se enviá al método POST `createFilm()` del `FilmController`. 
+
+```
+@RequestMapping(path = "films/add", method = RequestMethod.POST)
+public String createFilm(@RequestParam("posterImage") MultipartFile posterImage,
+                          @ModelAttribute("film") @Valid Film film,
+                          BindingResult result,
+                          Model model,
+                          Authentication auth)
+{
+  if (result.hasErrors()) {
+    return "new-film";
+  }
+  else {
+    film.setUser((User) auth.getPrincipal());
+    Film createdFilm = filmService.addFilm(film);
+    if (!posterImage.isEmpty()) {
+      createdFilm = filmService.savePoster(film, posterImage);
+    }
+    model.addAttribute("film", createdFilm);
+    return "redirect: /films/" + StringUtil.getFilmUri(createdFilm.getTitle(), createdFilm.getYear());
+  }
+}
+```
+Este método tiene 5 pasos:
+1. Primero devuelva la pagina si se encuentra errors en el `BindingResult`.
+2. Pone el usuario ya autenticado como propietario del `Film`.
+3. Llama el método de `addFilm(Film film)` del `FilmService` para guardar el `Film` en el base de datos.
+4. Si hay una imagen para la película llama el método `savePoster(Film film, MultipartImage posterImage)` del `FilmService` para guardar el imagen de la película y actualizar el `Film` en el base de datos.
+4. Añade la película nueva al modelo.
+5. Reenviá el usuario a la paginá donde se puede ver los datos de la película ya creada.  
+
+
+#### addFilm(Film film)
+```
+@Override
+@Transactional
+public Film addFilm(Film film) {
+  film.setUri(StringUtil.getFilmUri(film.getTitle(), film.getYear()));
+  log.info("Saving Film {}", film);
+  return filmRepo.save(film);
+}
+```
+El método para guardar una pelicular nueva es bastante simple.
+1. Primero añade el `uri` al `Film` nuevo.
+2. Lo guarda en el base de datos. 
+3. Al final devuelve el `Film` ya guardado.  
+
+##### savePoster(Film film , MultipartImage posterImage)
+```
+@Override
+@Transactional
+public Film savePoster(Film film, MultipartFile posterImage) {
+  Film toUpdate = filmRepo.findByTitleIgnoreCase(film.getTitle())
+    .orElseThrow(() -> new FilmNotFoundException());
+
+  String fileName = StringUtil.getFilmPosterFilename(film.getTitle(), film.getYear(), posterImage.getContentType());
+  fileService.saveFile(posterImage, fileName);
+
+  toUpdate.setPoster(fileName);
+  return filmRepo.save(toUpdate);
+}
+```
+EL método para guardar el imagen de la película tiene 5 pasos:
+1. Carga el `Film` para actualizar del base de datos.
+2. Llama el método de `StringUtil` para generar el nombre del archivo del imagen. Aunque ahorra me he dado cuenta que se podría usar el `uri` para esto también. 
+3. Llama el método `saveFile(MultipartFile file, String fileName)` de `FileService` ya explicado en la sección de la inscripción de usuarios nuevos.
+4. Actualiza el `Film` con el nombre del archivo del imagen.
+5. Guarda el `Film` actualizado en el base de datos y lo devuelve.
+
+### buscar películas
+* [header.html]()
+* [FilmController.java]()
+* [FilmServiceImpl.java]()
+* [FilmSearchImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/implementation/FilmSearchImpl.java)
+* [FilmSearchCriteriaEnum.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/FilmSearchCriteriaEnum.java)
+* [FilmSearchStrategy.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/strategy/FilmSearchStrategy.java)
+* [FilmTitleSearch.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/strategy/implementation/FilmTitleSearch.java)
+
+Para buscar una película en la plataforma el usuario tiene dos opciones.
+1. En el header de cualquier pagina se encuentra una barra de buscada donde puede ingresar el titulo de la película que quiere buscar.
+2. También se encuentra en el header el link para llegar al `film-search.html` donde puede buscar una película segunda varias criteria.
+
+
 
