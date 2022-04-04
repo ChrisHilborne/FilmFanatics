@@ -23,7 +23,7 @@ VALUES
     ('Ridley', 'Scott', 'DIRECTOR');
 
 INSERT INTO films
-    (title, year, duration, avg_score, poster, migrate, user_id, director_id, url)
+    (title, year, duration, avg_score, poster, migrate, user_id, director_id, uri)
 VALUES
     ('The Fellowship of the Ring', 2001, 178, 4,'the-fellowship-of-the-ring.jpg', 0,(SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE name = 'Peter' AND surname ='Jackson'), 'the-fellowship-of-the-ring-2001'),
     ('Kingdom of Heaven', 2005, 190, 3,'kingdom-of-heaven.jpg', 1, (SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE name = 'Ridley' AND surname ='Scott'), 'kingdom-of-heaven-2005');

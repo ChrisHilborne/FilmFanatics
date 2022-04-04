@@ -37,7 +37,7 @@ public class Review {
     if (textReview != null ? !textReview.equals(review.textReview) : review.textReview != null) return false;
     if (date != null ? !date.equals(review.date) : review.date != null) return false;
     if (film != null ? !film.getTitle().equals(review.film.getTitle()) : review.film != null) return false;
-    return user != null ? user.equals(review.user) : review.user == null;
+    return user != null ? user.getUsername().equals(review.user.getUsername()) : review.user == null;
   }
 
   @Override

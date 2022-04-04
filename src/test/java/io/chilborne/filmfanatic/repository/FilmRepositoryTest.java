@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
+@DirtiesContext
 @ContextConfiguration(classes = TestData.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
@@ -63,7 +65,8 @@ class FilmRepositoryTest {
 
     // assert
     assertEquals(2, returnedFilms.size());
-    assertTrue(returnedFilms.containsAll(Set.of(LOTR, kingdomOfHeaven)));
+    assertTrue(returnedFilms.contains(LOTR));
+    assertTrue(returnedFilms.contains(kingdomOfHeaven));
   }
 
 }

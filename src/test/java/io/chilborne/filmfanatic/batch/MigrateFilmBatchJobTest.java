@@ -8,12 +8,14 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.batch.operations.BatchRuntimeException;
 
 
 @SpringBootTest
+@DirtiesContext
 @ActiveProfiles("test")
 class MigrateFilmBatchJobTest {
 

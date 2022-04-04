@@ -19,7 +19,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 @EnableBatchProcessing
 @Slf4j
 public class MigrateJobConfig {

@@ -38,7 +38,7 @@ public class Film implements Serializable {
   @Column(name = "avg_score")
   private int avgScore;
 
-  @ManyToOne(cascade = REMOVE)
+  @ManyToOne(cascade = {MERGE})
   @JoinColumn(name = "user_id")
   private User user;
   @OneToMany(mappedBy = "film", fetch = FetchType.EAGER, orphanRemoval = true)
@@ -135,14 +135,14 @@ public class Film implements Serializable {
 
     Film film = (Film) o;
 
-    if (year != film.year) return false;
+     if (year != film.year) return false;
     if (duration != film.duration) return false;
     if (migrate != film.migrate) return false;
     if (title != null ? !title.equals(film.title) : film.title != null) return false;
     if (synopsis != null ? !synopsis.equals(film.synopsis) : film.synopsis != null) return false;
     if (poster != null ? !poster.equals(film.poster) : film.poster != null) return false;
     if (dateMigrate != null ? !dateMigrate.equals(film.dateMigrate) : film.dateMigrate != null) return false;
-    if (user != null ? !user.equals(film.user) : film.user != null) return false;
+    if (user != null ? !user.getUsername().equals(film.user.getUsername()) : film.user != null) return false;
     if (reviews != null ? !reviews.equals(film.reviews) : film.reviews != null) return false;
     if (filmDirector != null ? !filmDirector.equals(film.filmDirector) : film.filmDirector != null) return false;
     if (filmActors != null ? !filmActors.equals(film.filmActors) : film.filmActors != null) return false;

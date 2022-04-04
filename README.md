@@ -1005,8 +1005,7 @@ EL método para guardar el imagen de la película tiene 5 pasos:
 5. Guarda el `Film` actualizado en el base de datos y lo devuelve.
 
 ### buscar películas
-* [header.html]()
-* [FilmController.java]()
+* [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
 * [FilmServiceImpl.java]()
 * [FilmSearchImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/implementation/FilmSearchImpl.java)
 * [FilmSearchCriteriaEnum.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/FilmSearchCriteriaEnum.java)
@@ -1014,8 +1013,244 @@ EL método para guardar el imagen de la película tiene 5 pasos:
 * [FilmTitleSearch.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/strategy/implementation/FilmTitleSearch.java)
 
 Para buscar una película en la plataforma el usuario tiene dos opciones.
+
 1. En el header de cualquier pagina se encuentra una barra de buscada donde puede ingresar el titulo de la película que quiere buscar.
+```
+<form class="d-flex align-items-center" th:method="get" th:action="@{/films/search}">
+  <input class="form-control" type="text" name="query" id="query" placeholder="Search" aria-label="search">
+  <input type="hidden" name="criteria" id="criteria" value="title">
+  <button class="btn btn-outline-success mx-2" type="submit">
+    <i class="fas fa-search"></i>
+  </button>
+</form>
+```
 2. También se encuentra en el header el link para llegar al `film-search.html` donde puede buscar una película segunda varias criteria.
 
+El formulario de `film-search.html` se lee asi.
 
+```
+<form class="row d-flex justify-content-center p-4 align-items-middle" th:method="GET" th:action="@{films/search}">
+    <div class="col-6">
+        <input class="form-control" type="text" name="query" id="query" placeholder="Search">
+    </div>
+    <div class="col-3">
+        <select class="form-select" name="criteria" id="criteria">
+            <option th:each="c : ${criteria}" th:value="${c}" th:text="${c.displayValue}"></option>
+        </select>
+    </div>
+    <div class="col-2">
+        <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+```
 
+#### FilmSearchCriteriaEnum
+Los 'criteria' de la buscada que están incluido con el formulario o como un input ocultado, como en 1., o elegido por el usuario están representados en el programa por el `FilmSearchCriteriaEnum`.
+```
+@Slf4j
+public enum FilmSearchCriteriaEnum {
+  TITLE("Title"),
+  YEAR("Year"),
+  MAX_DURATION("Max Length"),
+  AVG_SCORE("Average Score"),
+  ACTOR("Actor"),
+  DIRECTOR("Director"),
+  SCREENWRITER("Screenwriter"),
+  CINEMATOGRAPHER("Cinematographer"),
+  COMPOSER("Composer");
+...
+```
+#### FilmSearchStrategy
+Cada criteria ENUM tiene su propio implementación de la interface `FilmSearchStrategy`. Asi que he usado el padrón de diseño estrategia para programar la búsqueda por criteria diferentes. Lo he usado para que sean separados las responsabilidades de las partes diferentes de la programa y también para que sea más fácil añadir otros criteria de búsqueda más adelante.
+```
+public interface FilmSearchStrategy {
+
+  Set<Film> searchFilm(String searchParam);
+
+}
+```
+Y cada implementación tiene su propio método en el `FilmRepository`.
+
+Por ejemplo el Enum `AVG_SCORE` tiene el [`FilmAverageScoreSearch`](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/strategy/implementation/FilmAverageScoreSearch.java) como su pareja.
+```
+public class FilmAverageScoreSearch implements FilmSearchStrategy {
+
+  private final FilmRepository repository;
+
+  public FilmAverageScoreSearch(FilmRepository repository) {
+    this.repository = repository;
+  }
+
+  @Override
+  public Set<Film> searchFilm(String searchParam) {
+    return repository.findByAvgScoreGreaterThanEqual(Integer.parseInt(searchParam));
+  }
+}
+``` 
+Que llama al método `findByAvgScoreGreaterThanEqual(int score)` de `FilmRepository`.
+
+#### FilmSearchImpl
+
+Es el interface `FilmSearch` que toma el criteria de búsqueda y los parámetros de ella y crear una instancia de la implementación correcta de `FilmSearchStrategy` y llama su método `searchFilm(String searchParam)`.  
+
+```
+@Override
+  public Set<Film> searchFilm(String searchParam, FilmSearchCriteriaEnum searchCriteria) {
+    switch (searchCriteria) {
+      case TITLE:
+        return new FilmTitleSearch(repository).searchFilm(searchParam);
+      case YEAR:
+        return new FilmYearSearch(repository).searchFilm(searchParam);
+      case MAX_DURATION:
+        return new FilmMaxDurationSearch(repository).searchFilm(searchParam);
+      case AVG_SCORE:
+        return new FilmAverageScoreSearch(repository).searchFilm(searchParam);
+      case ACTOR:
+        return new FilmActorSearch(repository).searchFilm(searchParam);
+      case DIRECTOR:
+        return new FilmDirectorSearch(repository).searchFilm(searchParam);
+      case SCREENWRITER:
+        return new FilmScreenwriterSearch(repository).searchFilm(searchParam);
+      case CINEMATOGRAPHER:
+        return new FilmCinematographerSearch(repository).searchFilm(searchParam);
+      case COMPOSER:
+        return new FilmComposerSearch(repository).searchFilm(searchParam);
+    }
+    throw new FilmNotFoundException();
+  }
+```
+
+#### Ruta de Solicitud de Búsqueda
+
+Al hacer una búsqueda de película en la plataforma, la solicitud sigue el siguiente pasos.
+
+1. Primero el formulario llega al `FilmController` que pasa la criteria y los parámetros al `FilmService`.
+```
+@RequestMapping(path = "films/search", method=RequestMethod.GET)
+  public String searchFilm(@RequestParam(name = "query") String query,
+                           @RequestParam(name = "criteria") String criteria,
+                           Model model) {
+    Set<Film> results = filmService.searchFilms(query, criteria);
+    model.addAttribute("films", results);
+    return "searched-film";
+  }
+```
+
+2. El `FilmService` llama al `FilmSearch` para que se busque la pelicular según la criteria dada.
+```
+@Override
+public Set<Film> searchFilms(String searchParam, String searchCriteria) {
+  return filmSearch.searchFilm(searchParam, FilmSearchCriteriaEnum.fromString(searchCriteria));
+}
+```
+Se genera el `FilmSearchCriteriaEnum` con un método de utilidad de dada clase `fromString(String criteria)`. 
+```
+  public static FilmSearchCriteriaEnum fromString(String value) {
+    for (FilmSearchCriteriaEnum criteria : FilmSearchCriteriaEnum.values()) {
+      if (criteria.getDisplayValue().equalsIgnoreCase(value)) {
+        return criteria;
+      }
+      else {
+        try {
+          if (FilmSearchCriteriaEnum.valueOf(value) == criteria) {
+            return criteria;
+          }
+        }
+        catch (Exception e) {
+          log.error("Error when fetching FilmSearchCriteriaEnum", e);
+        }
+      }
+    }
+    throw new IllegalArgumentException("No matching search criteria found");
+  }
+``` 
+3. El `FilmSearch` crea y usa la correcta implementación de `FilmSearchStrategy` para devolver las películas que corresponden a los datos ingresados.
+4. Cuando se devuelva los `Film` que corresponden con la criteria y los parámetros ingresados, el `FilmController` carga el `Model` y devuelve la paginá `search-film.html` que muestra una carta de cada película. 
+
+```
+<div th:fragment="searched-film" class="row">
+    <div class="card m-2" th:each="film : ${films}" style="width: 12rem;">
+        <img th:src="@{'/images/films/' + ${film.poster}}" src="" class="card-img-top p-3" alt="Film Poster">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${film.title}">Film Title</h5>
+            <p class="card-text" th:text="${film.synopsis}">Synopsis</p>
+            <a th:href="@{/films/__${film.url}__}" class="btn btn-primary">Info</a>
+        </div>
+    </div>
+</div>
+```
+Estas cartas de la información de las películas también están incluido en la pagina inicial como fragmento y inicializado por el `WebController` al cargar la paginá `index.html`.
+```
+  @RequestMapping(path = "/*", method = {GET, RequestMethod.POST})
+  public String index(Model model) {
+    logger.info("Connection... serving index.html");
+    model.addAttribute("films", filmService.getAllFilms());
+    return "index";
+  }
+```
+
+### Info de Película
+* [film.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/film.html)
+
+Al pinchar el botón la carta de una película que se muestra en la pagina de búsqueda, se enviá una solicitud GET a método `filmInfo(String filmUri, Model model, Authentication auth)`.
+```
+ @RequestMapping(path = "films/{filmUri}", method = RequestMethod.GET)
+  public String filmInfo(@PathVariable("filmUri") String filmUri,
+                         Model model,
+                         Authentication authentication) {
+    Film film = filmService.getFilmByUri(filmUri);
+    model.addAttribute("film", film);
+
+    if (authentication != null) {
+      User authenticatedUser = (User) authentication.getPrincipal();
+      Optional<Score> userScore = film.getScores()
+        .stream()
+        .filter(scr -> scr.getUser().getId() == authenticatedUser.getId())
+        .findFirst();
+      if (userScore.isPresent()) {
+        model.addAttribute("score", userScore.get());
+      } else {
+        model.addAttribute("newScore", new Score());
+      }
+    }
+    return "film";
+  }
+```
+
+Este método tiene 5 pasos:
+1. Primero llama el método de `getFilmByUri(String uri)` del `FilmService` para cargar la película solicitada.
+2. Carga el `Model` con la peli.
+3. Si la sesión de seguridad contiene un usuario autenticado, busca entre los `Score` del `User` que representa el usuario autenticado para ver si ya ha dado una puntuación a la película en cuestión.
+4. Si ya hay una puntuación de la película que la ha dodo el usuario - se carga el modelo con esta; y si no hay, se carga con un objeto nuevo de `Score` por si caso el usuario quiere darla una puntuación.
+5. Al final devuelve la paginá `film.html`      
+
+La paginá siempre muestra todo la información de la película, su puntuación media incluida y si el usuario esta autenticado muestra o la puntuación que se la ha dado ya, o le muestra la opción darla ahorra. Usa un icono de estrella para muestra al usuario la puntuación de la película.
+
+```
+<h5 class="mt-3">
+    Average Score:
+    <i th:each="i : ${#numbers.sequence(1, film.averageScore)}" class="fa fa-star"></i>
+</h5>
+<form></form>
+<form sec:authorize="isAuthenticated()" th:if="${newScore}" th:object="${newScore}" class="row row-cols g-1 align-items-centre" th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__/score/}">
+    <div class="col-4">
+        <select class="form-select" th:field="*{value}" >
+            <option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">Score</option>
+        </select>
+    </div>
+    <div class="col-8">
+        <button class="btn btn-primary btn-rounded" type="submit">Submit Your Score</button>
+    </div>
+</form>
+<h6 sec:authorize="isAuthenticated()" th:if="${score}" class="mt-1">
+    Your Score:
+    <i th:each="i : ${#numbers.sequence(1, score.value)}" class="fa fa-star"></i>
+</h6>
+```
+
+### Dar puntuación a una pelí 
+* [Score.java]()
+* [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
+* [FilmService.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FilmServiceImpl.java)
