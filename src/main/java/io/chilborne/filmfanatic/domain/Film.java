@@ -41,9 +41,9 @@ public class Film implements Serializable {
   @ManyToOne(cascade = {MERGE})
   @JoinColumn(name = "user_id")
   private User user;
-  @OneToMany(mappedBy = "film", fetch = FetchType.EAGER, orphanRemoval = true)
+  @OneToMany(mappedBy = "film", cascade = {REMOVE, MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
   private List<Score> scores = new ArrayList<>();
-  @OneToMany(mappedBy = "film", fetch = FetchType.EAGER, orphanRemoval = true)
+  @OneToMany(mappedBy = "film", cascade = {REMOVE, MERGE}, fetch = FetchType.EAGER, orphanRemoval = true)
   private Set<Review> reviews = new HashSet<>();
   @ManyToOne
   @JoinColumn(name = "director_id")

@@ -49,11 +49,11 @@ public class User implements UserDetails {
   private Collection<GrantedAuthority> authorities;
 
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final Set<Review> reviews = new HashSet<>();
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final Set<Film> films = new HashSet<>();
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
   private final Set<Score> scores = new HashSet<>();
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
