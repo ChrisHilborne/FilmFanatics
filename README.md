@@ -859,7 +859,54 @@ public String deleteUser(Principal principal) throws UnauthorizedException {
 }
 ```
 ## Personas
+* [Person.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Person.java)
+* [PersonTypeEnum.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/PersonTypeEnum.java)
+* [PersonController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/PersonController.java)
+* [PersonServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/PersonServiceImpl.java)
+* [PersonRepository.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/PersonRepository.java)
+* [new-person.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/new-person.html)
 
+Las personas que crean las películas que nuestros usuarios interesan, como directores, actores... forman una parte importante del dominio de nuestro plataforma. 
+
+Al llegar a la pagina para añadir una persona nueva el usuario tiene ingresar el nombre, apellidos y tipo, que ya esta determinada según el `PersonTypeEnum`.
+
+### PersonController.addPerson()
+
+Al enviar los datos del person nuevo al servidor - llegan al método `addPerson` del `userController`.
+
+```
+@RequestMapping(path = "/person/add", method = RequestMethod.POST)
+public String addPerson(@ModelAttribute @Valid Person person,
+                        BindingResult result,
+                        Model model,
+                        Principal principal)
+{
+  if (result.hasErrors()) {
+    log.error("Creation of Person {} failed because: {}", person, result.getAllErrors().toArray());
+    return "new-person";
+  }
+  else {
+    log.info("User {} added Person {}", principal.getName(), person);
+    service.addPerson(person);
+    return "redirect:/person/add?person=created";
+  }
+}
+```
+Este método tiene 4 pasos:
+1. Si hay algún error - los devuelve al usuario.
+2. Escribe al `log` que el usuario autenticado ha creado una persona nueva.
+3. Llama el método `addPerson(Person person)` del `PersonService`.
+4. Reenviá el usuario a la pagina para crear personas donde se muestra un mensaje de confirmación.
+
+### PersonService.addPerson(Person person)
+```
+@Override
+public Person addPerson(Person person) {
+  log.info("Adding Person: {}", person);
+  return personRepo.save(person);
+}
+```
+Este método solo guarda el `Person` nuevo en el base de datos. 
 
 ## Películas 
 
@@ -1226,7 +1273,7 @@ Este método tiene 5 pasos:
 4. Si ya hay una puntuación de la película que la ha dodo el usuario - se carga el modelo con esta; y si no hay, se carga con un objeto nuevo de `Score` por si caso el usuario quiere darla una puntuación.
 5. Al final devuelve la paginá `film.html`      
 
-La paginá siempre muestra todo la información de la película, su puntuación media incluida y si el usuario esta autenticado muestra o la puntuación que se la ha dado ya, o le muestra la opción darla ahorra. Usa un icono de estrella para muestra al usuario la puntuación de la película.
+La paginá siempre muestra todo la información de la película, las reseñas, su puntuación media incluida y si el usuario esta autenticado muestra o la puntuación que se la ha dado ya, o le muestra la opción darla ahorra. Usa un icono de estrella para muestra al usuario la puntuación de la película.
 
 ```
 <h5 class="mt-3">
@@ -1251,6 +1298,256 @@ La paginá siempre muestra todo la información de la película, su puntuación 
 ```
 
 ### Dar puntuación a una pelí 
-* [Score.java]()
+* [Score.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Score.java)
 * [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
 * [FilmService.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FilmServiceImpl.java)
+
+Al dar la puntuación a una película el se enviá al método `addScore(String filmUri, Score score, BindingResult result, Authentication auth)` del `FilmController`.
+
+```
+@RequestMapping(path = "films/{filmUri}/score", method = RequestMethod.POST)
+public String addScore(@PathVariable("filmUri") String filmUri,
+                        @ModelAttribute("newScore") @Valid Score score,
+                        BindingResult result,
+                        Authentication auth) {
+  if (result.hasErrors()) {
+    return "film";
+  }
+  score.setUser((User) auth.getPrincipal());
+  filmService.addScore(filmUri, score);
+
+  return "redirect: /films/" + filmUri;
+}
+```
+
+El método tiene 4 pasos:
+1. Si hay algún error en el BindingResult del Score - se devuelve la pagina para mostrarlo al usuario.
+2. Coge el `User` del `Authentication` objeto y lo aplica al `Score` nuevo.
+3. Llama el método `addScore(String filmUri, Score score)` del `FilmService`
+4. Reenviá el usuario a la pagina `film-info.html` para mostrar el `Score` nuevo actualizado.
+
+#### FilmService.addScore(String filmUri, Score score)
+
+```
+@Override
+@Transactional
+public Film addScore(String filmUri, Score score) {
+  Film toUpdate = getFilmByUri(filmUri);
+  toUpdate.addScore(score);
+  return filmRepo.save(toUpdate);
+}
+```
+
+El método de FilmService tiene 3 pasos:
+1. Llama su método `getFilmByUri(String filmUri)` para carga el Film a que le va dar la puntuación.  
+2. Añade el `Score` nuevo al `Film` ya cargado.
+3. Guarda el `Film` en el base de datos y lo devuelve.
+
+##### FilmService.getFilmByUri(String uri)
+* [StringUtil.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/StringUtil.java)
+
+```
+@Override
+@Transactional()
+public Film getFilmByUri(String filmUri) {
+  String filmTitle = StringUtil.getFilmTitleFromUri(filmUri);
+  return filmRepo.findByTitleIgnoreCase(filmTitle)
+    .orElseThrow(() -> new FilmNotFoundException());
+}
+```
+Este método tiene dos pasos:
+1. Llama el método `StringUtil.getFilmTitleFromUri(String filmUri)` para tener el titulo de la pelicula.
+2. Carga el `Film` del base de datos.
+
+El método `StringUtil.getFilmTitleFromUri(String filmUri)` funciona asi:
+
+```
+public static String getFilmTitleFromUri(String filmUri) {
+  String lowerCaseTitle = filmUri.substring(0, filmUri.length() - 5)
+    .replace("-", " ");
+  return StringUtils.capitalize(lowerCaseTitle);
+}
+```
+Usa el objeto `StringUtils` de la librería `Apache Commons`. Aun que he dado cuenta después que no es necesario hacer lo asi. Solo se necesita hacer un índice con el campo `uri` de `Film` en el base de datos. Asi que no sería necesario hacer el transformación de `title` + `year` y `filmUri` todo el tiempo.
+
+## Review
+* [Review.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Review.java)
+* [ReviewDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ReviewDTO.java)
+* [ApiReviewController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiReviewController.java)
+* [ReviewServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/ReviewServiceImpl.java)
+
+Las reseñas de la películas están importantes para nuestros usuarios - dejan que los usuarios compartir sus opinions sobre la películas ya guardadas en nuestro plataforma. Como estaba descrito en el documento de diseño los objetos de `Review` están disponibles, para crear y guardar, por un RESTful API. 
+
+Las peticiones HTTP al API usan el `ReviewDTO` para enviar y recibir los datos. 
+```
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ReviewDTO {
+  @Schema(description = "Title of Review", example = "A Really Good Film")
+  private String title;
+  @Schema(description = "Review text", example = "When I watched this film I was amazed!...")
+  private String text;
+  @Schema(description = "Date of Review creation", example = "2021-02-02")
+  private LocalDate date;
+  @Schema(description = "Username of Review owner", example = "username")
+  private String user;
+  @Schema(description = "Title of Film reviewed", example = "A Really Good Film")
+  private String film;
+}
+```
+
+### Solicitar reseñas del usuario
+* [ApiReviewController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiReviewController.java)
+
+Primero un usuario se tiene que autenticar con el API y recibir el token JWT. Una vez que lo tenemos y usando el utilidad de `httpie-jwt-auth`(https://github.com/teracyhq/httpie-jwt-auth) podemos solicitar todas las reseñas del usuario ya autenticado asi:
+
+```
+http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tpb3NjaG9vbCIsImV4cCI6MTY0OTcwNjE0NSwiaWF0IjoxNjQ5NzA1MDY1fQ.7yDIMR77-Wmr0_1G3ZTNpeGrxeMnJQ9LfAOhMDqeyDs" http://localhost:8080/api/review/user/tokioschool
+```
+
+La solicitude esta enviado al metodo `getUserReviews(@PathVariable String username, Authentication auth)` del `ApiReviewController`. Usamos el nombre del usuario como path variable para que los administradores puedan aceder a los datos tambien. 
+
+```
+@GetMapping(path = "/user/{username}")
+public ResponseEntity<?> getUserReviews(@PathVariable String username, Authentication auth) {
+  if (!username.equals(auth.getName())) {
+    if (!auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+    }
+  }
+  Set<Review> userReviews = reviewService.findByUsername(username);
+  return ResponseEntity.ok(convertToDtos(userReviews));
+}
+```
+El metodo tiene 4 pasos:
+1. Verifica que el usuario autenticado es o tiene el role de ADMIN o el usuario de que se esta pidiendo las reseñas, si no se tira una excepción.
+2. Llama el metodo `findyusername(String username)` del `Review Service` para cargar las reseñas del usuario en un `Set`.
+3. Conviere los datos cargados en objetos de DTO.
+4. Devuelve un `ResponseEntity` con el estatus HTTP de 200 y las reseñas del usuario en el cuerpo de la respuesta.   
+
+La respuesta recibida parece asi:
+```
+HTTP/1.1 200
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Connection: keep-alive
+Content-Type: application/json
+Date: Mon, 11 Apr 2022 19:35:51 GMT
+Expires: 0
+Keep-Alive: timeout=60
+Pragma: no-cache
+Set-Cookie: JSESSIONID=FD7C37FBC295BE986A7050B6EEF1159C; Path=/; HttpOnly
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+[
+    {
+        "date": null,
+        "film": "Kingdom of Heaven",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate facilisis velit eget feugiat. Vivamus nunc felis, interdum accumsan sapien sed, feugiat scelerisque ante. Pellentesque fermentum metus ac venenatis tristique. Ut feugiat ex hendrerit, blandit turpis id, semper magna. Suspendisse velit libero, fermentum at dolor a, rhoncus interdum massa. Ut mattis eget arcu at commodo. Integer rutrum diam est, in ornare ex malesuada eleifend. Phasellus eleifend suscipit enim, ac rhoncus diam tristique a. Sed pharetra quam quis dolor sagittis posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris tincidunt bibendum quam, eu porta mauris tincidunt eu. Nullam a ante magna. Donec lacinia ipsum lacus, sit amet malesuada nulla facilisis ut. Nullam euismod rhoncus erat. Aliquam nec ligula ac magna volutpat ultricies.",
+        "title": "Test Review",
+        "user": "tokioschool"
+    }
+]
+```
+### Creando una reseña nueva
+
+Para crear una reseña nueva se tiene que enviar los datos requiridos en otro solicitude HTTP, tambien con un token JWT. Por ejemplo:
+```
+http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tpb3NjaG9vbCIsImV4cCI6MTY0OTcwODIwMiwiaWF0IjoxNjQ5NzA3MTIyfQ.va2HJxItEScF9BgGONao2yvFHg4eeqyR9lBoB8zfWXE" http://localhost:8080/api/review/new \
+title=Really\ Great\ Film  \
+text=.............................................................................. \
+date=2022-04-11 \
+user=tokioschool \
+film=The\ Fellowship\ of\ The\ Ring
+```
+
+Los datos de la reseña nueva se envian al método `addReview(ReviewDTO reviewDTO, Principal principal)` del `ReviewController`. 
+```
+@PostMapping(path = "/new", consumes = "application/json", produces = {"application/json", "text/xml"})
+public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO, Principal principal) {
+  if (!reviewDTO.getUser().equals(principal.getName())) {
+    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+  }
+  Review received = convertToEntity(reviewDTO);
+  Review added = reviewService.addReview(received);
+  ReviewDTO addedDTO = convertToDto(added);
+  return ResponseEntity.status(HttpStatus.CREATED).body(addedDTO);
+}
+``` 
+Este metodo tiene 5 pasos:
+1. Primero verifica que el nombre de usuario incluido en la reseña enviado es los mismo del ususario ya autenticado, si no tira una excepción.
+2. Convierte la reseña (en forma `ReviewDTO`) enviado en un objeto de tipo `Review`.
+3. LLama el metodo `addReview(Review review) para guardarlo en el base de datos.
+4. Convierte el `Review` devuelto por el `ReviewService` en `ReviewDTO`.
+5. Devuelve un `ResponseEntity` con el estatus HTTP de 201 y la reseña ya añadida en su cuerpo. 
+
+Cuando esta recibida la respuesta parece asi:
+```
+HTTP/1.1 201
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Connection: keep-alive
+Content-Type: application/json
+Date: Mon, 11 Apr 2022 20:01:17 GMT
+Expires: 0
+Keep-Alive: timeout=60
+Pragma: no-cache
+Set-Cookie: JSESSIONID=74DB1997C07EA76B4580D84A6E1766DE; Path=/; HttpOnly
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+{
+    "date": "2022-04-11",
+    "film": "The Fellowship of the Ring",
+    "text": "..............................................................................",
+    "title": "Really Great Film",
+    "user": "tokioschool"
+}
+```
+ 
+### ReviewService
+* [ReviewServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/ReviewServiceImpl.java)
+
+#### findByUsername(String username)
+Este metodo es bastante simple:
+```
+@Override
+  @Transactional
+  public Set<Review> findByUsername(String username) {
+    return reviewRepo.findByUserUsername(username);
+  }
+```
+
+
+
+## Seguridad
+
+### RESTful API
+
+#### ApiAuthenticationController
+
+Usando `httpie` para connectar con el servidor podemos enviar una solicitude de autenticación asi:
+```
+http POST http://localhost:8080/api/auth  -a username=tokioschool password=tokioschool
+```
+
+De cual recebemos una respuesta asi con el auth token en el body:
+```
+HTTP/1.1 200
+Connection: keep-alive
+Content-Type: application/json
+Date: Mon, 11 Apr 2022 19:24:25 GMT
+Keep-Alive: timeout=60
+Transfer-Encoding: chunked
+
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tpb3NjaG9vbCIsImV4cCI6MTY0OTcwNjE0NSwiaWF0IjoxNjQ5NzA1MDY1fQ.7yDIMR77-Wmr0_1G3ZTNpeGrxeMnJQ9LfAOhMDqeyDs"
+}
+``` 
+
+#### Set-Cookie: JSESSIONID=...
+
+Se nota que aunque el modo de autenticación del RESTful API es con el token JWT y entonces debe ser sin estado (stateless) las respuesta siempre contienen un Header con un `Cookie` de la session. Esto he intentado de evitar pero la unica manera que he encontrado es crear dos clases de `@Configuration` que extienden el `WebSecurityConfigurerAdapter` pero, aunque lo intenté no podía lograr que las dos configuraciones se aplicaran al mismo tiempo - uno a las solicitudes de REST y el otro a las solicitudes de la pagina web.
