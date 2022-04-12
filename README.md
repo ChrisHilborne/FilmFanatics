@@ -4,7 +4,7 @@
 
 Este documento es la explicación del Proyecto Final del curso de Spring Boot de Tokio School.
 
-La plataforma esta disponible [aquí](https://film-fanaticos.herokuapp.com/) pero como esta alojado en in instance de Heroku, puede tardar unos segundos en cargar.
+La plataforma esta disponible [aquí](https://film-fanaticos.herokuapp.com/) pero como esta alojado en un instance de Heroku, puede tardar unos segundos en cargar.
 
 Todo el código del proyecto completo se encuentra en este [GitHub repository](https://github.com/ChrisHilborne/FilmFanatics/).
 
@@ -21,9 +21,311 @@ Proporcionaré en el propio documento fragmentos de código que requieren más e
 
 La estructura final del programa es:
 
+```
+.
+├── HELP.md
+├── LICENSE
+├── logs
+│   ├── film_fanatic@s-2022-03-07.0.log
+│   ├── film_fanatic@s-2022-03-08.0.log
+│   ├── film_fanatic@s-2022-03-10.0.log
+│   ├── film_fanatic@s-2022-03-11.0.log
+│   ├── film_fanatic@s-2022-03-29.0.log
+│   ├── film_fanatic@s-2022-03-30.0.log
+│   ├── film_fanatic@s-2022-04-03.0.log
+│   ├── film_fanatic@s-2022-04-03.1.log
+│   ├── film_fanatic@s-2022-04-04.0.log
+│   └── film_fanatic@s.log
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.md
+├── readme-pics
+│   ├── add-film.png
+│   ├── add-person.png
+│   ├── add-score.png
+│   ├── admin-create-user.png
+│   ├── admin-user-created.png
+│   ├── datepicker.png
+│   ├── delete-user.png
+│   ├── edit-user.png
+│   ├── film.png
+│   ├── film-review.png
+│   ├── Header-login.png
+│   ├── header-search-bar.png
+│   ├── Home Page.png
+│   ├── login.png
+│   ├── logout-message.png
+│   ├── loing-failure.png
+│   ├── Newly Added Review.png
+│   ├── password-modal.png
+│   ├── person-created-message.png
+│   ├── profile.png
+│   ├── register.png
+│   └── search-films.png
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── io
+│   │   │       └── chilborne
+│   │   │           └── filmfanatic
+│   │   │               ├── batch
+│   │   │               │   ├── FilmItemProcessor.java
+│   │   │               │   ├── FilmLineAggregator.java
+│   │   │               │   ├── FilmMapper.java
+│   │   │               │   ├── MigrateFilmStartListener.java
+│   │   │               │   ├── MigrateFilmWriteListener.java
+│   │   │               │   └── MigrateJobConfig.java
+│   │   │               ├── config
+│   │   │               │   ├── ApplicationConfig.java
+│   │   │               │   ├── FileServiceConfig.java
+│   │   │               │   ├── OpenApiConfig.java
+│   │   │               │   └── ValidationMessageConfig.java
+│   │   │               ├── controller
+│   │   │               │   ├── api
+│   │   │               │   │   ├── ApiAuthenticationController.java
+│   │   │               │   │   ├── ApiExceptionControllerAdvice.java
+│   │   │               │   │   ├── ApiReviewController.java
+│   │   │               │   │   └── ErrorResponse.java
+│   │   │               │   └── thymeleaf
+│   │   │               │       ├── FilmController.java
+│   │   │               │       ├── PersonController.java
+│   │   │               │       ├── UserController.java
+│   │   │               │       ├── WebController.java
+│   │   │               │       └── WebsiteExceptionControllerAdvice.java
+│   │   │               ├── domain
+│   │   │               │   ├── dto
+│   │   │               │   │   ├── ChangePasswordDTO.java
+│   │   │               │   │   ├── CreateUserDTO.java
+│   │   │               │   │   ├── EditUserDTO.java
+│   │   │               │   │   ├── FilmSearchCriteriaEnum.java
+│   │   │               │   │   ├── PasswordDTO.java
+│   │   │               │   │   └── ReviewDTO.java
+│   │   │               │   ├── Film.java
+│   │   │               │   ├── Person.java
+│   │   │               │   ├── PersonTypeEnum.java
+│   │   │               │   ├── Review.java
+│   │   │               │   ├── Role.java
+│   │   │               │   ├── Score.java
+│   │   │               │   └── User.java
+│   │   │               ├── exception
+│   │   │               │   ├── FilmNotFoundException.java
+│   │   │               │   ├── ImageUploadException.java
+│   │   │               │   ├── ReviewAlreadyExistsException.java
+│   │   │               │   ├── UnauthorizedException.java
+│   │   │               │   ├── UsernameAlreadyExistsException.java
+│   │   │               │   ├── UserNotFoundException.java
+│   │   │               │   └── UserRemovalException.java
+│   │   │               ├── FilmFanaticApplication.java
+│   │   │               ├── repository
+│   │   │               │   ├── FilmRepository.java
+│   │   │               │   ├── PersonRepository.java
+│   │   │               │   ├── ReviewRepository.java
+│   │   │               │   ├── RoleRepository.java
+│   │   │               │   ├── ScoreRepository.java
+│   │   │               │   └── UserRepository.java
+│   │   │               ├── security
+│   │   │               │   ├── jwt
+│   │   │               │   │   ├── JwtAuthenticationEntryPoint.java
+│   │   │               │   │   ├── JwtRequestFilter.java
+│   │   │               │   │   ├── JwtRequest.java
+│   │   │               │   │   ├── JwtResponse.java
+│   │   │               │   │   └── JwtTokenUtil.java
+│   │   │               │   ├── SuccessfulAuthenticationEventListener.java
+│   │   │               │   ├── UserDetailsServiceImpl.java
+│   │   │               │   └── WebSecurityConfig.java
+│   │   │               ├── service
+│   │   │               │   ├── FileService.java
+│   │   │               │   ├── filmsearch
+│   │   │               │   │   ├── FilmSearch.java
+│   │   │               │   │   ├── implementation
+│   │   │               │   │   │   └── FilmSearchImpl.java
+│   │   │               │   │   └── strategy
+│   │   │               │   │       ├── FilmSearchStrategy.java
+│   │   │               │   │       └── implementation
+│   │   │               │   │           ├── FilmActorSearch.java
+│   │   │               │   │           ├── FilmAverageScoreSearch.java
+│   │   │               │   │           ├── FilmCinematographerSearch.java
+│   │   │               │   │           ├── FilmComposerSearch.java
+│   │   │               │   │           ├── FilmDirectorSearch.java
+│   │   │               │   │           ├── FilmMaxDurationSearch.java
+│   │   │               │   │           ├── FilmScreenwriterSearch.java
+│   │   │               │   │           ├── FilmTitleSearch.java
+│   │   │               │   │           └── FilmYearSearch.java
+│   │   │               │   ├── FilmService.java
+│   │   │               │   ├── implementation
+│   │   │               │   │   ├── FileServiceImpl.java
+│   │   │               │   │   ├── FilmPosterImageFileService.java
+│   │   │               │   │   ├── FilmServiceImpl.java
+│   │   │               │   │   ├── PersonServiceImpl.java
+│   │   │               │   │   ├── ReviewServiceImpl.java
+│   │   │               │   │   ├── RoleServiceImpl.java
+│   │   │               │   │   └── UserServiceImpl.java
+│   │   │               │   ├── PersonService.java
+│   │   │               │   ├── ReviewService.java
+│   │   │               │   ├── RoleService.java
+│   │   │               │   └── UserService.java
+│   │   │               └── util
+│   │   │                   ├── Constants.java
+│   │   │                   ├── FileUtils.java
+│   │   │                   └── StringUtil.java
+│   │   └── resources
+│   │       ├── application-dev.properties
+│   │       ├── application-prod.properties
+│   │       ├── application.properties
+│   │       ├── application-test.properties
+│   │       ├── data.sql
+│   │       ├── films.csv
+│   │       ├── logback-spring.xml
+│   │       ├── static
+│   │       │   ├── images
+│   │       │   │   ├── cinema.png
+│   │       │   │   ├── films
+│   │       │   │   │   ├── kingdom-of-heaven.jpg
+│   │       │   │   │   └── the-fellowship-of-the-ring.jpg
+│   │       │   │   └── users
+│   │       │   │       ├── tokioschool.jpeg
+│   │       │   │       └── xsRV^Y3+env9+!3=g77H.jpg
+│   │       │   ├── js
+│   │       │   │   └── iziToast.min.js
+│   │       │   └── styles
+│   │       │       └── css
+│   │       │           ├── borders.css
+│   │       │           ├── custom-colours.css
+│   │       │           ├── iziToast.min.css
+│   │       │           ├── layout.css
+│   │       │           └── login.css
+│   │       ├── templates
+│   │       │   ├── delete-user.html
+│   │       │   ├── edit-profile.html
+│   │       │   ├── error.html
+│   │       │   ├── film.html
+│   │       │   ├── fragments
+│   │       │   │   ├── footer.html
+│   │       │   │   ├── header.html
+│   │       │   │   ├── head.html
+│   │       │   │   ├── passwordModal.html
+│   │       │   │   ├── personCreatedModal.html
+│   │       │   │   └── userCreatedModal.html
+│   │       │   ├── index.html
+│   │       │   ├── login.html
+│   │       │   ├── new-film.html
+│   │       │   ├── new-person.html
+│   │       │   ├── profile.html
+│   │       │   ├── registration.html
+│   │       │   ├── searched-film.html
+│   │       │   ├── search-film.html
+│   │       │   └── template.html
+│   │       └── validation-messages.properties
+│   └── test
+│       ├── java
+│       │   └── io
+│       │       └── chilborne
+│       │           └── filmfanatic
+│       │               ├── batch
+│       │               │   └── MigrateFilmBatchJobTest.java
+│       │               ├── controller
+│       │               │   └── api
+│       │               │       └── ApiIntegrationTest.java
+│       │               ├── FilmFanaticApplicationTests.java
+│       │               ├── repository
+│       │               │   ├── FilmRepositoryTest.java
+│       │               │   ├── PersonRepositoryTest.java
+│       │               │   └── ScoreRepositoryTest.java
+│       │               └── TestData.java
+│       └── resources
+│           └── test.sql
+└── system.properties
+```
+
+
 
 ## Sumario
 
+<!-- TOC -->
+
+- [Proyecto Final Tokio School](#proyecto-final-tokio-school)
+    - [Introducción](#introducci%C3%B3n)
+    - [Estructura del Programa](#estructura-del-programa)
+    - [Sumario](#sumario)
+    - [Usuario](#usuario)
+        - [Objeto de Dominio](#objeto-de-dominio)
+        - [Creación de Usuario](#creaci%C3%B3n-de-usuario)
+            - [CreateUserDTO](#createuserdto)
+            - [registration.html](#registrationhtml)
+            - [UserController](#usercontroller)
+            - [UserService](#userservice)
+                - [addUser](#adduser)
+                - [saveUserImageString username, MultipartFile imageFile](#saveuserimagestring-username-multipartfile-imagefile)
+            - [FileService](#fileservice)
+                - [saveFileMultipartFile file, String fileName](#savefilemultipartfile-file-string-filename)
+        - [Login](#login)
+            - [WebSecurityConfig](#websecurityconfig)
+            - [UserDetailsServiceImpl](#userdetailsserviceimpl)
+            - [Login/Logout Success](#loginlogout-success)
+                - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
+            - [Login Failure](#login-failure)
+        - [User Profile](#user-profile)
+            - [userCreatedModal.html](#usercreatedmodalhtml)
+        - [Editar Usuario](#editar-usuario)
+            - [Cambiar imagen de usuario](#cambiar-imagen-de-usuario)
+            - [Cambiar contraseña](#cambiar-contrase%C3%B1a)
+                - [changePasswordString username, String oldPassword, String newPassword](#changepasswordstring-username-string-oldpassword-string-newpassword)
+            - [Cambiar datos personales de usuario](#cambiar-datos-personales-de-usuario)
+                - [updateUserString username, User user](#updateuserstring-username-user-user)
+                - [updateSecurityContextString username](#updatesecuritycontextstring-username)
+        - [Eliminar Usuario](#eliminar-usuario)
+            - [deleteUserPrincipal principal](#deleteuserprincipal-principal)
+    - [Personas](#personas)
+        - [PersonController.addPerson](#personcontrolleraddperson)
+        - [PersonService.addPersonPerson person](#personserviceaddpersonperson-person)
+    - [Películas](#pel%C3%ADculas)
+        - [objeto de dominio](#objeto-de-dominio)
+        - [crear película](#crear-pel%C3%ADcula)
+            - [addFilmFilm film](#addfilmfilm-film)
+                - [savePosterFilm film , MultipartImage posterImage](#saveposterfilm-film--multipartimage-posterimage)
+        - [buscar películas](#buscar-pel%C3%ADculas)
+            - [FilmSearchCriteriaEnum](#filmsearchcriteriaenum)
+            - [FilmSearchStrategy](#filmsearchstrategy)
+            - [FilmSearchImpl](#filmsearchimpl)
+            - [Ruta de Solicitud de Búsqueda](#ruta-de-solicitud-de-b%C3%BAsqueda)
+        - [Info de Película](#info-de-pel%C3%ADcula)
+        - [Dar puntuación a una pelí](#dar-puntuaci%C3%B3n-a-una-pel%C3%AD)
+            - [FilmService.addScoreString filmUri, Score score](#filmserviceaddscorestring-filmuri-score-score)
+                - [FilmService.getFilmByUriString uri](#filmservicegetfilmbyuristring-uri)
+    - [Review](#review)
+        - [Solicitar reseñas del usuario](#solicitar-rese%C3%B1as-del-usuario)
+        - [Creando una reseña nueva](#creando-una-rese%C3%B1a-nueva)
+            - [ApiIntegrationTest](#apiintegrationtest)
+        - [ReviewService](#reviewservice)
+            - [findByUsernameString username](#findbyusernamestring-username)
+            - [addReviewReview review](#addreviewreview-review)
+    - [Seguridad](#seguridad)
+        - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
+        - [Seguridad JWT](#seguridad-jwt)
+            - [JwtRequest y JwtResponse](#jwtrequest-y-jwtresponse)
+            - [JwtRequestFilter](#jwtrequestfilter)
+            - [Proceso de autenticación](#proceso-de-autenticaci%C3%B3n)
+                - [Set-Cookie: JSESSIONID=...](#set-cookie-jsessionid)
+    - [Proceso Batch](#proceso-batch)
+        - [MigrateJobConfig](#migratejobconfig)
+            - [reader](#reader)
+            - [FilmMapper](#filmmapper)
+            - [FilmItemProcessor](#filmitemprocessor)
+            - [writer](#writer)
+            - [FilmLineAggregator](#filmlineaggregator)
+            - [step](#step)
+            - [MigrateFilmWiteListener](#migratefilmwitelistener)
+            - [migrateFilmJob](#migratefilmjob)
+            - [MigrateFilmListener](#migratefilmlistener)
+    - [Excepciones, Depuración y *logging*](#excepciones-depuraci%C3%B3n-y-logging)
+        - [Gestión de excepciones](#gesti%C3%B3n-de-excepciones)
+            - [WebsiteExceptionControllerAdvice](#websiteexceptioncontrolleradvice)
+            - [ApiExceptionControllerAdvice](#apiexceptioncontrolleradvice)
+        - [Depuración y logging](#depuraci%C3%B3n-y-logging)
+    - [Aprendizaje y Mejoras](#aprendizaje-y-mejoras)
+
+<!-- /TOC -->
 
 ## Usuario
 
@@ -107,7 +409,7 @@ public void removeFilm(Film film) {
 ```
 Se hace asi porque el framework ORM (Object Relational Mapping) de `Hibernate` se mantiene sesiones de los objetos, y las colecciones miembros están incluidas en estas sesiones. Si se asigna una nueva colección a la propiedad del objeto `Hibernate` no le va a persistir en el base de datos porque no forma parte de dicha sesión. 
 
-En el código arriba se ve que los `Film` del `User` tienen la anotación de `@OneToMany` con la opción de `orphanRemoval = true`. Asi cuando se elimina el usuario, todos las películas que este ha añadido a la plataforma también serán eliminadas. Es igual para los `Review` y `Score`.
+En el código arriba se ve que los `Film` del `User` tienen la anotación de `@OneToMany` con la opción de `orphanRemoval = true`. Así cuando se elimina el usuario, todos las películas que este ha añadido a la plataforma también serán eliminadas. Es igual para los `Review` y `Score`.
 
 
 Como el servidor usa el `username` y no el numero de identificación para buscar un `User`, añadí otro index al objeto de dominio: 
@@ -123,7 +425,9 @@ Asi cuando se busca un `User` con su `username` es más rápido.
 * [header.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/header.html)
 * [footer.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/footer.html)
 
-Al llegar a la paginá inicial del plataforma de FilmFanatic@s encontramos en el header de la paginá un botón de 'Register' para crear un usuario nuevo.       
+Al llegar a la paginá inicial de la plataforma de FilmFanatic@s encontramos en el header de la paginá un botón de 'Register' para crear un usuario nuevo.       
+
+![header unauthenticated user](readme-pics/Header-login.png)
 
 En el fichero `header.html` podemos ver que si no hay una usuario autenticado, se muestra los botones para iniciar sesión ('Login') o registrarse ('Register').
 ```
@@ -185,9 +489,12 @@ Todos los mensajes de validación están inducidos en el fichero `validation-mes
 #### registration.html
 * [registration.html.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/registration.html)
 
-Cuando se ve cualquier formulario en el plataforma se puede notar que antes hay un par de tags `<form></fom>` vaciás. Es asi porque encontré un bug que Thymeleaf no haría el formulario sin esto antes. Ya he creado un 'Issue' en el GitHub de Thymeleaf [aquí](https://github.com/thymeleaf/thymeleaf-spring/issues/282).    
+Cuando se ve cualquier formulario en la plataforma se puede notar que antes hay un par de tags `<form></fom>` vaciás. Es asi porque encontré un bug que Thymeleaf no haría el formulario sin esto antes. Ya he creado un 'Issue' en el GitHub de Thymeleaf [aquí](https://github.com/thymeleaf/thymeleaf-spring/issues/282).    
 
 La paginá ya servida lleva el formulario para crear un `User` nuevo.
+
+![Registration](readme-pics/register.png)
+
 ```
 <form th:method="POST" enctype="multipart/form-data" th:object="${createUserDTO}" th:action="@{/register}">
 ``` 
@@ -199,6 +506,9 @@ Este formulario carga el objeto de CreateUserDTO con los datos ingresados por el
 </div>
 ```
 Usé el 'widget' de [bootstrap-datepicker](https://bootstrap-datepicker.readthedocs.io/en/latest/) para seleccionar la fecha de nacimiento del usuario.
+
+![Datepicker](readme-pics/datepicker.png)
+
 ```
 <div class="col">
   <label for="birthDate" class="labels">Birthdate</label>
@@ -217,6 +527,9 @@ Todos los campos del `CreateUserDTO` que tienen anotaciones de validación tambi
 ```  
 
 Si es un Admin que quiere crear un `User` nuevo tambien se muestra la opción de decidir los `Role` del usuario nuevo: 
+
+![Admin user creation](readme-pics/admin-create-user.png)
+
 ```
  <div class="col" sec:authorize="hasAuthority('ADMIN')">
     <label for="role">Role</label>
@@ -451,6 +764,8 @@ public static Path getResourcePath(String directory, String fileName) throws IOE
 
 Al pinchar en el link de 'Login' para iniciar sesión el método GET `login(Model model)` del `UserController` devuelve la pagina de `login.html` donde se encuentra el formulario para indicar el username y contraseña del `User`. 
 
+![Login Page](readme-pics/login.png)
+
 #### WebSecurityConfig 
 * [WebSecurityConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
 
@@ -509,6 +824,8 @@ Dado que el objeto `User` implemente el `UserDetails` hubiera sido posible senci
 
 Cuando un usuario iniciar sesión con éxito se reenviá a la pagina principal con el url `/?message=success`. El fragmento `header.html` contiene una función de javascript para probar los parámetros del url, y si se detecta el parámetro 'message' con el valor de 'login' se usa la librería de javascript [iziToast](https://izitoast.marcelodolza.com/) para mostrar un mensaje de existo. Lo mismo pasa cuando un usuario termina una sesión solo que el valor del parámetro es 'logout'.   
 
+![Logout message](readme-pics/logout-message.png)
+
 ```
  <script type="text/javascript">
     (function() {
@@ -538,7 +855,7 @@ Cuando un usuario iniciar sesión con éxito se reenviá a la pagina principal c
 ##### SuccessfulAuthenticationEventListener 
 * [SuccessfulAuthenticationEventListener.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/SuccessfulAuthenticationEventListener.java)
 
-El objeto `User` tiene un campo de tipo `LocalDateTime` llamado 'lastLogin' que debe guardar el ultimo fecha y hora que el usuario inicio sesión en el plataforma. Para realizar esta funcionamiento decide utilizar la clase `SuccessfulAuthenticationEventListener` que implemente `ApplicationListener<AuthenticationSuccessEvent> `. De esta manera el método `onApplicationEvent(AuthenticationSuccessEvent event)` se llama cada vez que se autentica con éxito. 
+El objeto `User` tiene un campo de tipo `LocalDateTime` llamado 'lastLogin' que debe guardar el ultimo fecha y hora que el usuario inicio sesión en la plataforma. Para realizar esta funcionamiento decide utilizar la clase `SuccessfulAuthenticationEventListener` que implemente `ApplicationListener<AuthenticationSuccessEvent> `. De esta manera el método `onApplicationEvent(AuthenticationSuccessEvent event)` se llama cada vez que se autentica con éxito. 
 ```
   @Override
   public void onApplicationEvent(AuthenticationSuccessEvent event) {
@@ -561,6 +878,9 @@ public void userLoggedIn(User user) {
 #### Login Failure
 
 Si por algún motivo el intento del usuario de iniciar sesión se falla, la pagina de `login.html` se muestra un aviso así.
+
+![Login Error](readme-pics/loing-failure.png)
+
 ```
 <div th:if="${param.error}" class="alert alert-danger" role="alert">
   Incorrect username or password.
@@ -570,7 +890,10 @@ Si por algún motivo el intento del usuario de iniciar sesión se falla, la pagi
 ### User Profile
 * [profile.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/profile.html)
 
-Al iniciar una sesión el usuario esta enviado a la pagina del perfíl. El método GET del `UserController` usa los datos de la sesión para cargar el `Model` con un objeto de `User` que muestra al usuario autenticado sus datos.
+Al iniciar una sesión el usuario esta enviado a la pagina del perfil. El método GET del `UserController` usa los datos de la sesión para cargar el `Model` con un objeto de `User` que muestra al usuario autenticado sus datos.
+
+![Profile](readme-pics/profile.png)
+
 ```
 @RequestMapping(path = "/profile", method = RequestMethod.GET)
 public String profile(Model model, Principal principal) {
@@ -583,6 +906,7 @@ public String profile(Model model, Principal principal) {
 }
 ```
 También si un usuario ADMIN crea un usuario nuevo esta enviado a la pagina de perfil para que se pueda confirmar los datas ya ingresados. Esta vez el método de `UserController` coge el username como parámetro de URL.   
+
 ```
 @RequestMapping(path = "admin/user/{username}", method = RequestMethod.GET)
 public String profile(@PathVariable("username") String username,
@@ -599,6 +923,8 @@ De esta manera, un ADMIN puede ver los datos de cualquier usuario con el url pat
 #### userCreatedModal.html
 
 * [userCreatedModel.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/userCreatedModal.html)
+
+![User Created Message](readme-pics/admin-user-created.png)
 
 El método `register()` del `UserController` directa un usuario ADMIN a la paginá con la lineá de código `     return "redirect:/admin/user/" + newUser.getUsername() + "?user=created";`. El parámetro `user=created` activa el `Modal` de bootstrap que esta incluido en la paginá `profile.html` como fragment. Así se anuncia al usuario ADMIN que se ha creado el usuario nuevo con éxito. Abajo se encuentra la función de javascript que `userCreatedModal.html` contiene para activarse.    
 ```
@@ -620,6 +946,9 @@ El método `register()` del `UserController` directa un usuario ADMIN a la pagin
 * [edit-user.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/edit-profile.html)
 
 El perfil de usuario muestra un botón para editar los datos del usuario. Solo se muestra si es el usuario autenticado que esta viendo sus propios datos. 
+
+![Edit user Info](readme-pics/edit-user.png)
+
 ```
 <div class="mt-5 text-center" th:if="${#authentication.getPrincipal().getUsername() == user.username}">
     <a class="btn btn-primary profile-button mx-1" th:href="@{/profile/edit/}">Edit Profile</a>
@@ -668,6 +997,8 @@ Se enviá el nuevo imagen al método `saveUserImage(String username, MultipartFi
 #### Cambiar contraseña 
 [passwordModal.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/fragments/passwordModal.html)
 [ChangePasswordDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ChangePasswordDTO.java)
+
+![Change Password Modal](readme-pics/password-modal.png)
 
 Para cambiar la contraseña del usuario se hace clic en el botón 'Change Password' que abre un modal donde se encuentra el formulario de cambiar contraseña. El modal contiene un formulario donde el usuario debe ingresar su contraseña anterior, y su nuevo contraseña dos veces. Asi se puede verificar que: a) es el usuario que esta cambiando su contraseña, como tiene que ingresar su contraseña existente de nuevo; b) que la nueva contraseña esta correcto por el hecho de haber sido ingresado dos veces. 
 ```
@@ -824,7 +1155,9 @@ private void updateSecurityContext(String username) {
 ### Eliminar Usuario
 * [delete-user.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/delete-user.html)
 
-En la paginá `edit-user.html` se encuentra un botón para eliminar el usuario del plataforma. Como la paginá en sí es solo disponible para que un usuario autorizado edite sus propios datos, la opción de eliminarse también solo se dispone al usuario autenticado. 
+En la paginá `edit-user.html` se encuentra un botón para eliminar el usuario de la plataforma. Como la paginá en sí es solo disponible para que un usuario autorizado edite sus propios datos, la opción de eliminarse también solo se dispone al usuario autenticado. 
+
+![Delete user](readme-pics/delete-user.png)
 
 ```
 <a class="btn btn-danger profile-button mx-2 my-1 py-1" th:href="@{/profile/delete}">Delete Profile</a>
@@ -870,6 +1203,8 @@ Las personas que crean las películas que nuestros usuarios interesan, como dire
 
 Al llegar a la pagina para añadir una persona nueva el usuario tiene ingresar el nombre, apellidos y tipo, que ya esta determinada según el `PersonTypeEnum`.
 
+![Add person form](readme-pics/add-person.png)
+
 ### PersonController.addPerson()
 
 Al enviar los datos del person nuevo al servidor - llegan al método `addPerson` del `userController`.
@@ -898,6 +1233,8 @@ Este método tiene 4 pasos:
 3. Llama el método `addPerson(Person person)` del `PersonService`.
 4. Reenviá el usuario a la pagina para crear personas donde se muestra un mensaje de confirmación.
 
+![Person Created message](readme-pics/person-created-message.png)
+
 ### PersonService.addPerson(Person person)
 ```
 @Override
@@ -910,7 +1247,7 @@ Este método solo guarda el `Person` nuevo en el base de datos.
 
 ## Películas 
 
-Aparte del `User` el objeto de dominio `Film` es lo más esencial al programa. El propósito del plataforma es que usuarios pueden subir y buscar datos de pelis diferentes. 
+Aparte del `User` el objeto de dominio `Film` es lo más esencial al programa. El propósito de la plataforma es que usuarios pueden subir y buscar datos de pelis diferentes. 
 
 ### objeto de dominio
 *[Film.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Film.java)
@@ -966,6 +1303,8 @@ public void removeScore(Score score) {
 * [FilmRepository.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/repository/FilmRepository.java)
 
 Un usuario autenticado encontraría un link en el header para crear una película. Al pinchar el link llamará el método GET de `createFilm(Model model)` del `FilmController` que carga el modelo con todos las personas del base de datos antes de devolver la paginá `new-film.html`.  
+
+![Add film](readme-pics/add-film.png)
 
 ```
 @RequestMapping(path = "films/add", method = RequestMethod.GET)
@@ -1053,7 +1392,7 @@ EL método para guardar el imagen de la película tiene 5 pasos:
 
 ### buscar películas
 * [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
-* [FilmServiceImpl.java]()
+* [FilmServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FileServiceImpl.java)
 * [FilmSearchImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/implementation/FilmSearchImpl.java)
 * [FilmSearchCriteriaEnum.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/FilmSearchCriteriaEnum.java)
 * [FilmSearchStrategy.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/filmsearch/strategy/FilmSearchStrategy.java)
@@ -1071,7 +1410,12 @@ Para buscar una película en la plataforma el usuario tiene dos opciones.
   </button>
 </form>
 ```
+
+![Header film search](readme-pics/header-search-bar.png)
+
 2. También se encuentra en el header el link para llegar al `film-search.html` donde puede buscar una película segunda varias criteria.
+
+![film search page](readme-pics/search-films.png)
 
 El formulario de `film-search.html` se lee asi.
 
@@ -1094,6 +1438,7 @@ El formulario de `film-search.html` se lee asi.
 ```
 
 #### FilmSearchCriteriaEnum
+
 Los 'criteria' de la buscada que están incluido con el formulario o como un input ocultado, como en 1., o elegido por el usuario están representados en el programa por el `FilmSearchCriteriaEnum`.
 ```
 @Slf4j
@@ -1110,6 +1455,7 @@ public enum FilmSearchCriteriaEnum {
 ...
 ```
 #### FilmSearchStrategy
+
 Cada criteria ENUM tiene su propio implementación de la interface `FilmSearchStrategy`. Asi que he usado el padrón de diseño estrategia para programar la búsqueda por criteria diferentes. Lo he usado para que sean separados las responsabilidades de las partes diferentes de la programa y también para que sea más fácil añadir otros criteria de búsqueda más adelante.
 ```
 public interface FilmSearchStrategy {
@@ -1239,6 +1585,7 @@ Estas cartas de la información de las películas también están incluido en la
 ```
 
 ### Info de Película
+
 * [film.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/film.html)
 
 Al pinchar el botón la carta de una película que se muestra en la pagina de búsqueda, se enviá una solicitud GET a método `filmInfo(String filmUri, Model model, Authentication auth)`.
@@ -1273,6 +1620,9 @@ Este método tiene 5 pasos:
 4. Si ya hay una puntuación de la película que la ha dodo el usuario - se carga el modelo con esta; y si no hay, se carga con un objeto nuevo de `Score` por si caso el usuario quiere darla una puntuación.
 5. Al final devuelve la paginá `film.html`      
 
+![film-info](readme-pics/film.png)
+![film-review](readme-pics/film-review.png)
+
 La paginá siempre muestra todo la información de la película, las reseñas, su puntuación media incluida y si el usuario esta autenticado muestra o la puntuación que se la ha dado ya, o le muestra la opción darla ahorra. Usa un icono de estrella para muestra al usuario la puntuación de la película.
 
 ```
@@ -1298,9 +1648,12 @@ La paginá siempre muestra todo la información de la película, las reseñas, s
 ```
 
 ### Dar puntuación a una pelí 
+
 * [Score.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Score.java)
 * [FilmController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/FilmController.java)
 * [FilmService.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/FilmServiceImpl.java)
+
+![add-score](readme-pics/add-score.png)
 
 Al dar la puntuación a una película el se enviá al método `addScore(String filmUri, Score score, BindingResult result, Authentication auth)` del `FilmController`.
 
@@ -1344,6 +1697,7 @@ El método de FilmService tiene 3 pasos:
 3. Guarda el `Film` en el base de datos y lo devuelve.
 
 ##### FilmService.getFilmByUri(String uri)
+
 * [StringUtil.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/util/StringUtil.java)
 
 ```
@@ -1371,6 +1725,7 @@ public static String getFilmTitleFromUri(String filmUri) {
 Usa el objeto `StringUtils` de la librería `Apache Commons`. Aun que he dado cuenta después que no es necesario hacer lo asi. Solo se necesita hacer un índice con el campo `uri` de `Film` en el base de datos. Asi que no sería necesario hacer el transformación de `title` + `year` y `filmUri` todo el tiempo.
 
 ## Review
+
 * [Review.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/Review.java)
 * [ReviewDTO.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/domain/dto/ReviewDTO.java)
 * [ApiReviewController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiReviewController.java)
@@ -1399,6 +1754,7 @@ public class ReviewDTO {
 ```
 
 ### Solicitar reseñas del usuario
+
 * [ApiReviewController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiReviewController.java)
 
 Primero un usuario se tiene que autenticar con el API y recibir el token JWT. Una vez que lo tenemos y usando el utilidad de `httpie-jwt-auth`(https://github.com/teracyhq/httpie-jwt-auth) podemos solicitar todas las reseñas del usuario ya autenticado asi:
@@ -1421,10 +1777,10 @@ public ResponseEntity<?> getUserReviews(@PathVariable String username, Authentic
   return ResponseEntity.ok(convertToDtos(userReviews));
 }
 ```
-El metodo tiene 4 pasos:
+El método tiene 4 pasos:
 1. Verifica que el usuario autenticado es o tiene el role de ADMIN o el usuario de que se esta pidiendo las reseñas, si no se tira una excepción.
-2. Llama el metodo `findyusername(String username)` del `Review Service` para cargar las reseñas del usuario en un `Set`.
-3. Conviere los datos cargados en objetos de DTO.
+2. Llama el método `findyusername(String username)` del `Review Service` para cargar las reseñas del usuario en un `Set`.
+3. Convierte los datos cargados en objetos de DTO.
 4. Devuelve un `ResponseEntity` con el estatus HTTP de 200 y las reseñas del usuario en el cuerpo de la respuesta.   
 
 La respuesta recibida parece asi:
@@ -1454,7 +1810,7 @@ X-XSS-Protection: 1; mode=block
 ```
 ### Creando una reseña nueva
 
-Para crear una reseña nueva se tiene que enviar los datos requiridos en otro solicitude HTTP, tambien con un token JWT. Por ejemplo:
+Para crear una reseña nueva se tiene que enviar los datos requeridos en otro solicitude HTTP, también con un token JWT. Por ejemplo:
 ```
 http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tpb3NjaG9vbCIsImV4cCI6MTY0OTcwODIwMiwiaWF0IjoxNjQ5NzA3MTIyfQ.va2HJxItEScF9BgGONao2yvFHg4eeqyR9lBoB8zfWXE" http://localhost:8080/api/review/new \
 title=Really\ Great\ Film  \
@@ -1464,7 +1820,7 @@ user=tokioschool \
 film=The\ Fellowship\ of\ The\ Ring
 ```
 
-Los datos de la reseña nueva se envian al método `addReview(ReviewDTO reviewDTO, Principal principal)` del `ReviewController`. 
+Los datos de la reseña nueva se envían al método `addReview(ReviewDTO reviewDTO, Principal principal)` del `ReviewController`. 
 ```
 @PostMapping(path = "/new", consumes = "application/json", produces = {"application/json", "text/xml"})
 public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO, Principal principal) {
@@ -1477,12 +1833,23 @@ public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO, Principal p
   return ResponseEntity.status(HttpStatus.CREATED).body(addedDTO);
 }
 ``` 
-Este metodo tiene 5 pasos:
-1. Primero verifica que el nombre de usuario incluido en la reseña enviado es los mismo del ususario ya autenticado, si no tira una excepción.
+Este método tiene 5 pasos:
+1. Primero verifica que el nombre de usuario incluido en la reseña enviado es los mismo del usuario ya autenticado, si no tira una excepción.
 2. Convierte la reseña (en forma `ReviewDTO`) enviado en un objeto de tipo `Review`.
-3. LLama el metodo `addReview(Review review) para guardarlo en el base de datos.
+3. LLama el método `addReview(Review review) para guardarlo en el base de datos.
 4. Convierte el `Review` devuelto por el `ReviewService` en `ReviewDTO`.
 5. Devuelve un `ResponseEntity` con el estatus HTTP de 201 y la reseña ya añadida en su cuerpo. 
+
+En este momento es importante darse cuenta que en el método `convertToEntity(ReviewDTO reviewDto)` el `ReviewController` llama al `UserService` y `FilmService` para cargar el objeto `Review`que crea con el `User` y `Film` a cuales pertenece.
+```
+private Review convertToEntity(ReviewDTO reviewDTO) {
+  Review review = modelMapper.map(reviewDTO, Review.class);
+  review.setTextReview(reviewDTO.getText());
+  review.setUser(userService.getUser(reviewDTO.getUser()));
+  review.setFilm(filmService.findByTitleExact(reviewDTO.getFilm()));
+  return review;
+}
+```
 
 Cuando esta recibida la respuesta parece asi:
 ```
@@ -1507,12 +1874,23 @@ X-XSS-Protection: 1; mode=block
     "user": "tokioschool"
 }
 ```
+
+Se puede ver la reseña nueva en la pagina de la pelicula también.
+
+![newly added review](readme-pics/Newly%20Added%20Review.png)
  
+
+#### ApiIntegrationTest
+
+* [ApiIntegrationTest.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/test/java/io/chilborne/filmfanatic/controller/api/ApiIntegrationTest.java)
+
+Para confirmar que el API funciona bien, he creado una prueba de tipo integration para probar la autenticación del usuario y la creación de una reseña nueva. Usé uno datos de test cargados del fichero `test.sql` y la liberaría `RestAssured` para hacerlo. La prueba primero hace una solicitude de autenticación y luego, cuando tiene el token JWT, intenta crea una reseña nueva con el.
+
 ### ReviewService
 * [ReviewServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/service/implementation/ReviewServiceImpl.java)
 
 #### findByUsername(String username)
-Este metodo es bastante simple:
+El método para cargar los `Review` que pertenecen a un usuario es bastante simple:
 ```
 @Override
   @Transactional
@@ -1520,21 +1898,246 @@ Este metodo es bastante simple:
     return reviewRepo.findByUserUsername(username);
   }
 ```
+#### addReview(Review review)
+Sin embargo el método para crear un `Review` nuevo es mas complicado.
 
+```
+@Override
+@Transactional
+public Review addReview(Review review) {
+  User reviewingUser = review.getUser();
+  Film reviewedFilm = review.getFilm();
 
+  if (reviewingUser.getReviews().stream().anyMatch(r -> r.getFilm().equals(reviewedFilm))) {
+    throw new ReviewAlreadyExistsException(reviewingUser.getUsername(), reviewedFilm.getTitle());
+  }
+  else {
+
+    review.setUser(reviewingUser);
+    review.setFilm(reviewedFilm);
+    return reviewRepo.save(review);
+  }
+}
+```
+Este método tiene 4 pasos:
+1. Carga el usuario que esta creando la reseña nueva y la pelicula de que es la reseña que se esta creando.
+2. Verifica que el usuario ya no ha dado una reseña a la pelicula en cuestión, si lo ha dado antes se tira una excepción.
+3. Establece el `Film` y `User` del `Review` nuevo.
+4. Guarda y devuelve el `Review` ya creado.  
 
 ## Seguridad
+* [WebSecurityConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
+* [UserDetailsServiceImpl.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/UserDetailsServiceImpl.java)
+* [SuccessfulAuthenticationEventListener.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/SuccessfulAuthenticationEventListener.java)
 
-### RESTful API
 
-#### ApiAuthenticationController
+Como todos los programas, la seguridad de nuestra plataforma es esencial. Nuestros usuarios deben que saber que sus datos están seguros, y que la información que comparten están seguros también. Como hemos visto [antes](#login) - el acceso a la pagina web es configurado por el `WebSecurityConfig`. Los usuarios envían sus datos de autenticación con un formulario y sus sesión esta mantenido por un cookie.
 
-Usando `httpie` para connectar con el servidor podemos enviar una solicitude de autenticación asi:
+### SuccessfulAuthenticationEventListener
+
+El objeto `User` tiene un campo llamado `lastLogin` para guardar la ultima fecha y hora que un usuario ha accedido a la plataforma. Para proveer esta funcionalidad he usado una clase que implementa el interface `ApplicationListener<AuthenticationSuccessEvent>`. Asi que se activa cada vez que un usuario se autentica.
+
+```
+@Override
+public void onApplicationEvent(AuthenticationSuccessEvent event) {
+  User user = (User) event.getAuthentication().getPrincipal();
+  log.info("User {} successfully logged in", user.getUsername());
+  userService.userLoggedIn(user);
+}
+```
+
+Carga el `User` ya autenticado del `AuthenticationSuccessEvent` y lo pasa al método `userLoggedIn(User user)` de `UserService`.
+
+```
+@Override
+@Transactional
+public void userLoggedIn(User user) {
+  LocalDateTime now = LocalDateTime.now();
+  User loggedIn = userRepo.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
+  loggedIn.setLastLogin(now);
+  userRepo.save(loggedIn);
+}
+```
+Este método carga el `User`, actualiza su dato de la ultima autenticación y lo guarda en el base de datos. 
+
+### Seguridad JWT
+* [JwtRequestFilter.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtRequestFilter.java)
+* [JwtTokenUtil.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtTokenUtil.java)
+* [JwtAuthenticationEntryPoint.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtAuthenticationEntryPoint.java)
+
+Aparte de la seguridad de la pagina web, también hay que segurar el acceso al REST API. Por eso he usado el modo de autenticación de Json Web Token (JWT). 
+
+#### JwtRequest y JwtResponse
+* [JwtRequest.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtRequest.java)
+* [JwtResponse.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtResponse.java)
+
+Usamos los POJOs de `JwtRequest` y `JwtResponse` para enviar los datos de autenticación enter los usuarios y el servidor.
+
+El `JwtRequest` contiene solo el `username` y el `password` del usuario.
+```
+public class JwtRequest {
+
+  private String username;
+  private String password;
+
+}
+```
+El `JwtResponse` contiene el token JWT que el usuario puede usar después para autenticar sus solicitudes siguientes. 
+```
+public class JwtResponse {
+
+    @Schema(description = "Authentication Token")
+    private final String token;
+
+}
+```
+
+#### JwtRequestFilter
+* [WebSecurityConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
+* [JwtRequestFilter.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/jwt/JwtRequestFilter.java)
+
+Configuramos la autenticación JWT en el método `configure(HttpSecurity http)` del `WebSecurityConfig`. Mas importante es la adicion del `JWTRequestFilter` al `FilterChain` por cual pasan todas las solicitudes al servidor: 
+```
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http
+      .csrf()
+        .disable()
+      .authorizeRequests()
+        .antMatchers("/").permitAll()
+        .antMatchers("/register").permitAll()
+        .antMatchers("/login").permitAll()
+        .antMatchers("/film/**").permitAll()
+        .antMatchers("/films/**").permitAll()
+        .antMatchers("/search").permitAll()
+        .antMatchers("/h2-console/**").permitAll()
+        .antMatchers("/v3/api-docs/**" ,"/swagger-ui/**", "swagger-ui.html").permitAll()
+        .antMatchers("/admin/**").hasAnyAuthority(ADMIN_ROLE)
+        .anyRequest().authenticated()
+    .and()
+      .exceptionHandling()
+        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+    .and()
+      .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+    .and()
+      .formLogin()
+        .loginPage(LOGIN_URL)
+        .loginProcessingUrl(LOGIN_URL)
+        .successForwardUrl(LOGIN_SUCCESS_URL)
+        .failureUrl(LOGIN_FAILURE)
+    .and()
+      .logout()
+        .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
+        .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+    .and()
+      .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+      // in order to allow access to h2-console for testing
+      // TODO remove before release
+      .headers().frameOptions().disable();
+```
+
+El `JWTRequestFilter` extiende el `OncePerRequestFilter` y solo tiene un metodo: 
+```
+@Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    throws ServletException, IOException {
+
+    final String requestTokenHeader = request.getHeader("Authorization");
+    if (requestTokenHeader != null) {
+      if (requestTokenHeader.startsWith("Bearer ")) {
+        log.info("Authenticating JWT authentication request");
+        String jwtToken = requestTokenHeader.substring(7);
+        try {
+          String username = jwtTokenUtil.getUsername(jwtToken);
+          if (!username.isEmpty()
+            && null == SecurityContextHolder.getContext().getAuthentication()) {
+            log.info("Authenticating User {} JWT auth request", username);
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+              UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+              usernamePasswordAuthenticationToken
+                .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+              SecurityContextHolder.getContext()
+                .setAuthentication(usernamePasswordAuthenticationToken);
+            }
+          }
+        } catch (IllegalArgumentException e) {
+          logger.error("Unable to fetch JWT Token");
+        } catch (ExpiredJwtException e) {
+          logger.error("JWT Token is expired");
+        } catch (Exception e) {
+          logger.error(e.getMessage());
+        }
+      } else {
+        logger.warn("JWT Token does not begin with Bearer String");
+      }
+    }
+    chain.doFilter(request, response);
+  }
+```
+Este método tiene 9 pasos:
+1. Verifica si la solicitude tiene un header de nombre `Authorization` y que empieza con el `String` ¨Bearer¨, si no pasa la solicitude al proximo filtro en la cadena. 
+2. Saca el token JWT del solicitude.
+3. Usa el objeto `JwtTokenUtil` para sacar el nombre del usuario del token.
+4. Si el username existe y no hay una autenticación que ya existe en el `SecurityContext`, carga el objeto `UserDetails` del usuario por el `jwtUserDetails`. 
+5. Llama el método `validateToken(String jwtToken, UserDetails userDetails)` de `JwtTokenUtil` para verificar el token JWT.
+6. Crea un objeto `UsernamePasswordAuthenticationToken` con el `userDetails` ya cargado.
+7. Usa un nuevo objeto `WebAuthenticationDetailsSource` para establecer los datos del `UsernamePasswordAuthenticationToken`.
+8. Establece el `Authentication` del `SecurityContext` con el `UsernamePasswordAuthenticationToken` ya creado.  
+9. Pasa la solicitude al cadena de filtros para seguir con el procedimiento.
+
+#### Proceso de autenticación 
+
+* [ApiAuthenticationController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiAuthenticationController.java)
+
+El proceso de autenticación al REST API va asi. Usando `httpie` para conectar con el servidor podemos enviar una solicitude de autenticación asi:
 ```
 http POST http://localhost:8080/api/auth  -a username=tokioschool password=tokioschool
 ```
+El servidor interpreta el `username` y `password` enviados y los transforme en un objeto de `JwtRequest`, lo cual se enviá al método `login(@RequestBody JwtRequest authRequest)` del `ApiAuthenticationController`.
 
-De cual recebemos una respuesta asi con el auth token en el body:
+```
+@PostMapping(path = "/auth", consumes = "application/json", produces = "application/json")
+  public ResponseEntity<?> login(@RequestBody JwtRequest authRequest) throws Exception
+  {
+    log.info("BEGIN login for username: {}", authRequest.getUsername());
+    authenticate(authRequest.getUsername(), authRequest.getPassword());
+    final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+    final String jwtToken = jwtTokenUtil.generateToken(userDetails);
+    log.info("SUCCESS login:: token - {}", jwtToken);
+    return ResponseEntity.ok(new JwtResponse(jwtToken));
+  }
+```
+
+Este método tiene 4 pasos:
+1. Autentica el usuario con el `username` y `password` enviados.
+2. Carga el `UserDetails` del usuario.
+3. Genera el token JWT para el usuario ya autenticado con el `JwtTokenUtil`.
+4. Devuelve un `ResponseEntity` con el estatus http 200 y el token JWT en el cuerpo.  
+
+El método `authenticate(String username, String password)` de `ApiAuthenticationController` es asi:
+
+```
+private void authenticate(String username, String password) throws Exception
+  {
+    try {
+      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+      authenticationManager.authenticate(authenticationToken);
+    } catch (DisabledException de) {
+      throw new RuntimeException("User disabled", de);
+    } catch (BadCredentialsException bce) {
+      throw new UnauthorizedException("Bad credentials", bce);
+    }
+  }
+```
+El método tiene 2 pasos:
+1. Crea un objeto `UsernamePasswordAuthenticationToken` con el `username` y `password` dados.
+2. Intenta autenticar el usuario con una llamada al `AuthenticationManager` que el controlador tiene como dependencia. 
+
+Cuando recebamos una respuesta, se parece asi con el token JWT en el cuerpo:
 ```
 HTTP/1.1 200
 Connection: keep-alive
@@ -1548,6 +2151,337 @@ Transfer-Encoding: chunked
 }
 ``` 
 
-#### Set-Cookie: JSESSIONID=...
+##### Set-Cookie: JSESSIONID=...
 
-Se nota que aunque el modo de autenticación del RESTful API es con el token JWT y entonces debe ser sin estado (stateless) las respuesta siempre contienen un Header con un `Cookie` de la session. Esto he intentado de evitar pero la unica manera que he encontrado es crear dos clases de `@Configuration` que extienden el `WebSecurityConfigurerAdapter` pero, aunque lo intenté no podía lograr que las dos configuraciones se aplicaran al mismo tiempo - uno a las solicitudes de REST y el otro a las solicitudes de la pagina web.
+Se nota que aunque el modo de autenticación del RESTful API es con el token JWT y entonces debe ser sin estado (stateless) las respuesta siempre contienen un Header con un `Cookie` de la session. Esto he intentado de evitar pero la unica manera que he encontrado es crear dos clases de `@Configuration` que extienden el `WebSecurityConfigurerAdapter` pero, aunque lo intenté no podía lograr que las dos configuraciones se aplicaran al mismo tiempo - uno a las solicitudes de REST y el otro a las solicitudes de la pagina web.   
+
+## Proceso Batch
+
+Como esta descrito en la descripción del proyecto, he creado un pequeño proceso batch para demonstrar las habilidades del *framework* Spring de procesar muchos datos de manera regular.
+
+### MigrateJobConfig
+
+* [MigrateJobConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/MigrateJobConfig.java)
+
+Todo el trabajo de procesamiento esta configurado en el `MigrateJobConfig`. Aquí se declaran todos los objetos que van a formar parte del trabajo, los pasos (o en este caso el único paso) del trabajo, y el trabajo en sí.
+
+#### reader()
+
+El `reader` es el objeto que lee los datos que se van a procesar. En este caso lee los datos de las películas del base de datos, asi que es de tipo `JdbcCursorItemReader<Film>`:
+
+```
+  @Bean
+  public JdbcCursorItemReader<Film> reader() {
+    log.info("Preparing reader...");
+    return new JdbcCursorItemReaderBuilder<>()
+      .name("filmReader")
+      .dataSource(dataSource)
+      .sql("SELECT * FROM films")
+      .rowMapper(new FilmMapper())
+      .build();
+  }
+```
+#### FilmMapper 
+
+* [FilmMapper.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/FilmMapper.java)
+
+El método `.rowMapper()` define el objeto que convierte los datos leídos en un objeto de JAVA. Para hacer que los datos leídos se convierten en objetos de tipo `Film` declaré la clase `FilmMapper` que extiende la clase `RowMapper` y usa un objeto `BeanPropertyRowMapper` para crear el objeto `Film` que queremos. Para cargar los datos de los objetos miembros era necesario coger los datos disponibles directamente del `ResultSetMetaData`. No pude cargar todos los datos de los objetos que tiene relaciones `@ManyToMany` con el `Film`.  
+
+```
+  public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+    Film film = (new BeanPropertyRowMapper<>(Film.class).mapRow(rs, rowNum));
+
+    ResultSetMetaData metaData = rs.getMetaData();
+
+    User user = new User();
+    user.setId(rs.getLong("user_id"));
+    Person director = new Person();
+    director.setId(rs.getLong("director_id"));
+
+    film.setUser(user);
+    film.setFilmDirector(director);
+
+    return film;
+  }
+```
+
+#### FilmItemProcessor
+
+* [FilmItemProcessor.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/FilmItemProcessor.java)
+
+Después de esta leído y transformado en objetos de JAVA, los datos tiene que ser procesados. Para esto definí una clase `FilmItemProcessor` que simplemente verifica si la pelicula ha sido migrado ya o no, si no se la pasa al proximo paso del procesamiento. 
+
+```
+@Override
+public Film process(Film film) throws Exception {
+  if (!film.getMigrate()) {
+    return null;
+  }
+  else return film;
+}
+```
+
+#### writer()
+
+Después de su procesamiento, los datos están escritos al fichero de tipo `.csv`. Para esto definí un objeto de tipo `FlatFileTimeWriter<Film>`:
+
+```
+@Bean
+public FlatFileItemWriter<Film> writer() {
+  log.info("Preparing writer...");
+  return new FlatFileItemWriterBuilder<Film>()
+    .name("filmWriter")
+    .resource(new ClassPathResource("films.csv"))
+    .lineAggregator(new FilmLineAggregator())
+    .build();
+}
+```
+
+#### FilmLineAggregator 
+
+* [FilmLineAggregator.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/FilmLineAggregator.java)
+
+El `FilmLineAggregator` es el objeto que convierte los objetos de JAVA en un `String` para escribir al fichero ya definido. Como el fichero es de `.csv` (*comma separated values*) simplemente construye un `String` con todos los datos de la pelicula separados por comas.
+
+```
+public class FilmLineAggregator implements LineAggregator<Film> {
+
+  private static final String CSV_DELIMITER = ",";
+
+  @Override
+  public String aggregate(Film film) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(film.getId());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getTitle());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getYear());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getDuration());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getSynopsis());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getPoster());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getFilmDirector().getId());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getAvgScore());
+    builder.append(CSV_DELIMITER);
+    builder.append(film.getUser().getId());
+
+    return builder.toString();
+  }
+```
+
+#### step()
+
+Luego definimos el paso que incluye la lectura por el `reader`, el procesamiento por el `FilmItemProcessor`, y la escritura de los datos ya procesados por el `writer` y el tamaño de cada paso (10 objetos). También definimos un `listener` que actuá en reacción al cumplimiento de cada paso.    
+
+```
+@Bean
+public Step step(FlatFileItemWriter<Film> writer, MigrateFilmWriteListener writeListener) {
+  log.info("Preparing step...");
+  return stepBuilderFactory.get("step")
+    .<Film, Film>chunk(10)
+    .reader(reader())
+    .processor(processor())
+    .writer(writer)
+    .listener(writeListener)
+    .build();
+}
+```
+
+#### MigrateFilmWiteListener
+
+* [MigrateFilmWriteListener.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/MigrateFilmWriteListener.java)
+
+El `MigrateFilmWriteListener` activa después del procesamiento de cada 10 objetos `Film` para actualizar el base de datos con la información que ya han sido migradas. Usa el método `batchUpdate` del `JdbcTemplate`con un `BatchPreparedStatement` para actualizar los datos de la películas que han sido migradas. 
+
+```
+  @Override
+  public void afterWrite(List<? extends Film> migratedFilms) {
+    log.info("Updating migrated films in db");
+
+    jdbcTemplate.batchUpdate(
+      "UPDATE films SET migrate=?, date_migrate=? WHERE id=?",
+      new BatchPreparedStatementSetter() {
+        @Override
+        public void setValues(PreparedStatement ps, int i) throws SQLException {
+          ps.setBoolean(1, true);
+          ps.setDate(2, Date.valueOf(LocalDate.now()));
+          ps.setLong(3, migratedFilms.get(i).getId());
+        }
+
+        @Override
+        public int getBatchSize() {
+          return migratedFilms.size();
+        }
+      });
+  }
+```
+
+#### migrateFilmJob()
+
+Finalmente declaramos el método `migrateFilmJob()` que devuelve el `Job` que se va a ejecutar. Este contiene el `Step` o paso ya definido y otro *listener* que se activa al empiezo del trabajo.  
+
+```
+@Bean
+public Job migrateFilmJob(MigrateFilmStartListener startListener, Step step) {
+  return jobBuilderFactory.get("migrateFimJob")
+    .incrementer(new RunIdIncrementer())
+    .listener(startListener)
+    .flow(step)
+    .end()
+    .build();
+}
+```
+
+#### MigrateFilmListener 
+
+* [MigrateFilmStartListener.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/batch/MigrateFilmStartListener.java)
+
+Al empiezo del trabajo de procesamiento el `MigrateFilmStartListener` activa para contar las películas que todavía no han sido migradas y escribir lo a los *logs*. 
+
+```
+@Override
+public void beforeJob(JobExecution jobExecution) {
+  log.info("Migrate job starting...");
+
+  jdbcTemplate.query("SELECT COUNT (*) FROM films WHERE migrate = 0", (rs, rw) -> rs.getInt(1))
+    .forEach(count -> log.info("{} Films to migrate", count));
+}
+```
+
+## Excepciones, Depuración y *logging*
+
+La gestión de errores y *logging* de eventos en el programa son elementos importantes para el buen funcionamiento del programa. Aquí tratamos de los dos.
+
+### Gestión de excepciones
+
+* [exceptiones](https://github.com/ChrisHilborne/FilmFanatics/tree/main/src/main/java/io/chilborne/filmfanatic/exception)
+
+Para manejar excepciones que surgen en el programa decidí usar dos clases que usar la anotación `@ControllerAdvice`. Uno gestiona todas las excepciones de la pagina web, y el otro las del REST API. Gestionan todas las excepciones ya declaradas en el base de código y usado en el programa, y también gestiona cualquier otar inesperadas que surgen.        
+
+#### WebsiteExceptionControllerAdvice
+
+* [WebsiteExceptionControllerAdvice.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/WebsiteExceptionControllerAdvice.java)
+* [error.html](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/templates/error.html) 
+
+```
+@ControllerAdvice(basePackages = {"io.chilborne.filmfanatic.controller.thymeleaf"})
+public class WebsiteExceptionControllerAdvice {
+
+  private final Logger logger = LoggerFactory.getLogger(WebsiteExceptionControllerAdvice.class);
+
+  @ExceptionHandler
+  public ModelAndView handleException(HttpServletRequest request, Exception exception){
+    logger.error("Exception Caught!", exception);
+    exception.printStackTrace();
+    ModelAndView mav = new ModelAndView();
+    mav.addObject("message", exception.getMessage());
+    mav.addObject("exception", exception);
+    mav.setViewName("error");
+    return mav;
+  }
+
+}
+```
+Este método depurar el error y luego devuelve un objeto `ModelAndView` llamada ¨error¨ cargada con el mensaje y excepción. Spring luego comparte la pagina `error.html` cargada con el `ModelAndView`. La pagina muestra los detalles relevantes del error al usuario.
+```
+<div class="container">
+    <div class="alert alert-danger" role="alert">
+        <p><strong>Whoops! Something went wrong.</strong></p>
+        <p th:text="${message}"></p>
+        <p><a href="#" class="alert-link" onclick="history.back()">Go Back</a></p>
+    </div>
+</div>
+```
+
+#### ApiExceptionControllerAdvice 
+
+* [ApiExceptionControllerAdvice.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ApiExceptionControllerAdvice.java)
+* [ErrorResponse.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/api/ErrorResponse.java)
+
+El `ApiExceptionControllerAdvice` usa un POJO llamado `ErrorResponse` para enviar los datos de los errores:
+```
+@Data
+public class ErrorResponse {
+
+  @Schema(description = "Time error was raised", example = "2021-04-04T12:42:05")
+  private String timestamp;
+  @Schema(description = "HTTP Status code returned", example = "400")
+  private int status;
+  @Schema(description = "Brief description of the error", example = "Bad Request")
+  private String error;
+  @Schema(description = "Message from server with information regarding the error", example = "This is an error message.")
+  private String message;
+  @Schema(description = "Path of request which raised the error", example = "/path/of/request")
+  private String path;
+```
+
+Tiene un método privado para construir el objeto `ErrorResponse` con los datos del error:
+```
+private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, Exception exception, HttpServletRequest request) {
+  return ResponseEntity.status(status).body(
+    new ErrorResponse(LocalDateTime.now(), status, exception.getMessage(), request.getContextPath())
+  );
+}
+```
+Y varios métodos para gestionar errores diferentes. Por ejemplo el error de tipo `UnauthorizedException` tiene el siguiente método:
+```
+@ExceptionHandler(UnauthorizedException.class)
+public ResponseEntity<ErrorResponse> handleUnauthorizedException(HttpServletRequest request, UnauthorizedException ex) {
+  return buildResponse(HttpStatus.UNAUTHORIZED, ex, request);
+}
+```
+
+### Depuración y logging
+
+* [logback-spring.xml](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/resources/logback-spring.xml)
+
+Usando la liberaría *LogBack* que es el que viene por defecto con *Spring Boot*, escribimos trazas de varios evento, errores incluidos, a various *logs* configurados en el fichero `logback-spring.xml`. La configuración declara dos *logs* - una que se escribe directamente al console durante el ejecución del programa, y otro que se escribe a un fichero que se guarda de manera rotativo.
+```
+<!-- Configuración del log que aparece por consola: Console appender -->
+<appender name="Console"
+          class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>DEBUG</level>
+    </filter>
+        <!-- Configuración de la traza -->
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>
+            %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %-60.60yellow(%C{20}): %msg%n%throwable
+        </Pattern>
+    </encoder>
+</appender>
+
+<!-- Configuración para que se almacene el log en un fichero: File Appender -->
+<appender name="RollingFile"
+          class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/${LOG_NAME}.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>DEBUG</level>
+    </filter>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>%d %p %C{1.}:%M [%t] %m%n</Pattern>
+    </encoder>
+
+    <!-- Política de rotado de logs: diario y cuando el fichero llegue a los 10 MB -->
+    <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_DIR}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <maxFileSize>10MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+</appender>
+``` 
+
+## Aprendizaje y Mejoras 
+
+Durante este proyecto he aprendido mucho y, claro, he hecho varios error. Pensándolo de nuevo mientras he estado escribiendo este documento hay unas cosas que hubiera hecho de una manera diferente.
+
+1. No creo que era necesario implementar el `UserDetails` con mi propio objeto `User`. Creo que con la funcionalidad de caching implementado se podría evitar demasiados llamadas al base de datos sin complicar el programa. Ademas la implementación de caching ayudaría en otros areas del programa, por ejemplo cargando el formulario para crear una pelicular nueva con todas las personas guardadas cada vez.
+2. El uso del `film-uri` en los *url* de la pagina web era también innecesario. Se podría usar el `id` de la pelicula sin problema, muchos plataformas grandes lo hace así. Incluso si se usara el `uri` de ninguna manera sea necesario convertir del titulo al uri y al revers cada vez que se tiene que cargar una pelicula del base de datos. Podría usar el `uri` como otro indice en el base de datos.  
+3. No me gusta que los respuestas de API también incluyen un cookie de sesión. No debería ser así y me gustaría haber podido crear dos configuraciones separadas como esta explicado [aquí](https://stackoverflow.com/a/65664998).

@@ -15,7 +15,7 @@
                         <div class="card-body">
                             <h5 class="card-title" th:text="${film.title}">Film Title</h5>
                             <p class="card-text" th:text="${film.synopsis}">Synopsis</p>
-                            <a th:href="@{/films/__${film.url}__}" class="btn btn-primary">Info</a>
+                            <a th:href="@{/films/__${film.uri}__}" class="btn btn-primary">Info</a>
                         </div>
                     </div>
                 </div>

@@ -66,7 +66,6 @@ public class MigrateJobConfig {
       .flow(step)
       .end()
       .build();
-
   }
 
   @Bean

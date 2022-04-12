@@ -43,12 +43,6 @@ public class ReviewServiceImpl implements ReviewService {
       throw new ReviewAlreadyExistsException(reviewingUser.getUsername(), reviewedFilm.getTitle());
     }
     else {
-      review.setDate(LocalDate.now());
-
-      reviewingUser.addReview(review);
-      userRepository.save(reviewingUser);
-      reviewedFilm.addReview(review);
-      filmRepository.save(reviewedFilm);
 
       review.setUser(reviewingUser);
       review.setFilm(reviewedFilm);
