@@ -17,6 +17,94 @@ Los commits para cada de los tres pasos del proyecto se encuentran aquí:
 En vez de incluir grabaciones de pantalla, proveeré enlaces al código en el repository de GitHub. También 
 Proporcionaré en el propio documento fragmentos de código que requieren más explicación.
 
+## Sumario
+
+<!-- TOC -->
+
+- [Proyecto Final Tokio School](#proyecto-final-tokio-school)
+    - [Introducción](#introducci%C3%B3n)
+    - [Sumario](#sumario)
+    - [Estructura del Programa](#estructura-del-programa)
+    - [Usuario](#usuario)
+        - [Objeto de Dominio](#objeto-de-dominio)
+        - [Creación de Usuario](#creaci%C3%B3n-de-usuario)
+            - [CreateUserDTO](#createuserdto)
+            - [registration.html](#registrationhtml)
+            - [UserController](#usercontroller)
+            - [UserService](#userservice)
+                - [addUser](#adduser)
+                - [saveUserImageString username, MultipartFile imageFile](#saveuserimagestring-username-multipartfile-imagefile)
+            - [FileService](#fileservice)
+                - [saveFileMultipartFile file, String fileName](#savefilemultipartfile-file-string-filename)
+        - [Login](#login)
+            - [WebSecurityConfig](#websecurityconfig)
+            - [UserDetailsServiceImpl](#userdetailsserviceimpl)
+            - [Login/Logout Success](#loginlogout-success)
+                - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
+            - [Login Failure](#login-failure)
+        - [User Profile](#user-profile)
+            - [userCreatedModal.html](#usercreatedmodalhtml)
+        - [Editar Usuario](#editar-usuario)
+            - [Cambiar imagen de usuario](#cambiar-imagen-de-usuario)
+            - [Cambiar contraseña](#cambiar-contrase%C3%B1a)
+                - [changePasswordString username, String oldPassword, String newPassword](#changepasswordstring-username-string-oldpassword-string-newpassword)
+            - [Cambiar datos personales de usuario](#cambiar-datos-personales-de-usuario)
+                - [updateUserString username, User user](#updateuserstring-username-user-user)
+                - [updateSecurityContextString username](#updatesecuritycontextstring-username)
+        - [Eliminar Usuario](#eliminar-usuario)
+            - [deleteUserPrincipal principal](#deleteuserprincipal-principal)
+    - [Personas](#personas)
+        - [PersonController.addPerson](#personcontrolleraddperson)
+        - [PersonService.addPersonPerson person](#personserviceaddpersonperson-person)
+    - [Películas](#pel%C3%ADculas)
+        - [objeto de dominio](#objeto-de-dominio)
+        - [crear película](#crear-pel%C3%ADcula)
+            - [addFilmFilm film](#addfilmfilm-film)
+                - [savePosterFilm film , MultipartImage posterImage](#saveposterfilm-film--multipartimage-posterimage)
+        - [buscar películas](#buscar-pel%C3%ADculas)
+            - [FilmSearchCriteriaEnum](#filmsearchcriteriaenum)
+            - [FilmSearchStrategy](#filmsearchstrategy)
+            - [FilmSearchImpl](#filmsearchimpl)
+            - [Ruta de Solicitud de Búsqueda](#ruta-de-solicitud-de-b%C3%BAsqueda)
+        - [Info de Película](#info-de-pel%C3%ADcula)
+        - [Dar puntuación a una pelí](#dar-puntuaci%C3%B3n-a-una-pel%C3%AD)
+            - [FilmService.addScoreString filmUri, Score score](#filmserviceaddscorestring-filmuri-score-score)
+                - [FilmService.getFilmByUriString uri](#filmservicegetfilmbyuristring-uri)
+    - [Review](#review)
+        - [Solicitar reseñas del usuario](#solicitar-rese%C3%B1as-del-usuario)
+        - [Creando una reseña nueva](#creando-una-rese%C3%B1a-nueva)
+            - [ApiIntegrationTest](#apiintegrationtest)
+        - [ReviewService](#reviewservice)
+            - [findByUsernameString username](#findbyusernamestring-username)
+            - [addReviewReview review](#addreviewreview-review)
+    - [Documentación Open API](#documentaci%C3%B3n-open-api)
+    - [Seguridad](#seguridad)
+        - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
+        - [Seguridad JWT](#seguridad-jwt)
+            - [JwtRequest y JwtResponse](#jwtrequest-y-jwtresponse)
+            - [JwtRequestFilter](#jwtrequestfilter)
+            - [Proceso de autenticación](#proceso-de-autenticaci%C3%B3n)
+                - [Set-Cookie: JSESSIONID=...](#set-cookie-jsessionid)
+    - [Proceso Batch](#proceso-batch)
+        - [MigrateJobConfig](#migratejobconfig)
+            - [reader](#reader)
+            - [FilmMapper](#filmmapper)
+            - [FilmItemProcessor](#filmitemprocessor)
+            - [writer](#writer)
+            - [FilmLineAggregator](#filmlineaggregator)
+            - [step](#step)
+            - [MigrateFilmWiteListener](#migratefilmwitelistener)
+            - [migrateFilmJob](#migratefilmjob)
+            - [MigrateFilmListener](#migratefilmlistener)
+    - [Excepciones, Depuración y *logging*](#excepciones-depuraci%C3%B3n-y-logging)
+        - [Gestión de excepciones](#gesti%C3%B3n-de-excepciones)
+            - [WebsiteExceptionControllerAdvice](#websiteexceptioncontrolleradvice)
+            - [ApiExceptionControllerAdvice](#apiexceptioncontrolleradvice)
+        - [Depuración y logging](#depuraci%C3%B3n-y-logging)
+    - [Aprendizaje y Mejoras](#aprendizaje-y-mejoras)
+
+<!-- /TOC -->
+
 ## Estructura del Programa
 
 La estructura final del programa es:
@@ -237,95 +325,6 @@ La estructura final del programa es:
 │           └── test.sql
 └── system.properties
 ```
-
-
-
-## Sumario
-
-<!-- TOC -->
-
-- [Proyecto Final Tokio School](#proyecto-final-tokio-school)
-    - [Introducción](#introducci%C3%B3n)
-    - [Estructura del Programa](#estructura-del-programa)
-    - [Sumario](#sumario)
-    - [Usuario](#usuario)
-        - [Objeto de Dominio](#objeto-de-dominio)
-        - [Creación de Usuario](#creaci%C3%B3n-de-usuario)
-            - [CreateUserDTO](#createuserdto)
-            - [registration.html](#registrationhtml)
-            - [UserController](#usercontroller)
-            - [UserService](#userservice)
-                - [addUser](#adduser)
-                - [saveUserImageString username, MultipartFile imageFile](#saveuserimagestring-username-multipartfile-imagefile)
-            - [FileService](#fileservice)
-                - [saveFileMultipartFile file, String fileName](#savefilemultipartfile-file-string-filename)
-        - [Login](#login)
-            - [WebSecurityConfig](#websecurityconfig)
-            - [UserDetailsServiceImpl](#userdetailsserviceimpl)
-            - [Login/Logout Success](#loginlogout-success)
-                - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
-            - [Login Failure](#login-failure)
-        - [User Profile](#user-profile)
-            - [userCreatedModal.html](#usercreatedmodalhtml)
-        - [Editar Usuario](#editar-usuario)
-            - [Cambiar imagen de usuario](#cambiar-imagen-de-usuario)
-            - [Cambiar contraseña](#cambiar-contrase%C3%B1a)
-                - [changePasswordString username, String oldPassword, String newPassword](#changepasswordstring-username-string-oldpassword-string-newpassword)
-            - [Cambiar datos personales de usuario](#cambiar-datos-personales-de-usuario)
-                - [updateUserString username, User user](#updateuserstring-username-user-user)
-                - [updateSecurityContextString username](#updatesecuritycontextstring-username)
-        - [Eliminar Usuario](#eliminar-usuario)
-            - [deleteUserPrincipal principal](#deleteuserprincipal-principal)
-    - [Personas](#personas)
-        - [PersonController.addPerson](#personcontrolleraddperson)
-        - [PersonService.addPersonPerson person](#personserviceaddpersonperson-person)
-    - [Películas](#pel%C3%ADculas)
-        - [objeto de dominio](#objeto-de-dominio)
-        - [crear película](#crear-pel%C3%ADcula)
-            - [addFilmFilm film](#addfilmfilm-film)
-                - [savePosterFilm film , MultipartImage posterImage](#saveposterfilm-film--multipartimage-posterimage)
-        - [buscar películas](#buscar-pel%C3%ADculas)
-            - [FilmSearchCriteriaEnum](#filmsearchcriteriaenum)
-            - [FilmSearchStrategy](#filmsearchstrategy)
-            - [FilmSearchImpl](#filmsearchimpl)
-            - [Ruta de Solicitud de Búsqueda](#ruta-de-solicitud-de-b%C3%BAsqueda)
-        - [Info de Película](#info-de-pel%C3%ADcula)
-        - [Dar puntuación a una pelí](#dar-puntuaci%C3%B3n-a-una-pel%C3%AD)
-            - [FilmService.addScoreString filmUri, Score score](#filmserviceaddscorestring-filmuri-score-score)
-                - [FilmService.getFilmByUriString uri](#filmservicegetfilmbyuristring-uri)
-    - [Review](#review)
-        - [Solicitar reseñas del usuario](#solicitar-rese%C3%B1as-del-usuario)
-        - [Creando una reseña nueva](#creando-una-rese%C3%B1a-nueva)
-            - [ApiIntegrationTest](#apiintegrationtest)
-        - [ReviewService](#reviewservice)
-            - [findByUsernameString username](#findbyusernamestring-username)
-            - [addReviewReview review](#addreviewreview-review)
-    - [Seguridad](#seguridad)
-        - [SuccessfulAuthenticationEventListener](#successfulauthenticationeventlistener)
-        - [Seguridad JWT](#seguridad-jwt)
-            - [JwtRequest y JwtResponse](#jwtrequest-y-jwtresponse)
-            - [JwtRequestFilter](#jwtrequestfilter)
-            - [Proceso de autenticación](#proceso-de-autenticaci%C3%B3n)
-                - [Set-Cookie: JSESSIONID=...](#set-cookie-jsessionid)
-    - [Proceso Batch](#proceso-batch)
-        - [MigrateJobConfig](#migratejobconfig)
-            - [reader](#reader)
-            - [FilmMapper](#filmmapper)
-            - [FilmItemProcessor](#filmitemprocessor)
-            - [writer](#writer)
-            - [FilmLineAggregator](#filmlineaggregator)
-            - [step](#step)
-            - [MigrateFilmWiteListener](#migratefilmwitelistener)
-            - [migrateFilmJob](#migratefilmjob)
-            - [MigrateFilmListener](#migratefilmlistener)
-    - [Excepciones, Depuración y *logging*](#excepciones-depuraci%C3%B3n-y-logging)
-        - [Gestión de excepciones](#gesti%C3%B3n-de-excepciones)
-            - [WebsiteExceptionControllerAdvice](#websiteexceptioncontrolleradvice)
-            - [ApiExceptionControllerAdvice](#apiexceptioncontrolleradvice)
-        - [Depuración y logging](#depuraci%C3%B3n-y-logging)
-    - [Aprendizaje y Mejoras](#aprendizaje-y-mejoras)
-
-<!-- /TOC -->
 
 ## Usuario
 
@@ -1924,6 +1923,51 @@ Este método tiene 4 pasos:
 2. Verifica que el usuario ya no ha dado una reseña a la pelicula en cuestión, si lo ha dado antes se tira una excepción.
 3. Establece el `Film` y `User` del `Review` nuevo.
 4. Guarda y devuelve el `Review` ya creado.  
+
+## Documentación Open API
+
+* [OpenApiConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/config/OpenApiConfig.java)
+* [WebController.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/controller/thymeleaf/WebController.java)
+
+Para en el acceso al REST API de la plataforma proporciono documentación de la especificación OpenAPI 3.0 con el Swagger UI. En la clase de configuración `OpenApiConfig` doy la configuración necesaria para la liberaría `Springdocs`.
+
+```
+ @Bean
+  public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+      .addSecurityItem(new SecurityRequirement()
+        .addList("bearerAuth"))
+      .components(new Components()
+        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+            .name("Bearer Token")
+            .type(SecurityScheme.Type.HTTP)
+            .scheme("bearer")
+            .bearerFormat("JWT")
+        )
+      )
+      .info(new Info()
+          .title("Film Fanatic@s")
+          .description("Proyecto Final Spring de Tokio School")
+        .contact(new Contact()
+          .name("Christopher Hilborne")
+          .email("chris.hilborne@gmail.com")
+          .url("https://github.com/ChrisHilborne"))
+        .version("1.0")
+      );
+```
+
+Creé una método de el `WebController` para hacer lo más fácil llegar a la documentación. 
+
+```
+  @RequestMapping(path = "/swagger-ui", method = GET)
+  public String swaggerUi() {
+    return "redirect:/swagger-ui/index.html";
+  }
+```
+
+Se puede ver la documentación en la url [`https://film-fanaticos.herokuapp.com/swagger-ui/index.html`](https://film-fanaticos.herokuapp.com/swagger-ui/index.html) y parece asi:
+
+![swagger-ui](readme-pics/swagger-ui.png)
 
 ## Seguridad
 * [WebSecurityConfig.java](https://github.com/ChrisHilborne/FilmFanatics/blob/main/src/main/java/io/chilborne/filmfanatic/security/WebSecurityConfig.java)
