@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +26,7 @@ public class CreateUserDTO extends PasswordDTO {
   private String email;
   private Set<Role> roles = new HashSet<>();
 
-  private LocalDate birthDate;
+  private String birthDate;
 
   public User buildUser() {
     User user = new User();
@@ -32,7 +34,7 @@ public class CreateUserDTO extends PasswordDTO {
     user.setPassword(this.password);
     user.setName(this.name);
     user.setSurname(this.surname);
-    user.setBirthDate(this.birthDate);
+    user.setBirthDate(LocalDate.parse(this.birthDate, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     user.setEmail(this.email);
     roles.forEach(user::addRole);
     return user;
