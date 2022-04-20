@@ -13,7 +13,8 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "films")
 @Table(indexes = {
   @Index(name = "title_index", columnList = "title"),
-  @Index(name = "year_index", columnList = "year")})
+  @Index(name = "year_index", columnList = "year"),
+  @Index(name = "uri_index", columnList = "uri")})
 public class Film implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

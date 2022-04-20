@@ -57,8 +57,7 @@ public class FilmServiceImpl implements FilmService {
   @Override
   @Transactional()
   public Film getFilmByUri(String filmUri) {
-    String filmTitle = StringUtil.getFilmTitleFromUri(filmUri);
-    return filmRepo.findByTitleIgnoreCase(filmTitle)
+    return filmRepo.findByUri(filmUri)
       .orElseThrow(() -> new FilmNotFoundException());
   }
 

@@ -23,10 +23,4 @@ public class StringUtil {
     return String.join("-", filmTitle.toLowerCase(Locale.ROOT).split(" ")) + filmYear;
   }
 
-  public static String getFilmTitleFromUri(String filmUri) {
-    String lowerCaseTitle = filmUri.substring(0, filmUri.length() - 5)
-      .replace("-", " ");
-    return StringUtils.capitalize(lowerCaseTitle);
-
-  }
 }

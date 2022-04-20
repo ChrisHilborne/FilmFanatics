@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -64,7 +65,7 @@ public class FilmController {
       User authenticatedUser = (User) authentication.getPrincipal();
       Optional<Score> userScore = film.getScores()
         .stream()
-        .filter(scr -> scr.getUser().getId() == authenticatedUser.getId())
+        .filter(scr -> Objects.equals(scr.getUser().getId(), authenticatedUser.getId()))
         .findFirst();
       if (userScore.isPresent()) {
         model.addAttribute("score", userScore.get());
@@ -119,7 +120,7 @@ public class FilmController {
         createdFilm = filmService.savePoster(film, posterImage);
       }
       model.addAttribute("film", createdFilm);
-      return "redirect: /films/" + StringUtil.getFilmUri(createdFilm.getTitle(), createdFilm.getYear());
+      return "redirect:/films/" + StringUtil.getFilmUri(createdFilm.getTitle(), createdFilm.getYear());
     }
   }
 }
