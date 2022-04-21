@@ -1,9 +1,9 @@
 package io.chilborne.filmfanatic.config;
 
 import groovy.util.logging.Slf4j;
-import io.chilborne.filmfanatic.JarCondition;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -13,7 +13,7 @@ import java.io.File;
 @Configuration
 @EnableWebMvc
 @Slf4j
-@Conditional(JarCondition.class)
+@Profile("jar")
 public class JarApplicationConfig implements WebMvcConfigurer {
   public static String uploadDirectory= System.getProperty("user.home") + File.separator + "/film-fanatics";
 

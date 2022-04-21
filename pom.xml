@@ -156,6 +156,15 @@
 				<activatedProperties>dev</activatedProperties>
 			</properties>
 		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>jar</id>
+		</profile>
 	</profiles>
 
 
