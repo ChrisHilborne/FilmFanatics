@@ -1,15 +1,15 @@
 package io.chilborne.filmfanatic.config;
 
-import io.chilborne.filmfanatic.JarCondition;
 import io.chilborne.filmfanatic.service.FileService;
 import io.chilborne.filmfanatic.service.implementation.JarFileServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Conditional(JarCondition.class)
+@Profile("jar")
 public class JarFileServiceConfig {
 
   @Value("${images.upload.directory.user}")
