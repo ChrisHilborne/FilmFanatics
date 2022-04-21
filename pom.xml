@@ -163,6 +163,12 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>proxy</id>
+			<properties>
+				<activatedProperties>proxy</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
 			<id>jar</id>
 		</profile>
 	</profiles>
