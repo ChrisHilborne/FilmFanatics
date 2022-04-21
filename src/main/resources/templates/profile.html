@@ -78,7 +78,7 @@
                             <div class="row mt-2">
                                 <ul>
                                     <li class="d-flex align-items-center mx-1" th:each="film : ${user.films}">
-                                        <a th:href="@{'/film/' + ${film.url}}" class="link" title="${film.title}">
+                                        <a th:href="@{'/film/' + ${film.uri}}" class="link" title="${film.title}">
                                             <img class="responsive-image py-3 my-1" th:src="@{'/images/films/' + ${film.poster}}" height="120" id="Poster" alt="Film Poster" src="">
                                         </a>
                                         <strong class="mx-2" th:src="@{'/film/' + @{film.id}}" th:text="${film.title}"></strong>

@@ -1,5 +1,6 @@
 package io.chilborne.filmfanatic.config;
 
+import groovy.util.logging.Slf4j;
 import io.chilborne.filmfanatic.service.FileService;
 import io.chilborne.filmfanatic.service.implementation.FileServiceImpl;
 import io.chilborne.filmfanatic.service.implementation.JarFileServiceImpl;
@@ -9,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(value = "jar", havingValue = "false")
-public class FileServiceConfig {
+@ConditionalOnProperty(value = "jar", havingValue = "true")
+public class JarFileServiceConfig {
 
   @Value("${images.upload.directory.user}")
   private String userImageUploadDirectory;
@@ -19,12 +20,12 @@ public class FileServiceConfig {
 
   @Bean("user-image-file-service")
   public FileService userImageFileService() {
-    return new FileServiceImpl(userImageUploadDirectory);
+    return new JarFileServiceImpl(userImageUploadDirectory);
   }
 
   @Bean("film-poster-file-service")
   public FileService filmPosterFileService() {
-    return new FileServiceImpl(filmPosterUploadDirectory);
+    return new JarFileServiceImpl(filmPosterUploadDirectory);
   }
 
 }
