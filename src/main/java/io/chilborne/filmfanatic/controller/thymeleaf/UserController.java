@@ -87,7 +87,7 @@ public class UserController {
   @RequestMapping(path = "/profile/{username}/films", method = RequestMethod.GET)
   public String userFilms(Model model, @PathVariable("username") String username) {
     User user = userService.getUser(username);
-    model.addAttribute(user.getFilms());
+    model.addAttribute("films", user.getFilms());
     return "searched-film";
   }
 
