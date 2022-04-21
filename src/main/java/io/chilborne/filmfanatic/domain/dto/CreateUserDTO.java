@@ -34,7 +34,7 @@ public class CreateUserDTO extends PasswordDTO {
     user.setPassword(this.password);
     user.setName(this.name);
     user.setSurname(this.surname);
-    user.setBirthDate(LocalDate.parse(this.birthDate, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    user.setBirthDate(birthDate.isEmpty() ? null : LocalDate.parse(this.birthDate, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     user.setEmail(this.email);
     roles.forEach(user::addRole);
     return user;
