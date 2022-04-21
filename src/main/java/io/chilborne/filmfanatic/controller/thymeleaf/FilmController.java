@@ -87,7 +87,7 @@ public class FilmController {
     score.setUser((User) auth.getPrincipal());
     filmService.addScore(filmUri, score);
 
-    return "redirect: /films/" + filmUri;
+    return "redirect:/films/" + filmUri;
   }
 
   @RequestMapping(path = "films/add", method = RequestMethod.GET)
