@@ -14,7 +14,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static io.chilborne.filmfanatic.config.ApplicationConfig.uploadDirectory;
+import static io.chilborne.filmfanatic.config.JarApplicationConfig.uploadDirectory;
 
 @Component
 public class FileUtils {

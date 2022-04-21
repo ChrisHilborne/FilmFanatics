@@ -31,7 +31,9 @@ public class FileServiceImpl implements FileService {
       }
       else {
         log.info("Creating new file");
-        Files.write(imagePath, fileStream.readAllBytes(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+        imagePath.toFile()
+          .createNewFile();
+        Files.write(imagePath, fileStream.readAllBytes());
       }
     } catch (IOException e) {
       log.error("Error saving file {}", fileName, e);

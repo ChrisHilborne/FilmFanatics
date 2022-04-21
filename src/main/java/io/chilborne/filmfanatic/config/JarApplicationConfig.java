@@ -1,9 +1,8 @@
 package io.chilborne.filmfanatic.config;
 
 import groovy.util.logging.Slf4j;
-import io.chilborne.filmfanatic.domain.Film;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
+import io.chilborne.filmfanatic.JarCondition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -14,10 +13,11 @@ import java.io.File;
 @Configuration
 @EnableWebMvc
 @Slf4j
-public class ApplicationConfig implements WebMvcConfigurer {
+@Conditional(JarCondition.class)
+public class JarApplicationConfig implements WebMvcConfigurer {
   public static String uploadDirectory= System.getProperty("user.home") + File.separator + "/film-fanatics";
 
-  public ApplicationConfig() {
+  public JarApplicationConfig() {
     File upload = new File(uploadDirectory);
     if (!upload.exists()) {
       upload.mkdirs();
@@ -28,16 +28,9 @@ public class ApplicationConfig implements WebMvcConfigurer {
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     //registry.addResourceHandler("/images/**").addResourceLocations("file:" + uploadDirectory + File.separator);
     registry.addResourceHandler("/images/**", "styles/css/**", "/js/**", "/webjars/**")
-      .addResourceLocations("file:" + uploadDirectory + File.separator + "/images/", "classpath:/static/images/", "classpath:/static/styles/css/",
+      .addResourceLocations("file:" + uploadDirectory + File.separator + "/static/images/", "classpath:/static/images/", "classpath:/static/styles/css/",
       "classpath:/static/js/", "/webjars/");
 
   }
-
-  @Bean
-  public ModelMapper modelMapper() {
-    return new ModelMapper();
-  }
-
-
 
 }
