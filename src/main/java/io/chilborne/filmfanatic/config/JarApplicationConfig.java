@@ -15,7 +15,7 @@ import java.io.File;
 @Slf4j
 @Profile("jar")
 public class JarApplicationConfig implements WebMvcConfigurer {
-  public static String uploadDirectory= System.getProperty("user.home") + File.separator + "/film-fanatics";
+  public static String uploadDirectory= System.getProperty("user.home") + File.separator + "/film-fanatic-data";
 
   public JarApplicationConfig() {
     File upload = new File(uploadDirectory);
