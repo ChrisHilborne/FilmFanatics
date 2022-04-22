@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-4 border-right">
                         <form></form>
-                        <form th:method="POST" enctype="multipart/form-data" action="/user/image">
+                        <form th:method="POST" enctype="multipart/form-data" th:action="@{/user/image}">
                             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                                 <label for="image-file">
                                     <img class="rounded-circle mt-5 mb-2" style="border-color: #227093; border: 1px solid;" width="150px" th:src="@{'/images/users/' + ${editUserDTO.image}}">
