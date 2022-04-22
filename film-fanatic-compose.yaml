@@ -1,0 +1,41 @@
+version: '3'
+services:
+  film-fanatic:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: film-fanatic:prod
+    restart: on-failure
+    ports: 
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=film-fanatics-user
+      - DATABASE_PASSWORD=vLNeLnKdjL2HC2GA
+      - DATABASE_NAME=film-fanatics
+      - DATABASE_PORT=3306
+    depends_on: 
+      - mysql
+    networks:
+      - mysql
+  mysql:
+    image: mysql
+    environment: 
+      - MYSQL_ROOT_PASSWORD=6vfb9N9NXrefQ6Hr
+      - MYSQL_DATABASE=film-fanatics
+      - MYSQL_USER=film-fanatics-user
+      - MYSQL_PASSWORD=vLNeLnKdjL2HC2GA
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mysql
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  mysql:
+    driver: bridge
+    
+    
+    
