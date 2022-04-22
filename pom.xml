@@ -171,6 +171,9 @@
 		<profile>
 			<id>jar</id>
 		</profile>
+		<profile>
+			<id>docker</id>
+		</profile>
 	</profiles>
 
 
