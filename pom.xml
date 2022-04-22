@@ -169,6 +169,12 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>debug</id>
+			<properties>
+				<activatedProperties>debug</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
 			<id>jar</id>
 		</profile>
 		<profile>
