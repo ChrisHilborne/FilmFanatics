@@ -10,7 +10,7 @@ public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private long id;
-  @Column(nullable = false)
+  @Column(name = "role",nullable = false)
   private String name;
 
 }

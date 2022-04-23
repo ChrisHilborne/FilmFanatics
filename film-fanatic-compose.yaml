@@ -1,36 +1,39 @@
-version: '3'
+version: "3.7"
 services:
-  film-fanatic:
+  spring-boot-app:
     build: .
     ports: 
       - 8080:8080
     environment:
-      - DATABASE_HOST=mysql
+      - DATABASE_HOST=mysql-db
       - DATABASE_USER=film-fanatics-user
       - DATABASE_PASSWORD=vLNeLnKdjL2HC2GA
       - DATABASE_NAME=film-fanatics
       - DATABASE_PORT=3306
-    depends_on: 
-      - mysql
     networks:
-      - mysql
-  mysql:
-    image: mysql
+      - mysql-net
+    depends_on: 
+      - mysql-db
+  mysql-db:
+    image: mysql:5.7
     environment: 
-      - MYSQL_ROOT_PASSWORD=6vfb9N9NXrefQ6Hr
       - MYSQL_DATABASE=film-fanatics
       - MYSQL_USER=film-fanatics-user
       - MYSQL_PASSWORD=vLNeLnKdjL2HC2GA
+      - MYSQL_ROOT_USER=super-user
+      - MYSQL_ROOT_PASSWORD=JpG7Y4Ayga843BBQ
+    command: --sql_mode="ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+    restart: on-failure
+    networks:
+      - mysql-net
     volumes:
       - mysql-data:/var/lib/mysql
-    networks:
-      - mysql
 volumes:
   mysql-data:
     driver: local
+
 networks:
-  mysql:
-    driver: bridge
+  mysql-net:
     
     
     

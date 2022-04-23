@@ -8,14 +8,14 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity(name = "people")
-@Table(indexes = @Index(name = "firstname_lastname_index", columnList = "name, surname"))
+@Table(indexes = @Index(name = "firstname_lastname_index", columnList = "forename, surname"))
 public class Person {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   @NotEmpty(message = "{field.mandatory}")
-  @Column(nullable = false)
+  @Column(name = "forename", nullable = false)
   private String name;
   @NotEmpty(message = "{field.mandatory}")
   @Column(nullable = false)

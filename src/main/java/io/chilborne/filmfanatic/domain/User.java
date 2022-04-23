@@ -16,9 +16,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Builder
-@Entity(name = "users")
-@Table(indexes = @Index(name = "usrname_index", columnList = "username"))
+@Entity
+@Table(name = "users", indexes = @Index(name = "username_index", columnList = "username"))
 public class User implements UserDetails {
 
   @Id
@@ -27,9 +26,9 @@ public class User implements UserDetails {
   private Long id;
   @Column(nullable = false)
   private String username;
-  @Column(nullable = false)
+  @Column(name = "pass", nullable = false)
   private String password;
-  @Column
+  @Column(name = "forename")
   private String name;
   @Column
   private String surname;
@@ -37,18 +36,16 @@ public class User implements UserDetails {
   private String email;
   @Column
   private String image;
-  @Column(name = "birth_date", columnDefinition = "TIMESTAMP")
+  @Column(name = "birth_date", columnDefinition = "DATETIME", updatable = false)
   private LocalDate birthDate;
-  @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+  @Column(name = "creation_date", columnDefinition = "DATETIME", updatable = false)
   private LocalDate creationDate;
-  @Column(name = "last_login", columnDefinition = "TIMESTAMP")
+  @Column(name = "last_login", columnDefinition = "DATETIME")
   private LocalDateTime lastLogin;
   @Column
   private boolean active;
   @Transient
   private Collection<GrantedAuthority> authorities;
-
-
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final Set<Review> reviews = new HashSet<>();
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
