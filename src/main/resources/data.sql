@@ -1,8 +1,8 @@
 INSERT INTO roles
-    (id, role)
+    (role)
 VALUES
-    (0, 'ADMIN'),
-    (1, 'USER');
+    ('ADMIN'),
+    ('USER');
 
 INSERT INTO users
     (username, pass, image, forename, surname, email, birth_date, creation_date, last_login, active)

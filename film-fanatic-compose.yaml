@@ -28,10 +28,20 @@ services:
       - mysql-net
     volumes:
       - mysql-data:/var/lib/mysql
+  myphp:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 4444:80
+    environment:
+      -  PMA_HOST=mysql-db
+    depends_on:
+      - mysql-db
+    networks: 
+      - mysql-net
 volumes:
   mysql-data:
     driver: local
-
 networks:
   mysql-net:
     

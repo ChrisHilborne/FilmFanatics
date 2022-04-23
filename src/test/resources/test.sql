@@ -1,11 +1,11 @@
 INSERT INTO roles
-    (id, name)
+    (id, role)
 VALUES
     (0, 'ADMIN'),
     (1, 'USER');
 
 INSERT INTO users
-    (username, password, image, name, surname, email, birth_date, creation_date, last_login, active)
+    (username, pass, image, forename, surname, email, birth_date, creation_date, last_login, active)
 VALUES
     ('tokioschool', '$2a$10$.JGCNuoStUWFceU0S2oh.eoI5c3dIwzm5KiYvzoJW7KGrIOBb41yq', 'tokioschool.jpeg'
         , 'Tokio', 'School', 'tokioschool@gmail.com', '2010-06-06', '2021-12-03', '2022-01-01', 1);
@@ -13,10 +13,10 @@ VALUES
 INSERT INTO user_roles
     (user_id, role_id)
 VALUES
-    ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE name = 'ADMIN'));
+    ((SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM roles WHERE role = 'ADMIN'));
 
 INSERT INTO people
-    (name, surname, type)
+    (forename, surname, type)
 VALUES
     ('Peter', 'Jackson', 'DIRECTOR'),
     ('Orlando', 'Bloom', 'ACTOR'),
@@ -25,14 +25,14 @@ VALUES
 INSERT INTO films
     (title, year, duration, avg_score, poster, migrate, user_id, director_id, uri)
 VALUES
-    ('The Fellowship of the Ring', 2001, 178, 4,'the-fellowship-of-the-ring.jpg', 0,(SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE name = 'Peter' AND surname ='Jackson'), 'the-fellowship-of-the-ring-2001'),
-    ('Kingdom of Heaven', 2005, 190, 3,'kingdom-of-heaven.jpg', 1, (SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE name = 'Ridley' AND surname ='Scott'), 'kingdom-of-heaven-2005');
+    ('The Fellowship of the Ring', 2001, 178, 4,'the-fellowship-of-the-ring.jpg', 0,(SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE forename = 'Peter' AND surname ='Jackson'), 'the-fellowship-of-the-ring-2001'),
+    ('Kingdom of Heaven', 2005, 190, 3,'kingdom-of-heaven.jpg', 1, (SELECT id FROM users WHERE username = 'tokioschool'), (SELECT id FROM people WHERE forename = 'Ridley' AND surname ='Scott'), 'kingdom-of-heaven-2005');
 
 INSERT INTO film_actors
     (film_id, actor_id)
 VALUES
-    ((SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom')),
-    ((SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM people WHERE name = 'Orlando' AND surname = 'Bloom'));
+    ((SELECT id FROM films WHERE title = 'The Fellowship of the Ring'), (SELECT id FROM people WHERE forename = 'Orlando' AND surname = 'Bloom')),
+    ((SELECT id FROM films WHERE title = 'Kingdom of Heaven'), (SELECT id FROM people WHERE forename = 'Orlando' AND surname = 'Bloom'));
 
 INSERT INTO scores
     (value, film_id, user_id)
